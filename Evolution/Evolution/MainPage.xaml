@@ -1,0 +1,52 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="Evolution.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="480"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Landscape"  Orientation="Landscape"
+    shell:SystemTray.IsVisible="False">
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot">
+
+        
+        <Grid.Background>
+            <ImageBrush ImageSource="/Evolution;component/Img/cells.jpg" Opacity="0.5" />
+        </Grid.Background>
+
+
+        <StackPanel Tap="Button_Click" Width="250" Height="350" Margin="55,96,495,54" Grid.ColumnSpan="2">
+            <Image Name="img_start" Source="Img/player.png" Width="250" Height="250"> </Image>
+            <TextBlock FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Comic Sans MS" FontSize="60" Foreground="#FFD10000">Start</TextBlock>
+        </StackPanel>
+
+        <StackPanel Tap="Settings_Tap" Orientation="Horizontal" Width="400" Height="70" Margin="300,96,111,314">
+            <Image Source="Img/gear.png"></Image>
+            <TextBlock VerticalAlignment="Center"  FontFamily="Comic Sans MS" FontSize="40">Settings</TextBlock>
+        </StackPanel>
+        <StackPanel Tap="Highscores_Tap" Orientation="Horizontal" Width="400" Height="70" Margin="331,195,69,215">
+            <Image Source="Img/trophy.png"></Image>
+            <TextBlock VerticalAlignment="Center"  FontFamily="Comic Sans MS" FontSize="40">High Score</TextBlock>
+        </StackPanel>
+        <StackPanel Tap="Help_Tap" Orientation="Horizontal" Width="400" Height="70" Margin="250,283,68,127" Grid.Column="1">
+            <Image Source="Img/help.png"></Image>
+            <TextBlock VerticalAlignment="Center"  FontFamily="Comic Sans MS" FontSize="40">Help</TextBlock>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Height="68" Orientation="Horizontal" Grid.Column="1">
+            <TextBlock FontFamily="Comic Sans MS" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">EV</TextBlock>
+            <Image Width="45" Source="Img/enemy_smaller.png"></Image>
+            <TextBlock FontFamily="Comic Sans MS" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">LUTI</TextBlock>
+            <Image Width="45" Source="Img/enemy_smaller.png"></Image>
+            <TextBlock FontFamily="Comic Sans MS" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">N</TextBlock>
+        </StackPanel>
+        <!--<TextBlock Grid.Column="1" Height="68" HorizontalAlignment="Center" Name="textBlock1" Text="EVOLUTION" VerticalAlignment="Top" Width="320" FontFamily="Comic Sans MS" FontSize="50" Foreground="#FF27C100"/>-->
+    </Grid>
+
+</phone:PhoneApplicationPage>

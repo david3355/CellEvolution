@@ -1,0 +1,48 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="Evolution.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="480"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Landscape"  Orientation="Landscape"
+    shell:SystemTray.IsVisible="False">
+
+    
+        <Grid x:Name="LayoutRoot" >
+        <Grid.Background>
+            <ImageBrush ImageSource="/Evolution;component/Img/cells.jpg" Opacity="0.5" />
+        </Grid.Background>
+        <Border Background="#FF006F00" Opacity="0.5" Margin="59,114,48,105" CornerRadius="50">
+        </Border>
+        <Grid  Height="250" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="289"/>
+                <ColumnDefinition Width="311"/>
+                <ColumnDefinition Width="25"/>
+                <ColumnDefinition Width="35"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Grid.Row="0" Grid.Column="0">Background music:</TextBlock>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Grid.Row="1" Grid.Column="0">Sound effects:</TextBlock>
+            <Slider  Minimum="0" Maximum="1" Name="slideMusic" Grid.Row="0" Grid.Column="1" ValueChanged="slideMusic_ValueChanged"></Slider>
+            <Slider Minimum="0" Maximum="1" Name="slideSEffects" Grid.Row="1" Grid.Column="1"  ManipulationCompleted="slideSEffects_ManipulationCompleted"></Slider>
+            <TextBlock  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding ElementName=slideMusic, Path=Value}"></TextBlock>
+            <TextBlock  Grid.Row="1" Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding ElementName=slideSEffects, Path=Value}"></TextBlock>
+            <CheckBox FontSize="32" Content="Stop playing music from Zune queue" Grid.Row="2" Height="93" Grid.ColumnSpan="2" HorizontalAlignment="Right"  Name="cBox_stopPlayer" VerticalAlignment="Top" Checked="cBox_stopPlayer_Checked" Unchecked="cBox_stopPlayer_Unchecked" />
+        </Grid>
+        
+    </Grid>
+    
+
+
+</phone:PhoneApplicationPage>
