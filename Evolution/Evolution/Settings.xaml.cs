@@ -29,20 +29,20 @@ namespace Evolution
         {
             InitializeComponent();
             loaded = true;
-            slideMusic.Value = slideValMusic;
-            slideSEffects.Value = slideValEffects;
+            slideMusic.Value = slideValMusic * 100;
+            slideSEffects.Value = slideValEffects * 100;
             cBox_stopPlayer.IsChecked = stopMusic;
         }
 
         private void slideSEffects_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
-            slideValEffects = (float)slideSEffects.Value;
+            slideValEffects = (float)slideSEffects.Value / 100;
         }
 
         private void slideMusic_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            MediaPlayer.Volume = (float)slideMusic.Value;
-            slideValMusic = (float)slideMusic.Value;
+            MediaPlayer.Volume = (float)slideMusic.Value / 100;
+            slideValMusic = (float)slideMusic.Value / 100;
         }
 
         private void cBox_stopPlayer_Checked(object sender, RoutedEventArgs e)

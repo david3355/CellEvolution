@@ -51,15 +51,12 @@ namespace Evolution
         public Objects()
         {
         }
+
         public Objects(GamePage Game, Texture2D texture, Vector2 center, Vector2 velocity, float radius)
         {
-            this.game = Game;
-            this.texture = texture;
-            this.topLeft = new Vector2(center.X - radius, center.Y - radius);
-            this.velocity = velocity;
-            this.radius = radius;
-            CalculateScale();
+            SetAttributes(Game, texture, center, velocity, radius);
         }
+
         public void SetAttributes(GamePage Game, Texture2D texture, Vector2 center, Vector2 velocity, float radius)
         {
             this.game = Game;
@@ -69,7 +66,6 @@ namespace Evolution
             this.radius = radius;
             CalculateScale();
         }
-        
 
         void CalculateScale()
         {
@@ -86,6 +82,7 @@ namespace Evolution
             batch.Draw(texture, topLeft, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             //batch.End();
         }
+
         public void Update()
         {
             topLeft += velocity;
@@ -111,6 +108,7 @@ namespace Evolution
                 velocity.X *= -1;                
             }
         }
+
         public void ChangeTexture(Texture2D Texture)
         {
             texture = Texture;

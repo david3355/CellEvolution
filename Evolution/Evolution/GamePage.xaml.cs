@@ -22,6 +22,7 @@ using System.Windows.Media.Imaging;
 using System.Threading;
 using System.IO;
 using System.IO.IsolatedStorage;
+using System.Diagnostics;
 
 namespace Evolution
 {
@@ -54,6 +55,8 @@ namespace Evolution
         SoundEffect se_collosion, se_move, se_infection, se_extinct, se_rage;
 
         int n_enemy, n_antim, n_inf;
+        const int rageCycle = 20;
+        const int rageDuration = 5;
         float speed;
         public static float musicVolume = 1f, effectsVolume = 0.4f;
         public static string playerName;
@@ -86,6 +89,8 @@ namespace Evolution
 
         void Initialize()
         {
+            TouchPanel.EnabledGestures = GestureType.Tap | GestureType.Hold | GestureType.DoubleTap;
+
             levelEnd = false;
             canTwoTouch = false;
             twoTouches = false;
@@ -290,12 +295,13 @@ namespace Evolution
             if (levelEnd && HighScores.hLevel < level) HighScores.hLevel = level;
 
             if (levelEnd && twoTouches) NewLevel();
-            if (t_game > 0 && t_game % 60 == 0 && !rageObject)
+            if (t_game > 0 && t_game % rageCycle == 0 && !rageObject)
             {
                 rageObject = true;
                 AddObjects(new Rage(), tx_rage, 1, 0, Vector2.Zero);
+                se_rage.Play(effectsVolume, 0, 0);
             }
-            if (t_game > 0 && t_game % 66 == 0 && rageObject)
+            if (t_game > 0 && t_game % rageCycle == rageDuration && rageObject)
             {
                 rageObject = false;
                 foreach (Objects obj in objects) if (obj is Rage) { objects.Remove(obj); break; }
@@ -331,6 +337,7 @@ namespace Evolution
         void HandleTouches()
         {
             TouchCollection touches = TouchPanel.GetState();
+
             if (!touching && touches.Count > 0 && terminated == 0)
             {
                 touching = true;
@@ -349,7 +356,8 @@ namespace Evolution
         void SetNewVelocity(TouchCollection touch)
         {
             // itt állítjuk be, hogy kattintás (tap) hatására milyen irányba és sebességgel mozduljon el a player
-            float speed = 1.5f;
+            float speed = 1.5f; // basic speed
+            speed += GetBoostByGesture();
             Vector2 K = player.Origo;
             Vector2 T = touch[0].Position;
             Vector2 V = new Vector2();
@@ -379,6 +387,23 @@ namespace Evolution
 
             if (player.velocity.X > 10) player.velocity.X = 10;
             if (player.velocity.Y > 10) player.velocity.Y = 10;
+        }
+
+        float GetBoostByGesture()
+        {
+            if (TouchPanel.IsGestureAvailable)
+            {
+                GestureSample gesture = TouchPanel.ReadGesture();
+                const float MAX_BOOST = 2.5f;
+                switch (gesture.GestureType)
+                {
+                    case GestureType.Hold:
+                        return MAX_BOOST;
+                    case GestureType.DoubleTap:
+                        return 1.1f;
+                }
+            }
+            return 0.0f;
         }
 
         void UpdateObjects()

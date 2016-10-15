@@ -75,7 +75,7 @@ namespace Evolution
                 // application's PhoneApplicationService object to Disabled.
                 // Caution:- Use this under debug mode only. Applications that disable user idle detection will continue to run
                 // and consume battery power when the user is not using the phone.
-                PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Enabled;
+                PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Enabled;  // IN CASE OF NULL REFERENCE ERROR: clear all files from obj and bin folders
             }
         }
 
