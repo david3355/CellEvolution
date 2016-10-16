@@ -289,6 +289,7 @@ namespace Evolution
             {
                 se_extinct.Play(effectsVolume, 0, 0);
                 objects.Clear();
+                gt_game.Stop();
                 terminated = -1;
             }
             if (levelEnd && !canTwoTouch) canTwoTouch = true;
@@ -456,7 +457,7 @@ namespace Evolution
                     t_sdi = 5;
                     gt_imi.Start();
                 }
-                else if (b2 is Rage) // MEGÍRNI!!!!!!!
+                else if (b2 is Rage)
                 {
                     player.ChangeTexture(tx_rage);
                     rageOn = true;
