@@ -36,6 +36,7 @@ namespace Evolution
         #region Fields
 
         static Uri Uri = new Uri("/GamePage.xaml", UriKind.Relative);
+        static string[] backgrNames = { "bg1", "bg2", "bg3", "bg4", "bg5", "bg6", "bg7", "bg8", "bg9", "bg10", "bg11", "bg12", "bg13", "bg14", "bg15", "bg16", "bg17", "bg18" };
 
         ContentManager contentManager;  // A tartalmak betöltéséhez szükséges
         GameTimer timer;
@@ -50,13 +51,16 @@ namespace Evolution
         Texture2D tx_iminf;
         Texture2D tx_bG;
         Texture2D tx_rage;
+        List<Texture2D> backgrounds;
 
         Song s_music;
         SoundEffect se_collosion, se_move, se_infection, se_extinct, se_rage;
 
-        int n_enemy, n_antim, n_inf;
-        const int rageCycle = 20;
-        const int rageDuration = 5;
+        bool backKeyPressed;
+        int actualBackgroundIndex;
+        int n_enemy, n_antim, n_inf, n_intellienemy;
+        int rageCycle;
+        int rageDuration;
         float speed;
         public static float musicVolume = 1f, effectsVolume = 0.4f;
         public static string playerName;
@@ -78,9 +82,11 @@ namespace Evolution
 
         void NewLevel()
         {
+            NewBackground();
             level += 1;
-            speed += 0.1f;
+            speed += 0.15f;
             n_enemy += 1;
+            n_intellienemy += 1;
             n_antim += 1;
             n_inf += 1;
             t_game = 0;
@@ -88,9 +94,7 @@ namespace Evolution
         }
 
         void Initialize()
-        {
-            TouchPanel.EnabledGestures = GestureType.Tap | GestureType.Hold | GestureType.DoubleTap;
-
+        {         
             levelEnd = false;
             canTwoTouch = false;
             twoTouches = false;
@@ -106,6 +110,8 @@ namespace Evolution
             objects = new List<Objects>();
             AddObjects(new Enemy(), tx_enemy_smaller, n_enemy * 2, 10, GetRanVelocity(speed));
             AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -30, GetRanVelocity(speed));
+            AddObjects(new IntelligentEnemy(), tx_enemy_smaller, n_intellienemy * 2, 10, GetRanVelocity(speed));
+            AddObjects(new IntelligentEnemy(), tx_enemy_bigger, n_intellienemy, -30, GetRanVelocity(speed));
             AddObjects(new AntiMatter(), tx_antimatter, n_antim, 30, GetRanVelocity(speed));
             AddObjects(new SizeDecrease(), tx_sdinf, n_inf, 0, Vector2.Zero);
             AddObjects(new InverseMoving(), tx_iminf, n_inf, 0, Vector2.Zero);
@@ -131,7 +137,8 @@ namespace Evolution
                 if (maxRad == 0) ran = 13; // az infection-ök mérete rögzített
                 else if (maxRad < 0) ran = rnd.Next((int)player.R, Math.Abs(maxRad)); // ha nagyobb ellenséget adunk hozzá, tudnunk kell róla, így csak a player sugara és maxRad között generálhatunk számokat
                 else ran = rnd.Next(3, maxRad);
-                if (obj is Enemy) obj = new Enemy();
+                if (obj is IntelligentEnemy) obj = new IntelligentEnemy();  // TODO: ezen szépíteni kéne
+                else if (obj is Enemy) obj = new Enemy();
                 else if (obj is AntiMatter) obj = new AntiMatter();
                 else if (obj is SizeDecrease) obj = new SizeDecrease();
                 else if (obj is InverseMoving) obj = new InverseMoving();
@@ -156,11 +163,21 @@ namespace Evolution
             timer = new GameTimer();
             timer.UpdateInterval = TimeSpan.FromTicks(333333);
             timer.Update += OnUpdate;
-            timer.Draw += OnDraw;
+            timer.Draw += OnDraw;            
+        }
+
+        private void LoadBackGrounds()
+        {
+            foreach (String bgrname in backgrNames)
+            {
+                backgrounds.Add(contentManager.Load<Texture2D>("backgrounds/" + bgrname));
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            TouchPanel.EnabledGestures = GestureType.Flick /*| GestureType.Tap | GestureType.DoubleTap*/;
+
             // Set the sharing mode of the graphics device to turn on XNA rendering
             SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(true);
 
@@ -168,7 +185,11 @@ namespace Evolution
             spriteBatch = new SpriteBatch(SharedGraphicsDeviceManager.Current.GraphicsDevice);
             //contentManager.RootDirectory = "Content";
             // TODO: use this.content to load your game content here
-            tx_bG = contentManager.Load<Texture2D>("bg");
+
+            backKeyPressed = false;
+            backgrounds = new List<Texture2D>();
+            LoadBackGrounds();
+            actualBackgroundIndex = -1;
             tx_player = contentManager.Load<Texture2D>("player");
             tx_enemy_smaller = contentManager.Load<Texture2D>("enemy_smaller");
             tx_enemy_bigger = contentManager.Load<Texture2D>("enemy_bigger");
@@ -184,8 +205,11 @@ namespace Evolution
             se_move = contentManager.Load<SoundEffect>("move");
             se_infection = contentManager.Load<SoundEffect>("infection");
             se_rage = contentManager.Load<SoundEffect>("flame");
-            n_enemy = 10;
+            n_enemy = 4;
+            n_intellienemy = 6;
             n_antim = 10;
+            rageCycle = 20;
+            rageDuration = 6;
             n_inf = 3;
             speed = 0.1f;
             level = 0;
@@ -230,6 +254,15 @@ namespace Evolution
             timer.Start();
 
             base.OnNavigatedTo(e);
+        }
+
+        private void NewBackground()
+        {
+            if (actualBackgroundIndex < backgrounds.Count - 1)
+            {
+                actualBackgroundIndex++;
+                tx_bG = backgrounds[actualBackgroundIndex];
+            }
         }
 
         void gt_imi_Update(object sender, GameTimerEventArgs e)
@@ -332,6 +365,10 @@ namespace Evolution
             {
                 spriteBatch.DrawString(sfmgs, "Level completed, double-tap to new level", new Vector2(150, 10), Color.Green);
             }
+            if (backKeyPressed)
+            {
+                spriteBatch.DrawString(sfmgs, "Press Back key again to exit", new Vector2(220, (int)this.ActualHeight / 2 + 100), Color.Red);
+            }
             spriteBatch.End();
         }
 
@@ -341,8 +378,9 @@ namespace Evolution
 
             if (!touching && touches.Count > 0 && terminated == 0)
             {
+                backKeyPressed = false;
                 touching = true;
-                se_move.Play(effectsVolume, 0, 0);
+                if (player.R > 0) se_move.Play(effectsVolume, 0, 0);
                 SetNewVelocity(touches);
                 if (canTwoTouch && touches.Count == 2) twoTouches = true;
                 else twoTouches = false;
@@ -398,10 +436,11 @@ namespace Evolution
                 const float MAX_BOOST = 2.5f;
                 switch (gesture.GestureType)
                 {
-                    case GestureType.Hold:
-                        return MAX_BOOST;
-                    case GestureType.DoubleTap:
-                        return 1.1f;
+                    case GestureType.Flick:
+                    Debug.WriteLine("HOLD " + DateTime.Now.Second);
+                    return MAX_BOOST;
+                    //case GestureType.DoubleTap:
+                    //return 1.1f;
                 }
             }
             return 0.0f;
@@ -431,7 +470,10 @@ namespace Evolution
             }
             player.Update();
             foreach (Objects e in objects)
+            {
+                if (e is IntelligentEnemy) (e as IntelligentEnemy).ChangeVelocity(objects, player, speed);
                 e.Update();
+            }
             CollosionObjects();
             if (player.R <= 0 && terminated == 0 && !levelEnd) terminated = 1;
         }
@@ -440,7 +482,7 @@ namespace Evolution
         {
             float x, k;
             double d; // Distance
-            d = Math.Sqrt(Math.Pow(b1.Origo.X - b2.Origo.X, 2) + Math.Pow(b1.Origo.Y - b2.Origo.Y, 2));
+            d = Utility.DistanceOrigo(b1, b2);
             k = (float)((b1.R + b2.R) - d) / 2;
             x = 1f;
             if (b1 is Player && b2 is Infection && d <= b1.R + b2.R)
@@ -548,6 +590,15 @@ namespace Evolution
                 if (objects[i] is Enemy && objects[i].R > player.R) return;
             }
             if (terminated == 0) levelEnd = true;
+        }
+
+        private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!backKeyPressed)
+            {
+                backKeyPressed = true;
+                e.Cancel = true;
+            }
         }
 
 

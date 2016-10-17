@@ -22,7 +22,7 @@ namespace Evolution
             return Uri;
         }
 
-        public static double slideValMusic = 1, slideValEffects = 0.3;
+        public static double slideValMusic = 0.5, slideValEffects = 0.5;
         public static bool loaded = false;
         public static bool stopMusic = false;
         public Settings()

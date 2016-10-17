@@ -15,25 +15,31 @@
 
     <Grid x:Name="LayoutRoot" >
         <Grid.Background>
-            <ImageBrush ImageSource="/Evolution;component/Img/cells.jpg" Opacity="0.5" />
+            <ImageBrush ImageSource="Img/cells.jpg" Opacity="0.5" />
         </Grid.Background>
-        <Border Background="#FF006F00" Opacity="0.5" Margin="250,186" CornerRadius="50">
-        </Border>
-        <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="150"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        <Border BorderThickness="6" Margin="230,170" CornerRadius="25">
+            <Border.BorderBrush>
+                <SolidColorBrush Color="#FF006F00" />
+            </Border.BorderBrush>
+            <Border.Background>
+                <SolidColorBrush Color="#FF006F00" Opacity="0.5"/>
+            </Border.Background>
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="150"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" Grid.Column="0" Grid.Row="0">Level:</TextBlock>
-            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" Grid.Column="0" Grid.Row="1">Score:</TextBlock>
-            <TextBlock Name="txt_hl" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="#FFD41616"  Grid.Column="1"  Grid.Row="0" Text="{Binding}"></TextBlock>
-            <TextBlock Name="txt_hs" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="#FFD41616" Grid.Column="1" Grid.Row="1"></TextBlock>
-        </Grid>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" Grid.Column="0" Grid.Row="0">Level:</TextBlock>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" Grid.Column="0" Grid.Row="1">Score:</TextBlock>
+                <TextBlock Name="txt_hl" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="#FFD41616"  Grid.Column="1"  Grid.Row="0" Text="{Binding}"></TextBlock>
+                <TextBlock Name="txt_hs" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="#FFD41616" Grid.Column="1" Grid.Row="1"></TextBlock>
+            </Grid>
+        </Border>
     </Grid>
 
 

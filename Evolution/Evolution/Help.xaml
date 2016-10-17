@@ -17,23 +17,40 @@
     <Grid x:Name="LayoutRoot">
         
         <Grid.Background>
-            <ImageBrush ImageSource="/Evolution;component/Img/cells.jpg" Opacity="0.5" />
+            <ImageBrush ImageSource="Img/cells.jpg" Opacity="0.5" />
         </Grid.Background>
-        <Border Background="#FF006F00" Opacity="0.5" Margin="12,90,12,67" CornerRadius="50">
-        </Border>
-            <TextBlock FontFamily="Comic Sans MS"  FontSize="25" HorizontalAlignment="Center" Margin="132,34,130,380">Written and designed by Jäger.</TextBlock>
-        <StackPanel VerticalAlignment="Center" Height="277" Margin="0,117,0,86">
-            <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" Width="742" Height="219">Your goal in this game is to become the greatest of all life forms!
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Margin="15" FontFamily="Comic Sans MS"  FontSize="22" HorizontalAlignment="Center" >Written and designed by Jäger.</TextBlock>
+
+        <Border Grid.Row="1" BorderThickness="6"  CornerRadius="25" Margin="10">
+            <Border.BorderBrush>
+                <SolidColorBrush Color="#FF006F00" />
+            </Border.BorderBrush>
+            <Border.Background>
+                <SolidColorBrush Color="#FF006F00" Opacity="0.5"/>
+            </Border.Background>
+            <StackPanel VerticalAlignment="Center" Height="Auto" Margin="15" >
+                <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap"  VerticalAlignment="Center" Height="Auto">Your goal in this game is to become the greatest of all life forms!
                 Green cells are smaller than you, so you can consume them, increasing your size, and score. Red cells are bigger than you. Watch out, they consume you if you get close to them!
+                There are two kinds of enemies: the ordinary ones are moving into only one direction. The intelligent ones are following smaller enemies to consume them, or flee from the bigger ones.
                 Black-purple objects are antimatters, contact leads to decrease both objects's size. There are also two kinds of infection: one with the
                 lightning emblem cause size decreasing for a while, the other one has an effect to your moving.
             Be quick! Smaller cells will disappear quickly, and completing the level will become almost impossible.
-            In this case, orange objects come in handy...
-            </TextBlock>
-            <TextBlock TextWrapping="Wrap" Width="742" Height="59">
-            If you want to move your cell into a direction, you have to tap the screen in the line of direction you want to move your cell, but on the opposite side of it.
-        </TextBlock>
-        </StackPanel>
+            In this case, orange (rage) objects come in handy...
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" >
+                    <Bold>Moving:<LineBreak/></Bold>
+            If you want to move your cell into a direction, you have to tap the screen in the line of direction you want to move on the opposite side of your cell.
+                </TextBlock>
+            </StackPanel>
+        </Border>
+           
+        
     </Grid>
 
 </phone:PhoneApplicationPage>
