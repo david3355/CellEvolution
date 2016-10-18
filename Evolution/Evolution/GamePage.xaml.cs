@@ -176,7 +176,7 @@ namespace Evolution
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            TouchPanel.EnabledGestures = GestureType.Flick /*| GestureType.Tap | GestureType.DoubleTap*/;
+            TouchPanel.EnabledGestures = GestureType.Flick /*| GestureType.Hold | GestureType.Tap | GestureType.DoubleTap*/;
 
             // Set the sharing mode of the graphics device to turn on XNA rendering
             SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(true);
@@ -290,10 +290,18 @@ namespace Evolution
             t_rageOn += 1;
         }
 
+        private void StopTimers()
+        {
+            timer.Stop();
+            gt_game.Stop();
+        }
+
+        /// <summary>
+        /// This method is invoked when the GamePage is not longer visible, when a user press Back, Home buttons, etc.
+        /// </summary>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            // Stop the timer
-            timer.Stop();
+            StopTimers();
 
             // Set the sharing mode of the graphics device to turn off XNA rendering
             SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(false);
@@ -308,7 +316,6 @@ namespace Evolution
         /// </summary>
         private void OnUpdate(object sender, GameTimerEventArgs e)
         {
-            // TODO: Add your update logic here
             HandleTouches();
             UpdateObjects();
             IsLevelEnd();
@@ -437,10 +444,7 @@ namespace Evolution
                 switch (gesture.GestureType)
                 {
                     case GestureType.Flick:
-                    Debug.WriteLine("HOLD " + DateTime.Now.Second);
                     return MAX_BOOST;
-                    //case GestureType.DoubleTap:
-                    //return 1.1f;
                 }
             }
             return 0.0f;

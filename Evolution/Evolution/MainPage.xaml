@@ -42,7 +42,7 @@
             </StackPanel>
 
 
-            <StackPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" Tap="Button_Click"   >
+            <StackPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" Tap="Button_Click" Margin="0, 20, 0, 0"  >
                 <Image Name="img_start" Source="Img/player.png" Width="250" Height="250"></Image>
                 <TextBlock FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="60" Foreground="#FFD10000">Start</TextBlock>
             </StackPanel>
