@@ -140,13 +140,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BGMusic.mp3">
-      <Name>BGMusic</Name>
-      <Importer>Mp3Importer</Importer>
-      <Processor>SongProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="rage.png">
       <Name>rage</Name>
       <Importer>TextureImporter</Importer>
@@ -218,16 +211,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="backgrounds\bg3.jpg">
-      <Name>bg3</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="backgrounds\bg4.jpg">
-      <Name>bg4</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="backgrounds\bg5.jpg">
       <Name>bg5</Name>
       <Importer>TextureImporter</Importer>
@@ -259,6 +242,25 @@
       <Name>bg1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="backgrounds\bg3.jpg">
+      <Name>bg3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="backgrounds\bg4.jpg">
+      <Name>bg4</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BGMusic.mp3">
+      <Name>BGMusic</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

@@ -81,7 +81,7 @@
     <Compile Include="Name.xaml.cs">
       <DependentUpon>Name.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Objects.cs" />
+    <Compile Include="src\Cell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
@@ -89,7 +89,15 @@
     <Compile Include="Settings.xaml.cs">
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utility.cs" />
+    <Compile Include="src\AntiMatter.cs" />
+    <Compile Include="src\IntelligentEnemy.cs" />
+    <Compile Include="src\Infection.cs" />
+    <Compile Include="src\SizeDecrease.cs" />
+    <Compile Include="src\InverseMoving.cs" />
+    <Compile Include="src\Rage.cs" />
+    <Compile Include="src\Enemy.cs" />
+    <Compile Include="src\Player.cs" />
+    <Compile Include="src\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

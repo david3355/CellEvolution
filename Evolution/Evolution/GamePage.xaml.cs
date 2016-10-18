@@ -65,7 +65,7 @@ namespace Evolution
         public static float musicVolume = 1f, effectsVolume = 0.4f;
         public static string playerName;
 
-        List<Objects> objects;
+        List<Cell> objects;
         int level, score;
 
         Random rnd = new Random();
@@ -107,7 +107,7 @@ namespace Evolution
             Vector2 center = new Vector2(400, 240);
             player = new Player(this, tx_player, center, velocity, 10);
             //all other objects:
-            objects = new List<Objects>();
+            objects = new List<Cell>();
             AddObjects(new Enemy(), tx_enemy_smaller, n_enemy * 2, 10, GetRanVelocity(speed));
             AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -30, GetRanVelocity(speed));
             AddObjects(new IntelligentEnemy(), tx_enemy_smaller, n_intellienemy * 2, 10, GetRanVelocity(speed));
@@ -119,7 +119,7 @@ namespace Evolution
             gt_sdi.Stop(); t_sdi = 0; // az új pálya kezdésekor nem lehet infection
         }
         // E metódus segítségébel az objektumokat szignatúra alapján, univerzálisan tudjuk hozzáadni a listához
-        void AddObjects(Objects obj, Texture2D texture, int number, int maxRad, Vector2 velocity)
+        void AddObjects(Cell obj, Texture2D texture, int number, int maxRad, Vector2 velocity)
         {
             float ran, X, Y, dist = 100;
             for (int i = 0; i < number; i++)
@@ -345,7 +345,7 @@ namespace Evolution
             if (t_game > 0 && t_game % rageCycle == rageDuration && rageObject)
             {
                 rageObject = false;
-                foreach (Objects obj in objects) if (obj is Rage) { objects.Remove(obj); break; }
+                foreach (Cell obj in objects) if (obj is Rage) { objects.Remove(obj); break; }
             }
         }
 
@@ -360,7 +360,7 @@ namespace Evolution
             if (!twoTouches && terminated == 0) // Amíg nincs double tap és a játékos él, addig kirajzoljuk az objektumokat és az adatokat.
             {
                 if (player.R > 0) player.Draw(spriteBatch);
-                foreach (Objects en in objects) en.Draw(spriteBatch);
+                foreach (Cell en in objects) en.Draw(spriteBatch);
                 spriteBatch.DrawString(sf, "Level " + level, new Vector2(10, 10), Color.White);
                 spriteBatch.DrawString(sf, "Score: " + score, new Vector2(10, 30), Color.White);
             }
@@ -467,13 +467,13 @@ namespace Evolution
                 player.ChangeTexture(tx_player);
             }
 
-            foreach (Objects e in objects)
+            foreach (Cell e in objects)
             {
                 if (e is Enemy && e.R < player.R) e.ChangeTexture(tx_enemy_smaller);
                 else if (e is Enemy && e.R >= player.R) e.ChangeTexture(tx_enemy_bigger);
             }
             player.Update();
-            foreach (Objects e in objects)
+            foreach (Cell e in objects)
             {
                 if (e is IntelligentEnemy) (e as IntelligentEnemy).ChangeVelocity(objects, player, speed);
                 e.Update();
@@ -482,7 +482,7 @@ namespace Evolution
             if (player.R <= 0 && terminated == 0 && !levelEnd) terminated = 1;
         }
 
-        void CollosionTest(Objects b1, Objects b2)
+        void CollosionTest(Cell b1, Cell b2)
         {
             float x, k;
             double d; // Distance
@@ -563,11 +563,6 @@ namespace Evolution
                 t_se = 0;
                 gtse.Stop();
             }
-        }
-
-        void UnStuck(Objects obj) // Itt azt vizsgáljuk, hogy ha a megváltozott objektum kilóg, akkor annyival mozgatjuk el a képernyő felé
-        {
-
         }
 
         void CollosionObjects()

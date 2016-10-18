@@ -17,7 +17,7 @@ namespace Evolution
         /// <summary>
         /// Returns the distance of the ORIGO of two objects
         /// </summary>
-        public static double DistanceOrigo(Objects Object1, Objects Object2)
+        public static double DistanceOrigo(Cell Object1, Cell Object2)
         {
             return Distance(Object1.Origo, Object2.Origo);
         }
@@ -25,7 +25,7 @@ namespace Evolution
         /// <summary>
         /// Returns the distance of the EDGE of two objects
         /// </summary>
-        public static double DistanceEdge(Objects Object1, Objects Object2)
+        public static double DistanceEdge(Cell Object1, Cell Object2)
         {
             return DistanceOrigo(Object1, Object2) - (Object1.R + Object2.R);
         }
