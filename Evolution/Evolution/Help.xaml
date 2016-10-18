@@ -25,9 +25,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Margin="15" FontFamily="Comic Sans MS"  FontSize="22" HorizontalAlignment="Center" >Written and designed by Jäger.</TextBlock>
+        <TextBlock Grid.Row="0" Margin="10" FontFamily="Comic Sans MS"  FontSize="22" HorizontalAlignment="Center" >Written and designed by Jäger.</TextBlock>
 
-        <Border Grid.Row="1" BorderThickness="6"  CornerRadius="25" Margin="10">
+        <Border Grid.Row="1" BorderThickness="6"  CornerRadius="25" Margin="10, 5, 10, 10">
             <Border.BorderBrush>
                 <SolidColorBrush Color="#FF006F00" />
             </Border.BorderBrush>
@@ -35,17 +35,17 @@
                 <SolidColorBrush Color="#FF006F00" Opacity="0.5"/>
             </Border.Background>
             <StackPanel VerticalAlignment="Center" Height="Auto" Margin="15" >
-                <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap"  VerticalAlignment="Center" Height="Auto">Your goal in this game is to become the greatest of all life forms!
+                <TextBlock FontSize="19" HorizontalAlignment="Center" TextWrapping="Wrap"  VerticalAlignment="Center" Height="Auto">Your goal in this game is to become the greatest of all life forms!
                 Green cells are smaller than you, so you can consume them, increasing your size, and score. Red cells are bigger than you. Watch out, they consume you if you get close to them!
-                There are two kinds of enemies: the ordinary ones are moving into only one direction. The intelligent ones are following smaller enemies to consume them, or flee from the bigger ones.
+                There are two kinds of enemies: the ordinary ones are moving into only one direction. The intelligent ones are following smaller cells to consume them, or flee from the bigger ones.
                 Black-purple objects are antimatters, contact leads to decrease both objects's size. There are also two kinds of infection: one with the
                 lightning emblem cause size decreasing for a while, the other one has an effect to your moving.
             Be quick! Smaller cells will disappear quickly, and completing the level will become almost impossible.
-            In this case, orange (rage) objects come in handy...
+            In this case, orange (rage) objects come in handy. With rage on, you can consume bigger cells.
                 </TextBlock>
-                <TextBlock TextWrapping="Wrap" >
+                <TextBlock FontSize="19" TextWrapping="Wrap" >
                     <Bold>Moving:<LineBreak/></Bold>
-            If you want to move your cell into a direction, you have to tap the screen in the line of direction you want to move on the opposite side of your cell.
+            If you want to move your cell into a direction, you have to tap the screen in the line of direction you want to move on the opposite side of your cell. Perform a flick gesture to boost your speed. This may come in handy when your cell is close to the edge.
                 </TextBlock>
             </StackPanel>
         </Border>
