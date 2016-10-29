@@ -33,17 +33,24 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10" Orientation="Horizontal" >
-                <TextBlock FontFamily="Comic Sans MS" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">EV</TextBlock>
-                <Image Width="45" Source="Img/enemy_smaller.png"></Image>
-                <TextBlock FontFamily="Comic Sans MS" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">LUTI</TextBlock>
-                <Image Width="45" Source="Img/enemy_smaller.png"></Image>
-                <TextBlock FontFamily="Comic Sans MS" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">N</TextBlock>
-            </StackPanel>
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"   FontFamily="Segoe WP" FontSize="40"  Foreground="#FF27C100" FontWeight="Bold">Cell</TextBlock>
+                <StackPanel Grid.Row="1" Margin="25, -22, 0,0"  Orientation="Horizontal" >
+                    <TextBlock FontFamily="Segoe WP" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">EV</TextBlock>
+                    <Image Width="42" Source="Img/enemy_smaller.png"></Image>
+                    <TextBlock FontFamily="Segoe WP" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">LUTI</TextBlock>
+                    <Image Width="42" Source="Img/enemy_smaller.png"></Image>
+                    <TextBlock FontFamily="Segoe WP" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">N</TextBlock>
+                </StackPanel>
+            </Grid>
 
 
-            <StackPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" Tap="Button_Click" Margin="0, 20, 0, 0"  >
-                <Image Name="img_start" Source="Img/player.png" Width="250" Height="250"></Image>
+            <StackPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" Tap="Button_Click" Margin="0, 10, 0, 0"  >
+                <Image Name="img_start" Source="Img/player.png" Width="240" Height="240"></Image>
                 <TextBlock FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="60" Foreground="#FFD10000">Start</TextBlock>
             </StackPanel>
 
