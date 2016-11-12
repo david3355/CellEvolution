@@ -145,6 +145,8 @@
     <Resource Include="Img\enemy_smaller.png" />
     <Resource Include="Background.png" />
     <Resource Include="SmalMobileAppTile.png" />
+    <Resource Include="apptile173x173.png" />
+    <Resource Include="apptile99x99.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
