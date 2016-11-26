@@ -46,6 +46,8 @@ namespace Evolution
         Texture2D tx_player;
         Texture2D tx_enemy_smaller;
         Texture2D tx_enemy_bigger;
+        Texture2D tx_intellienemy_smaller;
+        Texture2D tx_intellienemy_bigger;
         Texture2D tx_antimatter;
         Texture2D tx_sdinf;
         Texture2D tx_iminf;
@@ -88,13 +90,13 @@ namespace Evolution
             n_enemy += 1;
             n_intellienemy += 1;
             n_antim += 1;
-            n_inf += 1;
+            if (level % 2 == 0) n_inf += 1;
             t_game = 0;
             Initialize();
         }
 
         void Initialize()
-        {         
+        {
             levelEnd = false;
             canTwoTouch = false;
             twoTouches = false;
@@ -110,8 +112,8 @@ namespace Evolution
             objects = new List<Cell>();
             AddObjects(new Enemy(), tx_enemy_smaller, n_enemy * 2, 10, GetRanVelocity(speed));
             AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -30, GetRanVelocity(speed));
-            AddObjects(new IntelligentEnemy(), tx_enemy_smaller, n_intellienemy * 2, 10, GetRanVelocity(speed));
-            AddObjects(new IntelligentEnemy(), tx_enemy_bigger, n_intellienemy, -30, GetRanVelocity(speed));
+            AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy * 2, 10, GetRanVelocity(speed));
+            AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -30, GetRanVelocity(speed));
             AddObjects(new AntiMatter(), tx_antimatter, n_antim, 30, GetRanVelocity(speed));
             AddObjects(new SizeDecrease(), tx_sdinf, n_inf, 0, Vector2.Zero);
             AddObjects(new InverseMoving(), tx_iminf, n_inf, 0, Vector2.Zero);
@@ -149,7 +151,7 @@ namespace Evolution
 
         Vector2 GetRanVelocity(float speed)
         {
-            return new Vector2(rnd.Next(2) < 1 ? speed : -speed, rnd.Next(2) < 1 ? speed : -speed);
+            return new Vector2(rnd.Next(2) < 1 ? speed : -speed, rnd.Next(2) < 1 ? speed : -speed); // TODO: minden irányba random
         }
 
         public GamePage()
@@ -163,7 +165,7 @@ namespace Evolution
             timer = new GameTimer();
             timer.UpdateInterval = TimeSpan.FromTicks(333333);
             timer.Update += OnUpdate;
-            timer.Draw += OnDraw;            
+            timer.Draw += OnDraw;
         }
 
         private void LoadBackGrounds()
@@ -193,6 +195,8 @@ namespace Evolution
             tx_player = contentManager.Load<Texture2D>("player");
             tx_enemy_smaller = contentManager.Load<Texture2D>("enemy_smaller");
             tx_enemy_bigger = contentManager.Load<Texture2D>("enemy_bigger");
+            tx_intellienemy_smaller = contentManager.Load<Texture2D>("intellienemy_smaller");
+            tx_intellienemy_bigger = contentManager.Load<Texture2D>("intellienemy_bigger");
             tx_antimatter = contentManager.Load<Texture2D>("antimatter");
             tx_sdinf = contentManager.Load<Texture2D>("sizedecinf");
             tx_iminf = contentManager.Load<Texture2D>("inverseinf");
@@ -366,7 +370,7 @@ namespace Evolution
             }
             else if (!levelEnd && player.R <= 0)
             {
-                spriteBatch.DrawString(sfmgs, "You have been extinct", new Vector2(250, (int)this.ActualHeight / 2), Color.Red);
+                spriteBatch.DrawString(sfmgs, "You are extinct", new Vector2(250, (int)this.ActualHeight / 2), Color.Red);
             }
             if (levelEnd)
             {
@@ -469,8 +473,8 @@ namespace Evolution
 
             foreach (Cell e in objects)
             {
-                if (e is Enemy && e.R < player.R) e.ChangeTexture(tx_enemy_smaller);
-                else if (e is Enemy && e.R >= player.R) e.ChangeTexture(tx_enemy_bigger);
+                if (e is Enemy && e.R < player.R) e.ChangeTexture(e is IntelligentEnemy ? tx_intellienemy_smaller : tx_enemy_smaller);
+                else if (e is Enemy && e.R >= player.R) e.ChangeTexture(e is IntelligentEnemy ? tx_intellienemy_bigger : tx_enemy_bigger);
             }
             player.Update();
             foreach (Cell e in objects)
