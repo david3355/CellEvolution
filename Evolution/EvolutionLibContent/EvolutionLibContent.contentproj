@@ -269,6 +269,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="intellienemy_smaller.png">
       <Name>intellienemy_smaller</Name>
       <Importer>TextureImporter</Importer>

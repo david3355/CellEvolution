@@ -123,30 +123,62 @@ namespace Evolution
         // E metódus segítségébel az objektumokat szignatúra alapján, univerzálisan tudjuk hozzáadni a listához
         void AddObjects(Cell obj, Texture2D texture, int number, int maxRad, Vector2 velocity)
         {
-            float ran, X, Y, dist = 100;
+            float radius;
+            Vector2 position;
             for (int i = 0; i < number; i++)
             {
-                X = rnd.Next(50, 750);
-                Y = rnd.Next(50, 430);
-                // ezeken majd még javítani kell, hogy univerzális legyen:
-                //X = rnd.Next(maxRad * 2, (int)this.ActualHeight - maxRad * 2);
-                //Y = rnd.Next(maxRad * 2, (int)this.ActualWidth - maxRad * 2);
-                if (X < player.Origo.X + dist && X > player.Origo.X - dist && Y < player.Origo.Y + dist && Y > player.Origo.Y - dist) // távolságot kell, hogy hagyjunk a player és az új objektumok között
-                {
-                    i--;
-                    continue;
-                }
-                if (maxRad == 0) ran = 13; // az infection-ök mérete rögzített
-                else if (maxRad < 0) ran = rnd.Next((int)player.R, Math.Abs(maxRad)); // ha nagyobb ellenséget adunk hozzá, tudnunk kell róla, így csak a player sugara és maxRad között generálhatunk számokat
-                else ran = rnd.Next(3, maxRad);
+                position = GetRandomPositionAroundPlayer();
+                if (maxRad == 0) radius = 13; // az infection-ök mérete rögzített
+                else if (maxRad < 0) radius = rnd.Next((int)player.R, Math.Abs(maxRad)); // ha nagyobb ellenséget adunk hozzá, tudnunk kell róla, így csak a player sugara és maxRad között generálhatunk számokat
+                else radius = rnd.Next(5, maxRad);
                 if (obj is IntelligentEnemy) obj = new IntelligentEnemy();  // TODO: ezen szépíteni kéne
                 else if (obj is Enemy) obj = new Enemy();
                 else if (obj is AntiMatter) obj = new AntiMatter();
                 else if (obj is SizeDecrease) obj = new SizeDecrease();
                 else if (obj is InverseMoving) obj = new InverseMoving();
-                obj.SetAttributes(this, texture, new Vector2(X, Y), velocity, ran);
+                obj.SetAttributes(this, texture, position, velocity, radius);
                 objects.Add(obj);
             }
+        }
+
+        void AddSmallerEnemyToBalance(GameObjectCount Count)
+        {
+            Cell enemy;
+            Texture2D texture;
+            if (rnd.Next(0, 3) < 1)
+            {
+                enemy = new Enemy();
+                texture = tx_enemy_smaller;
+            }
+            else
+            {
+                enemy = new IntelligentEnemy();
+                texture = tx_intellienemy_smaller;
+            }
+            Vector2 position = GetRandomPositionAroundPlayer();
+            float radius;
+            if(player.R < 2) radius = player.R - 0.1f;
+            else if(player.R < 5) radius = rnd.Next(3, (int)player.R);
+            else if(player.R > 20) radius = rnd.Next(20, (int)player.R);
+            else radius = rnd.Next((int)player.R - 5, (int)player.R);
+            enemy.SetAttributes(this, texture, position, GetRanVelocity(speed), radius);
+            objects.Add(enemy);
+        }
+
+        Vector2 GetRandomPositionAroundPlayer()
+        {
+            float dist = 100;
+            float X, Y;
+            // ezeken majd még javítani kell, hogy univerzális legyen:
+            //X = rnd.Next(maxRad * 2, (int)this.ActualHeight - maxRad * 2);
+            //Y = rnd.Next(maxRad * 2, (int)this.ActualWidth - maxRad * 2);
+            do
+            {
+                X = rnd.Next(50, 750);
+                Y = rnd.Next(50, 430);
+            }
+            while (X < player.Origo.X + dist && X > player.Origo.X - dist && Y < player.Origo.Y + dist && Y > player.Origo.Y - dist); // távolságot kell, hogy hagyjunk a player és az új objektumok között
+            return new Vector2(X, Y);
         }
 
         Vector2 GetRanVelocity(float speed)
@@ -212,7 +244,7 @@ namespace Evolution
             n_enemy = 4;
             n_intellienemy = 6;
             n_antim = 10;
-            rageCycle = 20;
+            rageCycle = 60;
             rageDuration = 6;
             n_inf = 3;
             speed = 0.1f;
@@ -287,6 +319,7 @@ namespace Evolution
         void gt_game_Update(object sender, GameTimerEventArgs e)
         {
             t_game += 1;
+            BalanceEnemies();
         }
 
         void gt_rageOn_Update(object sender, GameTimerEventArgs e)
@@ -351,6 +384,44 @@ namespace Evolution
                 rageObject = false;
                 foreach (Cell obj in objects) if (obj is Rage) { objects.Remove(obj); break; }
             }
+        }
+
+        private void BalanceEnemies()
+        {
+            int ratio = 3;
+            int maxSmallerEnemies = 30;
+            GameObjectCount count = CountObjects();
+            if (count.SmallerEnemies < count.GreaterEnemies * ratio && count.SmallerEnemies < maxSmallerEnemies)
+                AddSmallerEnemyToBalance(count);
+        }
+
+        class GameObjectCount
+        {
+            public GameObjectCount()
+            {
+                GreaterEnemies = 0;
+                SmallerEnemies = 0;
+                AllEnemies = 0;
+            }
+
+            public int GreaterEnemies { get; set; }
+            public int SmallerEnemies { get; set; }
+            public int AllEnemies { get; set; }
+        }
+
+        private GameObjectCount CountObjects()
+        {
+            GameObjectCount count = new GameObjectCount();
+            foreach (Cell gameobject in objects)
+            {
+                if (gameobject is Enemy)
+                {
+                    count.AllEnemies++;
+                    if (gameobject.R < player.R) count.SmallerEnemies++;
+                    else count.GreaterEnemies++;
+                }
+            }
+            return count;
         }
 
         /// <summary>
@@ -603,7 +674,6 @@ namespace Evolution
                 e.Cancel = true;
             }
         }
-
 
     }
 

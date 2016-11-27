@@ -37,11 +37,10 @@
             <StackPanel VerticalAlignment="Center" Height="Auto" Margin="15" >
                 <TextBlock FontSize="19" HorizontalAlignment="Center" TextWrapping="Wrap"  VerticalAlignment="Center" Height="Auto">Your goal in this game is to become the greatest of all life forms!
                 Green cells are smaller than you, so you can consume them, increasing your size, and score. Red cells are bigger than you. Watch out, they consume you if you get close to them!
-                There are two kinds of enemies: the ordinary ones are moving into only one direction. The intelligent ones are following smaller cells to consume them, or flee from the bigger ones.
+                There are two kinds of enemies: the ordinary ones are moving into only one direction. The intelligent ones (with blue core) are following smaller cells to consume them, or flee from the bigger ones. 
                 Black-purple objects are antimatters, contact leads to decrease both objects's size. There are also two kinds of infection: one with the
                 lightning emblem cause size decreasing for a while, the other one has an effect to your moving.
-            Be quick! Smaller cells will disappear quickly, and completing the level will become almost impossible.
-            In this case, orange (rage) objects come in handy. With rage on, you can consume bigger cells.
+            Occasionally, orange (rage) objects appears, catching this causes rage effect on player. With rage on, you can consume bigger cells.
                 </TextBlock>
                 <TextBlock FontSize="19" TextWrapping="Wrap" >
                     <Bold>Moving:<LineBreak/></Bold>
