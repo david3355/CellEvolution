@@ -24,6 +24,41 @@ namespace Evolution
         public Help()
         {
             InitializeComponent();
+        }        
+
+        private void btn_help1_back_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.GoBack();
+        }
+
+        private void btn_help1_next_Click(object sender, RoutedEventArgs e)
+        {
+            Help1.Visibility = Visibility.Collapsed;
+            Help2.Visibility = Visibility.Visible;
+        }
+
+        private void btn_help2_back_Click(object sender, RoutedEventArgs e)
+        {
+            Help2.Visibility = Visibility.Collapsed;
+            Help1.Visibility = Visibility.Visible;
+        }
+
+        private void btn_help2_next_Click(object sender, RoutedEventArgs e)
+        {
+            Help2.Visibility = Visibility.Collapsed;
+            Help3.Visibility = Visibility.Visible;
+        }
+
+        private void btn_help3_back_Click(object sender, RoutedEventArgs e)
+        {
+            Help3.Visibility = Visibility.Collapsed;
+            Help2.Visibility = Visibility.Visible;
+        }
+
+        private void btn_help3_okay_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: check if game is started, if so, go to gamepage
+            NavigationService.GoBack();
         }
     }
 }

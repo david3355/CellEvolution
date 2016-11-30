@@ -147,6 +147,12 @@
     <Resource Include="SmalMobileAppTile.png" />
     <Resource Include="apptile173x173.png" />
     <Resource Include="apptile99x99.png" />
+    <Resource Include="Images\antimatter.png" />
+    <Resource Include="Images\intellienemy_bigger.png" />
+    <Resource Include="Images\intellienemy_smaller.png" />
+    <Resource Include="Images\inverseinf.png" />
+    <Resource Include="Images\rage.png" />
+    <Resource Include="Images\sizedecinf.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>

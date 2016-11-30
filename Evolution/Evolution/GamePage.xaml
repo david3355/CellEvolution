@@ -12,7 +12,13 @@
     SupportedOrientations="Landscape" Orientation="Landscape"
     mc:Ignorable="d" d:DesignHeight="480" d:DesignWidth="800"
     shell:SystemTray.IsVisible="False" BackKeyPress="PhoneApplicationPage_BackKeyPress">
-    
+
     <!--No XAML content is required as the page is rendered entirely with the XNA Framework-->
-    
+
+    <!--Sample code showing usage of ApplicationBar-->
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="False" IsMenuEnabled="False" >
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
 </phone:PhoneApplicationPage>
