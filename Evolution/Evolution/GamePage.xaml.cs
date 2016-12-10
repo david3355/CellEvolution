@@ -84,15 +84,27 @@ namespace Evolution
 
         void NewLevel()
         {
-            NewBackground();
             level += 1;
-            speed += 0.15f;
-            n_enemy += 1;
-            n_intellienemy += 1;
-            n_antim += 1;
-            if (level % 2 == 0) n_inf += 1;
+            SetLevel(level);
+        }
+
+        void SetLevel(int Level)
+        {
+            SetBackground();
+            speed = 0.1f + level * 0.13f;
+            n_enemy = 4 + level / 3;
+            n_intellienemy = 6 + level / 2;
+            n_antim = 10 + level / 3;
+            n_inf = 3 + level / 4;
             t_game = 0;
             Initialize();
+        }
+
+        private void SetBackground()
+        {
+            actualBackgroundIndex = level - 1;
+            if (actualBackgroundIndex >= backgrounds.Count - 1) actualBackgroundIndex = backgrounds.Count - 1;
+            tx_bG = backgrounds[actualBackgroundIndex];
         }
 
         void Initialize()
@@ -110,6 +122,7 @@ namespace Evolution
             int playerStartRadius = 10;
             player = new Player(this, tx_player, center, velocity, 10);
             //all other objects:
+            if (objects != null && objects.Count > 0) objects.Clear();
             objects = new List<Cell>();
             AddObjects(new Enemy(), tx_enemy_smaller, n_enemy * 2, playerStartRadius, GetRanVelocity(speed));
             AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -30, GetRanVelocity(speed));
@@ -273,7 +286,9 @@ namespace Evolution
             gt_game.Start();
 
             SharedGraphicsDeviceManager.Current.GraphicsDevice.Clear(Color.White);
-            NewLevel();
+            int lastLevel = int.Parse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.LastLevel));
+            level = lastLevel;
+            SetLevel(lastLevel);
 
             if (Settings.stopMusic)
             {
@@ -291,15 +306,6 @@ namespace Evolution
             timer.Start();
 
             base.OnNavigatedTo(e);
-        }
-
-        private void NewBackground()
-        {
-            if (actualBackgroundIndex < backgrounds.Count - 1)
-            {
-                actualBackgroundIndex++;
-                tx_bG = backgrounds[actualBackgroundIndex];
-            }
         }
 
         void gt_imi_Update(object sender, GameTimerEventArgs e)
@@ -369,9 +375,14 @@ namespace Evolution
                 objects.Clear();
                 gt_game.Stop();
                 terminated = -1;
+                // configmanager.WriteConfig(ConfigKeys.LastLevel, "1");    Ez majd beállítástól függ (Survival mode)
             }
             if (levelEnd && !canTwoTouch) canTwoTouch = true;
-            if (levelEnd) HighScores.SetMaxLevel(level);
+            if (levelEnd)
+            {
+                HighScores.SetMaxLevel(level);
+                HighScores.SetLastLevel(level + 1);
+            }
 
             if (levelEnd && twoTouches) NewLevel();
             if (t_game > 0 && t_game % rageCycle == 0 && !rageObject)

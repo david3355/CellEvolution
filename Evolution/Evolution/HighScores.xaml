@@ -17,7 +17,7 @@
         <Grid.Background>
             <ImageBrush ImageSource="Img/cells.jpg" Opacity="0.5" />
         </Grid.Background>
-        <Border BorderThickness="6" Margin="230,170" CornerRadius="25">
+        <Border BorderThickness="6" Margin="180,140" CornerRadius="25">
             <Border.BorderBrush>
                 <SolidColorBrush Color="#FF006F00" />
             </Border.BorderBrush>
@@ -26,18 +26,21 @@
             </Border.Background>
             <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150"/>
-                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="140"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" Grid.Column="0" Grid.Row="0">Level:</TextBlock>
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" Grid.Column="0" Grid.Row="1">Score:</TextBlock>
-                <TextBlock Name="txt_hl" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="#FFD41616"  Grid.Column="1"  Grid.Row="0" Text="{Binding}"></TextBlock>
-                <TextBlock Name="txt_hs" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="#FFD41616" Grid.Column="1" Grid.Row="1"></TextBlock>
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="35" Grid.Column="0" Grid.Row="0" FontWeight="Medium">Highest Level:</TextBlock>
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="35" Grid.Column="0" Grid.Row="1" FontWeight="Medium" >Highest Score:</TextBlock>
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="40" Grid.Column="0" Grid.Row="2" Margin="0, 20,0,0" Foreground="#FF80A9FF"  FontWeight="Black">Last level:</TextBlock>
+                <TextBlock Name="txt_hl" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="#FFD41616"  Grid.Column="1"  Grid.Row="0" Text="{Binding}"></TextBlock>
+                <TextBlock Name="txt_hs" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="#FFD41616" Grid.Column="1" Grid.Row="1"></TextBlock>
+                <TextBlock Name="txt_lastlevel" HorizontalAlignment="Right" VerticalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="#FF80A9FF" Grid.Column="1" Grid.Row="2"></TextBlock>
             </Grid>
         </Border>
     </Grid>

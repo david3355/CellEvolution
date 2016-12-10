@@ -26,12 +26,15 @@ namespace Evolution
             InitializeComponent();
             int.TryParse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.HighScore), out hScore);
             int.TryParse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.MaxLevel), out hLevel);
+            int.TryParse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.LastLevel), out lastLevel);
             txt_hl.Text = hLevel.ToString();
             txt_hs.Text = hScore.ToString();
+            txt_lastlevel.Text = lastLevel.ToString();
         }
 
         private static int hScore = 0;
         private static int hLevel = 0;
+        private static int lastLevel = 1;
 
         public static void SetHighScore(int Value)
         {
@@ -48,6 +51,15 @@ namespace Evolution
             {
                 hLevel = Value;
                 ConfigManager.GetInstance.WriteConfig(ConfigKeys.MaxLevel, Value.ToString());
+            }
+        }
+
+        public static void SetLastLevel(int Value)
+        {
+            if (Value > lastLevel)
+            {
+                lastLevel = Value;
+                ConfigManager.GetInstance.WriteConfig(ConfigKeys.LastLevel, Value.ToString());
             }
         }
 
