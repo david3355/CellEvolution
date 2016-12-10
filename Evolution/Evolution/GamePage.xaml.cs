@@ -66,6 +66,7 @@ namespace Evolution
         float speed;
         public static float musicVolume = 1f, effectsVolume = 0.4f;
         public static string playerName;
+        double smallObjectInfectTreshold;
 
         List<Cell> objects;
         int level, score;
@@ -92,8 +93,8 @@ namespace Evolution
         {
             SetBackground();
             speed = 0.1f + level * 0.13f;
-            n_enemy = 4 + level / 3;
-            n_intellienemy = 6 + level / 2;
+            n_enemy = 4 + level / 2;
+            n_intellienemy = 6 + level;
             n_antim = 10 + level / 3;
             n_inf = 3 + level / 4;
             t_game = 0;
@@ -172,7 +173,7 @@ namespace Evolution
             Vector2 position = GetRandomPositionAroundPlayer();
             float radius;
             if (player.R <= 0.2) return;
-            if(player.R <= 2) radius = player.R - 0.1f;
+            if (player.R <= 2) radius = player.R - 0.1f;
             else radius = Utility.RandomDouble(player.R / 2, player.R - 0.1);
             enemy.SetAttributes(this, texture, position, GetRanVelocity(speed), radius);
             objects.Add(enemy);
@@ -223,7 +224,7 @@ namespace Evolution
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(MainPage.startedWithTutorial) NavigationService.RemoveBackEntry();
+            if (MainPage.startedWithTutorial) NavigationService.RemoveBackEntry();
             TouchPanel.EnabledGestures = GestureType.Flick /*| GestureType.Hold | GestureType.Tap | GestureType.DoubleTap*/;
 
             // Set the sharing mode of the graphics device to turn on XNA rendering
@@ -264,11 +265,12 @@ namespace Evolution
             speed = 0.1f;
             level = 0;
             score = 0;
+            smallObjectInfectTreshold = 2.5;
             gt_sdi = new GameTimer();
-            gt_sdi.UpdateInterval = new TimeSpan(0, 0, 1);
+            gt_sdi.UpdateInterval = TimeSpan.FromSeconds(1);
             gt_sdi.Update += gt_imi_Update;
             gt_imi = new GameTimer();
-            gt_imi.UpdateInterval = new TimeSpan(0, 0, 1);
+            gt_imi.UpdateInterval = TimeSpan.FromSeconds(1);
             gt_imi.Update += gt_sdi_Update;
             gtse = new GameTimer();
             gtse.UpdateInterval = TimeSpan.FromMilliseconds(1);
@@ -327,6 +329,7 @@ namespace Evolution
         {
             t_game += 1;
             BalanceEnemies();
+            SlowlyKillTinyObjects();
         }
 
         void gt_rageOn_Update(object sender, GameTimerEventArgs e)
@@ -405,6 +408,21 @@ namespace Evolution
             GameObjectCount count = CountObjects();
             if (terminated == 0 && !levelEnd && count.SmallerEnemies < count.GreaterEnemies * ratio && count.SmallerEnemies < maxSmallerEnemies)
                 AddSmallerEnemyToBalance(count);
+        }
+
+        private void SlowlyKillTinyObjects()
+        {
+            float sizeDecrease = 0.3f;
+            Cell obj;
+            for (int i = objects.Count - 1; i >= 0; i--)
+            {
+                obj = objects[i];
+                if (obj is Enemy)
+                {
+                    if (obj.R < smallObjectInfectTreshold) obj.R -= sizeDecrease;
+                    if (obj.R <= 0) objects.RemoveAt(i);
+                }
+            }
         }
 
         class GameObjectCount
