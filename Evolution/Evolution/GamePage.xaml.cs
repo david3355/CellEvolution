@@ -40,7 +40,7 @@ namespace Evolution
 
         ContentManager contentManager;  // A tartalmak betöltéséhez szükséges
         GameTimer timer;
-        SpriteBatch spriteBatch; // A rajzolásért/megjelenítésért felelős grafikai objektum
+        SpriteBatch spriteBatch; // A rajzolásért/megjelenítésért felelős grafikai objektum        
 
         Player player;
         Texture2D tx_player;
@@ -107,12 +107,13 @@ namespace Evolution
             //player:
             Vector2 velocity = Vector2.Zero;
             Vector2 center = new Vector2(400, 240);
+            int playerStartRadius = 10;
             player = new Player(this, tx_player, center, velocity, 10);
             //all other objects:
             objects = new List<Cell>();
-            AddObjects(new Enemy(), tx_enemy_smaller, n_enemy * 2, 10, GetRanVelocity(speed));
+            AddObjects(new Enemy(), tx_enemy_smaller, n_enemy * 2, playerStartRadius, GetRanVelocity(speed));
             AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -30, GetRanVelocity(speed));
-            AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy * 2, 10, GetRanVelocity(speed));
+            AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy * 2, playerStartRadius, GetRanVelocity(speed));
             AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -30, GetRanVelocity(speed));
             AddObjects(new AntiMatter(), tx_antimatter, n_antim, 30, GetRanVelocity(speed));
             AddObjects(new SizeDecrease(), tx_sdinf, n_inf, 0, Vector2.Zero);
@@ -129,8 +130,8 @@ namespace Evolution
             {
                 position = GetRandomPositionAroundPlayer();
                 if (maxRad == 0) radius = 13; // az infection-ök mérete rögzített
-                else if (maxRad < 0) radius = rnd.Next((int)player.R, Math.Abs(maxRad)); // ha nagyobb ellenséget adunk hozzá, tudnunk kell róla, így csak a player sugara és maxRad között generálhatunk számokat
-                else radius = rnd.Next(5, maxRad);
+                else if (maxRad < 0) radius = Utility.RandomDouble(player.R + 0.1, Math.Abs(maxRad)); // ha nagyobb ellenséget adunk hozzá, tudnunk kell róla, így csak a player sugara és maxRad között generálhatunk számokat
+                else radius = Utility.RandomDouble(5, maxRad);
                 if (obj is IntelligentEnemy) obj = new IntelligentEnemy();  // TODO: ezen szépíteni kéne
                 else if (obj is Enemy) obj = new Enemy();
                 else if (obj is AntiMatter) obj = new AntiMatter();
@@ -157,10 +158,9 @@ namespace Evolution
             }
             Vector2 position = GetRandomPositionAroundPlayer();
             float radius;
-            if(player.R < 2) radius = player.R - 0.1f;
-            else if(player.R < 5) radius = rnd.Next(3, (int)player.R);
-            else if(player.R > 20) radius = rnd.Next(20, (int)player.R);
-            else radius = rnd.Next((int)player.R - 5, (int)player.R);
+            if (player.R <= 0.2) return;
+            if(player.R <= 2) radius = player.R - 0.1f;
+            else radius = Utility.RandomDouble(player.R / 2, player.R - 0.1);
             enemy.SetAttributes(this, texture, position, GetRanVelocity(speed), radius);
             objects.Add(enemy);
         }
@@ -210,6 +210,7 @@ namespace Evolution
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if(MainPage.startedWithTutorial) NavigationService.RemoveBackEntry();
             TouchPanel.EnabledGestures = GestureType.Flick /*| GestureType.Hold | GestureType.Tap | GestureType.DoubleTap*/;
 
             // Set the sharing mode of the graphics device to turn on XNA rendering
@@ -370,7 +371,7 @@ namespace Evolution
                 terminated = -1;
             }
             if (levelEnd && !canTwoTouch) canTwoTouch = true;
-            if (levelEnd && HighScores.hLevel < level) HighScores.hLevel = level;
+            if (levelEnd) HighScores.SetMaxLevel(level);
 
             if (levelEnd && twoTouches) NewLevel();
             if (t_game > 0 && t_game % rageCycle == 0 && !rageObject)
@@ -391,7 +392,7 @@ namespace Evolution
             int ratio = 3;
             int maxSmallerEnemies = 30;
             GameObjectCount count = CountObjects();
-            if (count.SmallerEnemies < count.GreaterEnemies * ratio && count.SmallerEnemies < maxSmallerEnemies)
+            if (terminated == 0 && !levelEnd && count.SmallerEnemies < count.GreaterEnemies * ratio && count.SmallerEnemies < maxSmallerEnemies)
                 AddSmallerEnemyToBalance(count);
         }
 
@@ -441,7 +442,7 @@ namespace Evolution
             }
             else if (!levelEnd && player.R <= 0)
             {
-                spriteBatch.DrawString(sfmgs, "You are extinct", new Vector2(250, (int)this.ActualHeight / 2), Color.Red);
+                spriteBatch.DrawString(sfmgs, "You are extinct", new Vector2(300, (int)this.ActualHeight / 2), Color.Red);
             }
             if (levelEnd)
             {
@@ -622,7 +623,7 @@ namespace Evolution
             if (b1 is Player && !(b2 is AntiMatter) && b2.R <= 0)
             {
                 score += 10;
-                if (HighScores.hScore < score) HighScores.hScore = score;
+                HighScores.SetHighScore(score);
             }
         }
 
@@ -668,7 +669,7 @@ namespace Evolution
 
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!backKeyPressed)
+            if (!backKeyPressed && terminated == 0)
             {
                 backKeyPressed = true;
                 e.Cancel = true;

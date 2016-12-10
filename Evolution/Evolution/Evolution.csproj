@@ -90,6 +90,8 @@
       <DependentUpon>Settings.xaml</DependentUpon>
     </Compile>
     <Compile Include="src\AntiMatter.cs" />
+    <Compile Include="src\ConfigManager.cs" />
+    <Compile Include="src\FileManager.cs" />
     <Compile Include="src\IntelligentEnemy.cs" />
     <Compile Include="src\Infection.cs" />
     <Compile Include="src\SizeDecrease.cs" />

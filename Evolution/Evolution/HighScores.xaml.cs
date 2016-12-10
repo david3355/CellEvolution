@@ -24,11 +24,33 @@ namespace Evolution
         public HighScores()
         {
             InitializeComponent();
+            int.TryParse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.HighScore), out hScore);
+            int.TryParse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.MaxLevel), out hLevel);
             txt_hl.Text = hLevel.ToString();
             txt_hs.Text = hScore.ToString();
         }
 
-        public static int hScore = 0;
-        public static int hLevel = 0;
+        private static int hScore = 0;
+        private static int hLevel = 0;
+
+        public static void SetHighScore(int Value)
+        {
+            if (Value > hScore)
+            {
+                hScore = Value;
+                ConfigManager.GetInstance.WriteConfig(ConfigKeys.HighScore, Value.ToString());
+            }
+        }
+
+        public static void SetMaxLevel(int Value)
+        {
+            if (Value > hLevel)
+            {
+                hLevel = Value;
+                ConfigManager.GetInstance.WriteConfig(ConfigKeys.MaxLevel, Value.ToString());
+            }
+        }
+
+
     }
 }

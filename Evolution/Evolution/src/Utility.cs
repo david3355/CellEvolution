@@ -39,5 +39,10 @@ namespace Evolution
         }
 
         public static readonly Random Rnd = new Random();
+
+        public static float RandomDouble(double Minimum, double Maximum)
+        {
+            return (float)(Rnd.NextDouble() * (Maximum - Minimum) + Minimum);
+        }
     }
 }
