@@ -69,6 +69,9 @@
     <Compile Include="AppServiceProvider.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChooseGameMode.xaml.cs">
+      <DependentUpon>ChooseGameMode.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Help.xaml.cs">
       <DependentUpon>Help.xaml</DependentUpon>
     </Compile>
@@ -106,6 +109,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="ChooseGameMode.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Help.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -139,9 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Img\cells.jpg" />
-    <Resource Include="Img\gear.png" />
     <Resource Include="Img\trophy.png" />
-    <Resource Include="Img\help.png" />
     <Resource Include="Img\player.png" />
     <Resource Include="Img\enemy_bigger.png" />
     <Resource Include="Img\enemy_smaller.png" />
@@ -155,6 +160,8 @@
     <Resource Include="Images\inverseinf.png" />
     <Resource Include="Images\rage.png" />
     <Resource Include="Images\sizedecinf.png" />
+    <Resource Include="Img\settings.png" />
+    <Resource Include="Img\help.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>

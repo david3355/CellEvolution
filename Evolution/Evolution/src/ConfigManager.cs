@@ -13,7 +13,9 @@ using System.Text;
 
 namespace Evolution
 {
-    public enum ConfigKeys { MaxLevel, HighScore, ShowTutorial, LastLevel }
+    public enum ConfigKeys { MaxLevel, HighScore, ShowTutorial, LastLevel, GameMode, FirstStart }
+
+    public enum GameMode { Evolution, Survival }
 
     public class ConfigManager
     {
@@ -48,8 +50,20 @@ namespace Evolution
                 case ConfigKeys.HighScore: return "0";
                 case ConfigKeys.ShowTutorial: return "true";
                 case ConfigKeys.LastLevel: return "1";
+                case ConfigKeys.GameMode: return GameMode.Evolution.ToString();
+                case ConfigKeys.FirstStart: return "true";
                 default: return "0";
             }
+        }
+
+        private void CreateConfig()
+        {
+            SetDefaultConfig(ConfigKeys.HighScore);
+            SetDefaultConfig(ConfigKeys.MaxLevel);
+            SetDefaultConfig(ConfigKeys.ShowTutorial);
+            SetDefaultConfig(ConfigKeys.LastLevel);
+            SetDefaultConfig(ConfigKeys.GameMode);
+            SetDefaultConfig(ConfigKeys.FirstStart);
         }
 
         private void SetDefaultConfig(ConfigKeys Key)
@@ -70,14 +84,6 @@ namespace Evolution
                     WriteConfig(key, tags[1], true);
                 }
             }
-        }
-
-        private void CreateConfig()
-        {
-            SetDefaultConfig(ConfigKeys.HighScore);
-            SetDefaultConfig(ConfigKeys.MaxLevel);
-            SetDefaultConfig(ConfigKeys.ShowTutorial);
-            SetDefaultConfig(ConfigKeys.LastLevel);
         }
 
         public void WriteConfig(ConfigKeys ConfigKey, String Value, bool load = false)

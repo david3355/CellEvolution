@@ -18,14 +18,14 @@
         <Grid.Background>
             <ImageBrush ImageSource="Img/cells.jpg" Opacity="0.5" />
         </Grid.Background>
-        <Border BorderThickness="6" Margin="50,90,50,100" CornerRadius="25">
+        <Border BorderThickness="6" Margin="50,60,50,60" CornerRadius="25">
             <Border.BorderBrush>
                 <SolidColorBrush Color="#FF006F00" />
             </Border.BorderBrush>
             <Border.Background>
                 <SolidColorBrush Color="#FF006F00" Opacity="0.5"/>
             </Border.Background>
-            <Grid  Height="250" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid  Height="Auto" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="289"/>
                     <ColumnDefinition Width="311"/>
@@ -36,14 +36,20 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" Grid.Row="0" Grid.Column="0">Background music:</TextBlock>
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="32" Grid.Row="1" Grid.Column="0">Sound effects:</TextBlock>
+                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="32" Grid.Row="0" Grid.Column="0" Margin="0,0,10,0">Background music:</TextBlock>
+                <TextBlock HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="32" Grid.Row="1" Grid.Column="0" Margin="0,0,10,0">Sound effects:</TextBlock>
                 <Slider  Minimum="0" Maximum="100" Name="slideMusic" Grid.Row="0" Grid.Column="1" ValueChanged="slideMusic_ValueChanged" SmallChange="1" LargeChange="10"></Slider>
                 <Slider Minimum="0" Maximum="100" Name="slideSEffects" Grid.Row="1" Grid.Column="1"  ManipulationCompleted="slideSEffects_ManipulationCompleted" LargeChange="10" SmallChange="1"></Slider>
                 <TextBlock  Grid.Row="0" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding ElementName=slideMusic, Path=Value, StringFormat=N0}"></TextBlock>
                 <TextBlock  Grid.Row="1" Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{Binding ElementName=slideSEffects, Path=Value, StringFormat=N0}"></TextBlock>
                 <CheckBox FontSize="32" Content="Stop playing music from Zune queue" Grid.Row="2" Height="93" Grid.ColumnSpan="2" HorizontalAlignment="Right"  Name="cBox_stopPlayer" VerticalAlignment="Top" Checked="cBox_stopPlayer_Checked" Unchecked="cBox_stopPlayer_Unchecked" />
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" Grid.Row="3" Grid.Column="0" Foreground="#FFFF9134" FontWeight="Bold">Game mode:</TextBlock>
+                <StackPanel VerticalAlignment="Center" Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
+                    <RadioButton Name="radio_gm_evo" Checked="radio_gm_evo_Checked">Evolution</RadioButton>
+                    <RadioButton Name="radio_gm_surv" Checked="radio_gm_surv_Checked">Survival</RadioButton>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>

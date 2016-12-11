@@ -1,0 +1,63 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="Evolution.ChooseGameMode"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Landscape" Orientation="Landscape"
+    mc:Ignorable="d" d:DesignHeight="480" d:DesignWidth="728"
+    shell:SystemTray.IsVisible="True">
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" >
+        <Grid.Background>
+            <ImageBrush ImageSource="Img/cells.jpg" Opacity="0.9" />
+        </Grid.Background>
+        <Border BorderThickness="6"  CornerRadius="25" Margin="10, 5, 10, 10">
+            <Border.BorderBrush>
+                <SolidColorBrush Color="#FF04A004" />
+            </Border.BorderBrush>
+            <Border.Background>
+                <SolidColorBrush Color="Black" Opacity="0.8"/>
+            </Border.Background>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.ColumnSpan="2" FontSize="35" Margin="0, 20, 0, 20" VerticalAlignment="Center" HorizontalAlignment="Center">Choose game mode</TextBlock>
+                <RadioButton Name="radio_chosegm_evo" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="33" Checked="radio_chosegm_evo_Checked">Evolution</RadioButton>
+                <RadioButton Name="radio_chosegm_surv" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="33" Checked="radio_chosegm_surv_Checked">Survival</RadioButton>
+                <Border BorderThickness="6"  CornerRadius="25" Grid.ColumnSpan="2" Grid.Row="2" Margin="15" >
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="#FF006F00" />
+                    </Border.BorderBrush>
+                    <Border.Background>
+                        <SolidColorBrush Color="#FF006F00" Opacity="0.5"/>
+                    </Border.Background>
+                    <Grid>
+                        <TextBlock Name="txt_evo_tutorial" Margin="7" FontSize="24" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Collapsed">In Evolution mode, when you succeed a level, you can continue from the next level even if you die. This game mode gives advantage to succeed higher levels. Of course you can restart the game from the first level.</TextBlock>
+                        <TextBlock Name="txt_surv_tutorial" Margin="7" FontSize="24" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Collapsed">In Survival mode, when your cell dies, you start again from the first level. This hard mode is for succeeding higher levels with one life.</TextBlock>
+                        <TextBlock Name="txt_choose" Margin="7" FontSize="35" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Visible" VerticalAlignment="Center">- Choose -</TextBlock>
+                    </Grid>
+                </Border>
+                <TextBlock Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center">Hint: You can change game mode in Settings later</TextBlock>
+                <Button Name="btn_gamemode_next" Grid.Row="4" Grid.ColumnSpan="2" Width="200" IsEnabled="False" Click="btn_gamemode_next_Click">Next</Button>
+            </Grid>
+        </Border>
+    </Grid>
+
+</phone:PhoneApplicationPage>

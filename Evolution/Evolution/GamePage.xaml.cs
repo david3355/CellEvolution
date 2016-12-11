@@ -224,7 +224,10 @@ namespace Evolution
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            if (ConfigManager.GetInstance.ReadConfig(ConfigKeys.FirstStart) == "true") ConfigManager.GetInstance.WriteConfig(ConfigKeys.FirstStart, "false");
+
             if (MainPage.startedWithTutorial) NavigationService.RemoveBackEntry();
+            if (MainPage.startedWithGameModeChoose) NavigationService.RemoveBackEntry();
             TouchPanel.EnabledGestures = GestureType.Flick /*| GestureType.Hold | GestureType.Tap | GestureType.DoubleTap*/;
 
             // Set the sharing mode of the graphics device to turn on XNA rendering
@@ -374,11 +377,7 @@ namespace Evolution
             if (Math.Abs(player.velocity.X) < 0.11) player.velocity.X = 0;
             if (terminated == 1)
             {
-                se_extinct.Play(effectsVolume, 0, 0);
-                objects.Clear();
-                gt_game.Stop();
-                terminated = -1;
-                // configmanager.WriteConfig(ConfigKeys.LastLevel, "1");    Ez majd beállítástól függ (Survival mode)
+                PlayerDies();
             }
             if (levelEnd && !canTwoTouch) canTwoTouch = true;
             if (levelEnd)
@@ -399,6 +398,15 @@ namespace Evolution
                 rageObject = false;
                 foreach (Cell obj in objects) if (obj is Rage) { objects.Remove(obj); break; }
             }
+        }
+
+        private void PlayerDies()
+        {
+            se_extinct.Play(effectsVolume, 0, 0);
+            objects.Clear();
+            gt_game.Stop();
+            terminated = -1;
+            if (ConfigManager.GetInstance.ReadConfig(ConfigKeys.GameMode) == GameMode.Survival.ToString()) ConfigManager.GetInstance.WriteConfig(ConfigKeys.LastLevel, "1");
         }
 
         private void BalanceEnemies()

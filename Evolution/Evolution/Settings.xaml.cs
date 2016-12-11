@@ -32,6 +32,20 @@ namespace Evolution
             slideMusic.Value = slideValMusic * 100;
             slideSEffects.Value = slideValEffects * 100;
             cBox_stopPlayer.IsChecked = stopMusic;
+            SetGameMode((GameMode)Enum.Parse(typeof(GameMode), ConfigManager.GetInstance.ReadConfig(ConfigKeys.GameMode), true));
+        }
+
+        private void SetGameMode(GameMode Mode)
+        {
+            radio_gm_evo.Checked -= radio_gm_evo_Checked;
+            radio_gm_surv.Checked -= radio_gm_surv_Checked;
+            switch (Mode)
+            {
+                case GameMode.Evolution: radio_gm_evo.IsChecked = true; break;
+                case GameMode.Survival: radio_gm_surv.IsChecked = true; break;
+            }
+            radio_gm_evo.Checked += radio_gm_evo_Checked;
+            radio_gm_surv.Checked += radio_gm_surv_Checked;
         }
 
         private void slideSEffects_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
@@ -53,6 +67,16 @@ namespace Evolution
         private void cBox_stopPlayer_Unchecked(object sender, RoutedEventArgs e)
         {
             stopMusic = false;
+        }
+
+        private void radio_gm_evo_Checked(object sender, RoutedEventArgs e)
+        {
+            ConfigManager.GetInstance.WriteConfig(ConfigKeys.GameMode, GameMode.Evolution.ToString());
+        }
+
+        private void radio_gm_surv_Checked(object sender, RoutedEventArgs e)
+        {
+            ConfigManager.GetInstance.WriteConfig(ConfigKeys.GameMode, GameMode.Survival.ToString());
         }
     }
 }
