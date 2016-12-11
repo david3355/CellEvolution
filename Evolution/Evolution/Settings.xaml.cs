@@ -25,6 +25,8 @@ namespace Evolution
         public static double slideValMusic = 0.5, slideValEffects = 0.5;
         public static bool loaded = false;
         public static bool stopMusic = false;
+        private static bool loadData = false;
+
         public Settings()
         {
             InitializeComponent();
@@ -32,20 +34,22 @@ namespace Evolution
             slideMusic.Value = slideValMusic * 100;
             slideSEffects.Value = slideValEffects * 100;
             cBox_stopPlayer.IsChecked = stopMusic;
+        }
+
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
             SetGameMode((GameMode)Enum.Parse(typeof(GameMode), ConfigManager.GetInstance.ReadConfig(ConfigKeys.GameMode), true));
         }
 
         private void SetGameMode(GameMode Mode)
         {
-            radio_gm_evo.Checked -= radio_gm_evo_Checked;
-            radio_gm_surv.Checked -= radio_gm_surv_Checked;
+            loadData = true;
             switch (Mode)
             {
                 case GameMode.Evolution: radio_gm_evo.IsChecked = true; break;
                 case GameMode.Survival: radio_gm_surv.IsChecked = true; break;
             }
-            radio_gm_evo.Checked += radio_gm_evo_Checked;
-            radio_gm_surv.Checked += radio_gm_surv_Checked;
+            loadData = false;
         }
 
         private void slideSEffects_ManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
@@ -71,12 +75,16 @@ namespace Evolution
 
         private void radio_gm_evo_Checked(object sender, RoutedEventArgs e)
         {
-            ConfigManager.GetInstance.WriteConfig(ConfigKeys.GameMode, GameMode.Evolution.ToString());
+            txt_surv_desc.Visibility = Visibility.Collapsed;
+            txt_evo_desc.Visibility = Visibility.Visible;
+            if (!loadData) ConfigManager.GetInstance.WriteConfig(ConfigKeys.GameMode, GameMode.Evolution.ToString());
         }
 
         private void radio_gm_surv_Checked(object sender, RoutedEventArgs e)
         {
-            ConfigManager.GetInstance.WriteConfig(ConfigKeys.GameMode, GameMode.Survival.ToString());
+            txt_evo_desc.Visibility = Visibility.Collapsed;
+            txt_surv_desc.Visibility = Visibility.Visible;
+            if (!loadData) ConfigManager.GetInstance.WriteConfig(ConfigKeys.GameMode, GameMode.Survival.ToString());
         }
     }
 }

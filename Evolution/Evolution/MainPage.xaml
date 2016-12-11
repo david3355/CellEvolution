@@ -92,7 +92,7 @@
                 <SolidColorBrush Color="#FFD41616" Opacity="0.9" />
             </Border.BorderBrush>
             <Border.Background>
-                <SolidColorBrush Color="#FF006F00" Opacity="0.7"/>
+                <SolidColorBrush Color="#FF006F00" Opacity="0.9"/>
             </Border.Background>
             <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center" >
                 <TextBlock Foreground="Red" FontWeight="Bold" Width="150" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="25">Restart from level 1?</TextBlock>

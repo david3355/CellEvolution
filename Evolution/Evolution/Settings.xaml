@@ -18,7 +18,7 @@
         <Grid.Background>
             <ImageBrush ImageSource="Img/cells.jpg" Opacity="0.5" />
         </Grid.Background>
-        <Border BorderThickness="6" Margin="50,60,50,60" CornerRadius="25">
+        <Border BorderThickness="6" Margin="50,50,50,50" CornerRadius="25">
             <Border.BorderBrush>
                 <SolidColorBrush Color="#FF006F00" />
             </Border.BorderBrush>
@@ -37,6 +37,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <TextBlock HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="32" Grid.Row="0" Grid.Column="0" Margin="0,0,10,0">Background music:</TextBlock>
                 <TextBlock HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="32" Grid.Row="1" Grid.Column="0" Margin="0,0,10,0">Sound effects:</TextBlock>
@@ -50,6 +51,8 @@
                     <RadioButton Name="radio_gm_evo" Checked="radio_gm_evo_Checked">Evolution</RadioButton>
                     <RadioButton Name="radio_gm_surv" Checked="radio_gm_surv_Checked">Survival</RadioButton>
                 </StackPanel>
+                <TextBlock Name="txt_evo_desc" Margin="7" FontSize="18" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Collapsed" Grid.ColumnSpan="4" Grid.Row="4">When you succeed a level, you can continue from the next level even if you die.</TextBlock>
+                <TextBlock Name="txt_surv_desc" Margin="7" FontSize="18" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Collapsed" Grid.ColumnSpan="4" Grid.Row="4">When your cell dies, you start again from the first level.</TextBlock>
             </Grid>
         </Border>
     </Grid>
