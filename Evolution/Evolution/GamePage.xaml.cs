@@ -38,6 +38,13 @@ namespace Evolution
         static Uri Uri = new Uri("/GamePage.xaml", UriKind.Relative);
         static string[] backgrNames = { "bg1", "bg2", "bg3", "bg4", "bg5", "bg6", "bg7", "bg8", "bg9", "bg10", "bg11", "bg12", "bg13", "bg14", "bg15", "bg16", "bg17", "bg18" };
 
+        const string TEXT_EXTINCT = "You are extinct";
+        const string TEXT_LEVELCOMPLETED = "Congratulations, level completed!";
+        const string TEXT_DOUBLETAP = "Tap the screen on two points for new level";
+        const string TEXT_PRESSBACK = "Press Back key again to exit";
+
+        float width_tx_extinct, width_tx_levelcompleted, width_tx_doubletap, width_tx_pressback;
+
         ContentManager contentManager;  // A tartalmak betöltéséhez szükséges
         GameTimer timer;
         SpriteBatch spriteBatch; // A rajzolásért/megjelenítésért felelős grafikai objektum        
@@ -53,10 +60,11 @@ namespace Evolution
         Texture2D tx_iminf;
         Texture2D tx_bG;
         Texture2D tx_rage;
+        Texture2D tx_doubletap;
         List<Texture2D> backgrounds;
 
         Song s_music;
-        SoundEffect se_collosion, se_move, se_infection, se_extinct, se_rage;
+        SoundEffect se_collosion, se_move, se_infection, se_extinct, se_rage, se_levelCompleted;
 
         bool backKeyPressed;
         int actualBackgroundIndex;
@@ -67,12 +75,13 @@ namespace Evolution
         public static float musicVolume = 1f, effectsVolume = 0.4f;
         public static string playerName;
         double smallObjectInfectTreshold;
+        bool levelCompletedSoundPlayed;
 
         List<Cell> objects;
         int level, score;
 
         Random rnd = new Random();
-        SpriteFont sf, sfmgs;
+        SpriteFont sf, sf_mgs, sf_levelcomp_msg;
         GameTimer gt_sdi, gt_imi, gtse, gt_game, gt_rageOn; // Az infection objektumok időzítői
 
 
@@ -114,6 +123,7 @@ namespace Evolution
             canTwoTouch = false;
             twoTouches = false;
             terminated = 0;
+            levelCompletedSoundPlayed = false;
 
             effectsVolume = (float)Settings.slideValEffects;
 
@@ -251,14 +261,23 @@ namespace Evolution
             tx_sdinf = contentManager.Load<Texture2D>("sizedecinf");
             tx_iminf = contentManager.Load<Texture2D>("inverseinf");
             tx_rage = contentManager.Load<Texture2D>("rage");
+            tx_doubletap = contentManager.Load<Texture2D>("doubletap");
             sf = contentManager.Load<SpriteFont>("myFont");
-            sfmgs = contentManager.Load<SpriteFont>("SFmgs");
+            sf_mgs = contentManager.Load<SpriteFont>("SFmgs");
+            sf_levelcomp_msg = contentManager.Load<SpriteFont>("levelcomp_msg");
             s_music = contentManager.Load<Song>("BGMusic");
             se_collosion = contentManager.Load<SoundEffect>("collosion");
             se_extinct = contentManager.Load<SoundEffect>("death");
             se_move = contentManager.Load<SoundEffect>("move");
             se_infection = contentManager.Load<SoundEffect>("infection");
             se_rage = contentManager.Load<SoundEffect>("flame");
+            se_levelCompleted = contentManager.Load<SoundEffect>("glassbell");
+
+            width_tx_extinct = sf_mgs.MeasureString(TEXT_EXTINCT).X;
+            width_tx_levelcompleted = sf_levelcomp_msg.MeasureString(TEXT_LEVELCOMPLETED).X;
+            width_tx_doubletap = sf_mgs.MeasureString(TEXT_DOUBLETAP).X;
+            width_tx_pressback = sf_mgs.MeasureString(TEXT_PRESSBACK).X;
+
             n_enemy = 4;
             n_intellienemy = 6;
             n_antim = 10;
@@ -431,6 +450,7 @@ namespace Evolution
                     if (obj.R <= 0) objects.RemoveAt(i);
                 }
             }
+            if (player.R < smallObjectInfectTreshold) player.R -= sizeDecrease;
         }
 
         class GameObjectCount
@@ -479,15 +499,18 @@ namespace Evolution
             }
             else if (!levelEnd && player.R <= 0)
             {
-                spriteBatch.DrawString(sfmgs, "You are extinct", new Vector2(300, (int)this.ActualHeight / 2), Color.Red);
+                spriteBatch.DrawString(sf_mgs, TEXT_EXTINCT, new Vector2((float)this.ActualWidth / 2 - width_tx_extinct / 2, (float)this.ActualHeight / 2), Color.Red);
             }
             if (levelEnd)
             {
-                spriteBatch.DrawString(sfmgs, "Level completed, double-tap to new level", new Vector2(150, 10), Color.Green);
+                spriteBatch.DrawString(sf_levelcomp_msg, TEXT_LEVELCOMPLETED, new Vector2((float)this.ActualWidth / 2 - width_tx_levelcompleted / 2, (float)this.ActualHeight / 2 - 30), Color.Green);
+                spriteBatch.DrawString(sf_mgs, TEXT_DOUBLETAP, new Vector2((float)this.ActualWidth / 2 - width_tx_doubletap / 2, (float)this.ActualHeight / 2 + 50), Color.Green);
+                int tap_img_width = 100;
+                spriteBatch.Draw(tx_doubletap, new Microsoft.Xna.Framework.Rectangle((int)this.ActualWidth / 2 - tap_img_width / 2, (int)this.ActualHeight / 2 + 100, tap_img_width, tap_img_width), Color.White);
             }
             if (backKeyPressed)
             {
-                spriteBatch.DrawString(sfmgs, "Press Back key again to exit", new Vector2(220, (int)this.ActualHeight / 2 + 100), Color.Red);
+                spriteBatch.DrawString(sf_mgs, TEXT_PRESSBACK, new Vector2((float)this.ActualWidth / 2 - width_tx_pressback / 2, (float)this.ActualHeight / 2 + 100), Color.Red);
             }
             spriteBatch.End();
         }
@@ -701,7 +724,15 @@ namespace Evolution
             {
                 if (objects[i] is Enemy && objects[i].R > player.R) return;
             }
-            if (terminated == 0) levelEnd = true;
+            if (terminated == 0)
+            {
+                levelEnd = true;
+                if (!levelCompletedSoundPlayed)
+                {
+                    se_levelCompleted.Play(effectsVolume, 0, 0);
+                    levelCompletedSoundPlayed = true;
+                }
+            }
         }
 
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
