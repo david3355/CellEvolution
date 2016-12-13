@@ -38,14 +38,15 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0"   FontFamily="Segoe WP" FontSize="40"  Foreground="#FF27C100" FontWeight="Bold">Cell</TextBlock>
-                    <StackPanel Grid.Row="1" Margin="25, -22, 0,0"  Orientation="Horizontal" >
-                        <TextBlock FontFamily="Segoe WP" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">EV</TextBlock>
+                    
+                    <StackPanel Grid.Row="0" Margin="25, 0, 0,0"  Orientation="Horizontal" >
+                        <TextBlock FontFamily="Segoe WP" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">CELL EV</TextBlock>
                         <Image Width="42" Source="Img/enemy_smaller.png"></Image>
                         <TextBlock FontFamily="Segoe WP" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">LUTI</TextBlock>
                         <Image Width="42" Source="Img/enemy_smaller.png"></Image>
                         <TextBlock FontFamily="Segoe WP" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">N</TextBlock>
                     </StackPanel>
+                    <TextBlock Grid.Row="1" Margin="25, -22, 0,0" HorizontalAlignment="Right" FontFamily="Segoe WP" FontSize="40"  Foreground="#FF27C100" FontWeight="Bold">Reloaded</TextBlock>
                 </Grid>
 
 

@@ -162,6 +162,7 @@
     <Resource Include="Images\sizedecinf.png" />
     <Resource Include="Img\settings.png" />
     <Resource Include="Img\help.png" />
+    <Resource Include="Img\slide.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>

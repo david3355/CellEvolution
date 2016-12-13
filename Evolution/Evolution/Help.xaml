@@ -148,6 +148,10 @@
                         <TextBlock Foreground="Red" TextWrapping="Wrap" FontWeight="Bold" FontSize="20" Canvas.Left="320" Canvas.Top="100" Width="360">
                     Tap on the red position of you want to move your cell in this direction
                         </TextBlock>
+                        <Image Source="img/slide.png" Width="100" Canvas.Left="423" Canvas.Top="200"></Image>
+                        <TextBlock Foreground="Red" TextWrapping="Wrap" FontWeight="Bold" FontSize="20" Canvas.Left="410" Canvas.Top="300" Width="360">
+                    Or slide towards any direction from that point to boost your cell
+                        </TextBlock>
 
                     </Canvas>
                     <Grid Grid.Row="1">
