@@ -39,7 +39,7 @@ namespace Evolution
         static string[] backgrNames = { "bg1", "bg2", "bg3", "bg4", "bg5", "bg6", "bg7", "bg8", "bg9", "bg10", "bg11", "bg12", "bg13", "bg14", "bg15", "bg16", "bg17", "bg18" };
 
         const string TEXT_EXTINCT = "You are extinct";
-        const string TEXT_LEVELCOMPLETED = "Congratulations, level completed!";
+        const string TEXT_LEVELCOMPLETED = "Congratulations, level {0} completed!";
         const string TEXT_DOUBLETAP = "Tap the screen on two points for new level";
         const string TEXT_PRESSBACK = "Press Back key again to exit";
 
@@ -72,6 +72,7 @@ namespace Evolution
         int rageCycle;
         int rageDuration;
         float speed;
+        int initialPlayerSize;
         public static float musicVolume = 1f, effectsVolume = 0.4f;
         public static string playerName;
         double smallObjectInfectTreshold;
@@ -101,6 +102,7 @@ namespace Evolution
         void SetLevel(int Level)
         {
             SetBackground();
+            initialPlayerSize = 10 + level / 2;
             speed = 0.1f + level * 0.13f;
             n_enemy = 4 + level / 2;
             n_intellienemy = 6 + level;
@@ -130,15 +132,15 @@ namespace Evolution
             //player:
             Vector2 velocity = Vector2.Zero;
             Vector2 center = new Vector2(400, 240);
-            int playerStartRadius = 10;
-            player = new Player(this, tx_player, center, velocity, 10);
+            int playerStartRadius = initialPlayerSize;
+            player = new Player(this, tx_player, center, velocity, playerStartRadius);
             //all other objects:
             if (objects != null && objects.Count > 0) objects.Clear();
             objects = new List<Cell>();
-            AddObjects(new Enemy(), tx_enemy_smaller, n_enemy * 2, playerStartRadius, GetRanVelocity(speed));
-            AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -30, GetRanVelocity(speed));
-            AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy * 2, playerStartRadius, GetRanVelocity(speed));
-            AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -30, GetRanVelocity(speed));
+            AddObjects(new Enemy(), tx_enemy_smaller, n_enemy, playerStartRadius, GetRanVelocity(speed));
+            AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -20, GetRanVelocity(speed));
+            AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy, playerStartRadius, GetRanVelocity(speed));
+            AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -20, GetRanVelocity(speed));
             AddObjects(new AntiMatter(), tx_antimatter, n_antim, 30, GetRanVelocity(speed));
             AddObjects(new SizeDecrease(), tx_sdinf, n_inf, 0, Vector2.Zero);
             AddObjects(new InverseMoving(), tx_iminf, n_inf, 0, Vector2.Zero);
@@ -273,7 +275,7 @@ namespace Evolution
             se_rage = contentManager.Load<SoundEffect>("flame");
             se_levelCompleted = contentManager.Load<SoundEffect>("glassbell");
 
-            width_tx_extinct = sf_mgs.MeasureString(TEXT_EXTINCT).X;
+            width_tx_extinct = sf_levelcomp_msg.MeasureString(TEXT_EXTINCT).X;
             width_tx_levelcompleted = sf_levelcomp_msg.MeasureString(TEXT_LEVELCOMPLETED).X;
             width_tx_doubletap = sf_mgs.MeasureString(TEXT_DOUBLETAP).X;
             width_tx_pressback = sf_mgs.MeasureString(TEXT_PRESSBACK).X;
@@ -499,11 +501,11 @@ namespace Evolution
             }
             else if (!levelEnd && player.R <= 0)
             {
-                spriteBatch.DrawString(sf_mgs, TEXT_EXTINCT, new Vector2((float)this.ActualWidth / 2 - width_tx_extinct / 2, (float)this.ActualHeight / 2), Color.Red);
+                spriteBatch.DrawString(sf_levelcomp_msg, TEXT_EXTINCT, new Vector2((float)this.ActualWidth / 2 - width_tx_extinct / 2, (float)this.ActualHeight / 2), Color.Red);
             }
             if (levelEnd)
             {
-                spriteBatch.DrawString(sf_levelcomp_msg, TEXT_LEVELCOMPLETED, new Vector2((float)this.ActualWidth / 2 - width_tx_levelcompleted / 2, (float)this.ActualHeight / 2 - 30), Color.Green);
+                spriteBatch.DrawString(sf_levelcomp_msg, String.Format(TEXT_LEVELCOMPLETED, level), new Vector2((float)this.ActualWidth / 2 - width_tx_levelcompleted / 2, (float)this.ActualHeight / 2 - 30), Color.Green);
                 spriteBatch.DrawString(sf_mgs, TEXT_DOUBLETAP, new Vector2((float)this.ActualWidth / 2 - width_tx_doubletap / 2, (float)this.ActualHeight / 2 + 50), Color.Green);
                 int tap_img_width = 100;
                 spriteBatch.Draw(tx_doubletap, new Microsoft.Xna.Framework.Rectangle((int)this.ActualWidth / 2 - tap_img_width / 2, (int)this.ActualHeight / 2 + 100, tap_img_width, tap_img_width), Color.White);
