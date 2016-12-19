@@ -140,15 +140,17 @@ namespace Evolution
             Vector2 velocity = Vector2.Zero;
             Vector2 center = new Vector2(400, 240);
             int playerStartRadius = initialPlayerSize;
+            int bigenemyMaxSize = 13 + level;
+            int animatterMaxSize = 10 + level;
             player = new Player(this, tx_player, center, velocity, playerStartRadius);
             //all other objects:
             if (objects != null && objects.Count > 0) objects.Clear();
             objects = new List<Cell>();
             AddObjects(new Enemy(), tx_enemy_smaller, n_enemy, playerStartRadius, GetRanVelocity(speed));
-            AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -12, GetRanVelocity(speed));
+            AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -bigenemyMaxSize, GetRanVelocity(speed));
             AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy, playerStartRadius, GetRanVelocity(speed));
-            AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -12, GetRanVelocity(speed));
-            AddObjects(new AntiMatter(), tx_antimatter, n_antim, 30, GetRanVelocity(speed));
+            AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -bigenemyMaxSize, GetRanVelocity(speed));
+            AddObjects(new AntiMatter(), tx_antimatter, n_antim, animatterMaxSize, GetRanVelocity(speed));
             AddObjects(new SizeDecrease(), tx_sdinf, n_inf, 0, Vector2.Zero);
             AddObjects(new InverseMoving(), tx_iminf, n_inf, 0, Vector2.Zero);
 
@@ -162,7 +164,7 @@ namespace Evolution
             for (int i = 0; i < number; i++)
             {
                 position = GetRandomPositionAroundPlayer();
-                if (maxRad == 0) radius = 13; // az infection-ök mérete rögzített
+                if (maxRad == 0) radius = 12; // az infection-ök mérete rögzített
                 else if (maxRad < 0) radius = Utility.RandomDouble(player.R + 0.1, Math.Abs(maxRad)); // ha nagyobb ellenséget adunk hozzá, tudnunk kell róla, így csak a player sugara és maxRad között generálhatunk számokat
                 else radius = Utility.RandomDouble(5, maxRad);
                 if (obj is IntelligentEnemy) obj = new IntelligentEnemy();  // TODO: ezen szépíteni kéne
@@ -437,7 +439,11 @@ namespace Evolution
             objects.Clear();
             gt_game.Stop();
             terminated = -1;
-            if (ConfigManager.GetInstance.ReadConfig(ConfigKeys.GameMode) == GameMode.Survival.ToString()) HighScores.ResetLastLevel();
+            if (ConfigManager.GetInstance.ReadConfig(ConfigKeys.GameMode) == GameMode.Survival.ToString())
+            {
+                level = 1;
+                HighScores.ResetLastLevel();
+            }
         }
 
         private void BalanceEnemies()
