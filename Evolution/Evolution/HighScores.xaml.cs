@@ -36,6 +36,12 @@ namespace Evolution
         private static int hLevel = 0;
         private static int lastLevel = 1;
 
+        public static void ResetLastLevel()
+        {
+            lastLevel = 1;
+            ConfigManager.GetInstance.WriteConfig(ConfigKeys.LastLevel, "1");
+        }
+
         public static void SetHighScore(int Value)
         {
             if (Value > hScore)

@@ -41,9 +41,10 @@ namespace Evolution
         const string TEXT_EXTINCT = "You are extinct";
         const string TEXT_LEVELCOMPLETED = "Congratulations, level {0} completed!";
         const string TEXT_DOUBLETAP = "Tap the screen on two points for new level";
+        const string TEXT_DOUBLETAP_RESTART = "Tap the screen on two points to restart level";
         const string TEXT_PRESSBACK = "Press Back key again to exit";
 
-        float width_tx_extinct, width_tx_levelcompleted, width_tx_doubletap, width_tx_pressback;
+        float width_tx_extinct, width_tx_levelcompleted, width_tx_doubletap, width_tx_pressback, width_tx_doubletap_restart;
 
         ContentManager contentManager;  // A tartalmak betöltéséhez szükséges
         GameTimer timer;
@@ -61,6 +62,7 @@ namespace Evolution
         Texture2D tx_bG;
         Texture2D tx_rage;
         Texture2D tx_doubletap;
+        Texture2D tx_doubletap_red;
         List<Texture2D> backgrounds;
 
         Song s_music;
@@ -96,6 +98,11 @@ namespace Evolution
         void NewLevel()
         {
             level += 1;
+            SetLevel(level);
+        }
+
+        void RestartLevel()
+        {
             SetLevel(level);
         }
 
@@ -138,9 +145,9 @@ namespace Evolution
             if (objects != null && objects.Count > 0) objects.Clear();
             objects = new List<Cell>();
             AddObjects(new Enemy(), tx_enemy_smaller, n_enemy, playerStartRadius, GetRanVelocity(speed));
-            AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -20, GetRanVelocity(speed));
+            AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -12, GetRanVelocity(speed));
             AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy, playerStartRadius, GetRanVelocity(speed));
-            AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -20, GetRanVelocity(speed));
+            AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -12, GetRanVelocity(speed));
             AddObjects(new AntiMatter(), tx_antimatter, n_antim, 30, GetRanVelocity(speed));
             AddObjects(new SizeDecrease(), tx_sdinf, n_inf, 0, Vector2.Zero);
             AddObjects(new InverseMoving(), tx_iminf, n_inf, 0, Vector2.Zero);
@@ -264,6 +271,7 @@ namespace Evolution
             tx_iminf = contentManager.Load<Texture2D>("inverseinf");
             tx_rage = contentManager.Load<Texture2D>("rage");
             tx_doubletap = contentManager.Load<Texture2D>("doubletap");
+            tx_doubletap_red = contentManager.Load<Texture2D>("doubletap_red");
             sf = contentManager.Load<SpriteFont>("myFont");
             sf_mgs = contentManager.Load<SpriteFont>("SFmgs");
             sf_levelcomp_msg = contentManager.Load<SpriteFont>("levelcomp_msg");
@@ -279,6 +287,7 @@ namespace Evolution
             width_tx_levelcompleted = sf_levelcomp_msg.MeasureString(TEXT_LEVELCOMPLETED).X;
             width_tx_doubletap = sf_mgs.MeasureString(TEXT_DOUBLETAP).X;
             width_tx_pressback = sf_mgs.MeasureString(TEXT_PRESSBACK).X;
+            width_tx_doubletap_restart = sf_mgs.MeasureString(TEXT_DOUBLETAP_RESTART).X;
 
             n_enemy = 4;
             n_intellienemy = 6;
@@ -400,7 +409,7 @@ namespace Evolution
             {
                 PlayerDies();
             }
-            if (levelEnd && !canTwoTouch) canTwoTouch = true;
+            if ((levelEnd || IsPlayerTerminated()) && !canTwoTouch) canTwoTouch = true;
             if (levelEnd)
             {
                 HighScores.SetMaxLevel(level);
@@ -408,6 +417,7 @@ namespace Evolution
             }
 
             if (levelEnd && twoTouches) NewLevel();
+            if (IsPlayerTerminated() && twoTouches) RestartLevel();
             if (t_game > 0 && t_game % rageCycle == 0 && !rageObject)
             {
                 rageObject = true;
@@ -427,7 +437,7 @@ namespace Evolution
             objects.Clear();
             gt_game.Stop();
             terminated = -1;
-            if (ConfigManager.GetInstance.ReadConfig(ConfigKeys.GameMode) == GameMode.Survival.ToString()) ConfigManager.GetInstance.WriteConfig(ConfigKeys.LastLevel, "1");
+            if (ConfigManager.GetInstance.ReadConfig(ConfigKeys.GameMode) == GameMode.Survival.ToString()) HighScores.ResetLastLevel();
         }
 
         private void BalanceEnemies()
@@ -484,6 +494,11 @@ namespace Evolution
             return count;
         }
 
+        private bool IsPlayerTerminated()
+        {
+            return !levelEnd && player.R <= 0;
+        }
+
         /// <summary>
         /// Allows the page to draw itself.
         /// </summary>
@@ -499,9 +514,12 @@ namespace Evolution
                 spriteBatch.DrawString(sf, "Level " + level, new Vector2(10, 10), Color.White);
                 spriteBatch.DrawString(sf, "Score: " + score, new Vector2(10, 30), Color.White);
             }
-            else if (!levelEnd && player.R <= 0)
+            else if (IsPlayerTerminated())
             {
-                spriteBatch.DrawString(sf_levelcomp_msg, TEXT_EXTINCT, new Vector2((float)this.ActualWidth / 2 - width_tx_extinct / 2, (float)this.ActualHeight / 2), Color.Red);
+                spriteBatch.DrawString(sf_levelcomp_msg, TEXT_EXTINCT, new Vector2((float)this.ActualWidth / 2 - width_tx_extinct / 2, (float)this.ActualHeight / 2 - 30), Color.Red);
+                spriteBatch.DrawString(sf_mgs, TEXT_DOUBLETAP_RESTART, new Vector2((float)this.ActualWidth / 2 - width_tx_doubletap_restart / 2, (float)this.ActualHeight / 2 + 50), Color.Red);
+                int tap_img_width = 100;
+                spriteBatch.Draw(tx_doubletap_red, new Microsoft.Xna.Framework.Rectangle((int)this.ActualWidth / 2 - tap_img_width / 2, (int)this.ActualHeight / 2 + 100, tap_img_width, tap_img_width), Color.White);
             }
             if (levelEnd)
             {
@@ -521,12 +539,15 @@ namespace Evolution
         {
             TouchCollection touches = TouchPanel.GetState();
 
-            if (!touching && touches.Count > 0 && terminated == 0)
+            if (!touching && touches.Count > 0)
             {
-                backKeyPressed = false;
+                if (terminated == 0)
+                {
+                    backKeyPressed = false;
+                    if (player.R > 0) se_move.Play(effectsVolume, 0, 0);
+                    SetNewVelocity(touches);
+                }
                 touching = true;
-                if (player.R > 0) se_move.Play(effectsVolume, 0, 0);
-                SetNewVelocity(touches);
                 if (canTwoTouch && touches.Count == 2) twoTouches = true;
                 else twoTouches = false;
             }
@@ -535,6 +556,7 @@ namespace Evolution
                 touching = false;
                 twoTouches = false;
             }
+            // if (levelEnd || IsPlayerTerminated()) twoTouches = true;    // TODO: only for debug; simulate two touches to enable next level
         }
 
         void SetNewVelocity(TouchCollection touch)
