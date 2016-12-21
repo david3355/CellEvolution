@@ -155,6 +155,7 @@ namespace Evolution
             AddObjects(new InverseMoving(), tx_iminf, n_inf, 0, Vector2.Zero);
 
             gt_sdi.Stop(); t_sdi = 0; // az új pálya kezdésekor nem lehet infection
+            gt_game.Start();
         }
         // E metódus segítségébel az objektumokat szignatúra alapján, univerzálisan tudjuk hozzáadni a listához
         void AddObjects(Cell obj, Texture2D texture, int number, int maxRad, Vector2 velocity)
@@ -318,10 +319,7 @@ namespace Evolution
             gt_rageOn.Update += gt_rageOn_Update;
             t_se = 0;
             t_game = 0;
-
-            gt_sdi.Start();
-            gt_game.Start();
-
+                
             SharedGraphicsDeviceManager.Current.GraphicsDevice.Clear(Color.White);
             int lastLevel = int.Parse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.LastLevel));
             level = lastLevel;
