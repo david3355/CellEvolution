@@ -101,7 +101,7 @@ namespace Evolution
 
         private void restart_yes_Click(object sender, RoutedEventArgs e)
         {
-            ConfigManager.GetInstance.WriteConfig(ConfigKeys.LastLevel, "1");
+            HighScores.ResetLastLevel();
             StartGame();
         }
 
