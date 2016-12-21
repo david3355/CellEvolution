@@ -36,19 +36,19 @@
                 <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     
                     <StackPanel Grid.Row="0" Margin="25, 0, 0,0"  Orientation="Horizontal" >
-                        <TextBlock FontFamily="Segoe WP" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">CELL EV</TextBlock>
-                        <Image Width="42" Source="Img/enemy_smaller.png"></Image>
-                        <TextBlock FontFamily="Segoe WP" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">LUTI</TextBlock>
-                        <Image Width="42" Source="Img/enemy_smaller.png"></Image>
-                        <TextBlock FontFamily="Segoe WP" FontSize="50" Foreground="#FF27C100" FontWeight="Bold">N</TextBlock>
+                        <Grid>
+                            <TextBlock VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="80" Foreground="#FF27A600" FontWeight="Bold" Margin="0, -15" >C</TextBlock>
+                            <Image VerticalAlignment="Center" Width="30" Source="Img/enemy_smaller.png" Margin="15,10,0,0"></Image>
+                        </Grid>
+                        <TextBlock VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="50" Foreground="#FF27A600" FontWeight="Bold" Margin="0,0,10,0">ELL </TextBlock>
+                        <TextBlock VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="50" Foreground="#FFC10000" FontWeight="Bold">PREDAT</TextBlock>
+                        <Image VerticalAlignment="Center" Width="42" Source="Img/enemy_bigger.png"></Image>
+                        <TextBlock VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="50" Foreground="#FFC10000" FontWeight="Bold">R</TextBlock>
                     </StackPanel>
-                    <TextBlock Grid.Row="1" Margin="25, -22, 0,0" HorizontalAlignment="Right" FontFamily="Segoe WP" FontSize="40"  Foreground="#FF27C100" FontWeight="Bold">Reloaded</TextBlock>
                 </Grid>
-
 
                 <StackPanel Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" Margin="0, 10, 0, 0"  >
                     <Grid HorizontalAlignment="Center" Tap="Button_Click" >
@@ -57,7 +57,7 @@
                         </Ellipse>
                         <Ellipse Width="130" Height="130" Fill="AliceBlue" Opacity="0.3" >
                         </Ellipse>
-                        <TextBlock FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="45" Foreground="#FF0E6F00">Start</TextBlock>
+                        <TextBlock FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="52" Foreground="#FF0E6F00">Start</TextBlock>
                     </Grid>
                     <Button Name="btn_restart" Visibility="Collapsed" Foreground="Red" FontWeight="Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btn_restart_Click">Restart</Button>
                     
