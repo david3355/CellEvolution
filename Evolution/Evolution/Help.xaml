@@ -6,12 +6,45 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Landscape" Orientation="Landscape"
     mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="480"
     shell:SystemTray.IsVisible="False">
+
+    <phone:PhoneApplicationPage.Resources>
+        <sys:Double x:Key="size_help_mainobjects">100</sys:Double>
+        <Span x:Key="info_smallenemy">These kind of cells are &#032;
+            <Bold>smaller</Bold> &#032; than the player's cell, so you can consume them. They move in only  &#032;
+            <Bold>one</Bold> &#032; predefined  &#032;
+            <Bold>direction</Bold>.
+        </Span>
+        <Span x:Key="info_bigenemy">These kind of cells are &#032;
+            <Bold>bigger</Bold> &#032; than the player's cell, so they will consume you if you get close to them. They move in only &#032;
+            <Bold>one</Bold> &#032; predefined &#032;
+            <Bold>direction</Bold>.</Span>
+        <Span x:Key="info_small_intelli_enemy">These kind of intelligent cells are &#032;
+            <Bold>smaller</Bold> &#032; than the player's cell, so you can consume them. &#032;
+            <Bold>They flee</Bold> &#032; from the player, bigger cells and antimatters to avoid being consumed, and they also follows smaller cells to consume.
+        </Span>
+        <Span x:Key="info_big_intelli_enemy">These kind of intelligent cells are &#032;
+            <Bold>bigger</Bold> &#032; than the player's cell. Watch out, &#032;
+            <Bold>they will follow you</Bold> &#032; and smaller cells to consume, and also try to avoid antimatters.
+        </Span>
+        <Span x:Key="info_antimatter">Collosion with antimatter objects leads to &#032;
+            <Bold>decreasing both object's size</Bold> &#032;.
+        </Span>
+        <Span x:Key="info_sizedec_inf">When your cell collides with size decreasing infection, it becomes infected for a while, and during this time, &#032;
+            <Bold>player's size is decreasing</Bold> &#032;.
+        </Span>
+        <Span x:Key="info_move_inf">When your cell is infected with move infection, the &#032;
+            <Bold>direction of your next move is inverted</Bold>.</Span>
+        <Span x:Key="info_rage">Rage is a special kind of infection which appears quite rarely. When your cell gets this infection, it goes &#032;
+            <Bold>on rage</Bold> &#032; for a couple of seconds, and for this time &#032;
+            <Bold>player can consume bigger cells too</Bold>. This doesn't regard to antimatters!</Span>
+    </phone:PhoneApplicationPage.Resources>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot">
@@ -32,11 +65,11 @@
 
 
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" /> 
+                        <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                   
+
                     <StackPanel Grid.Row="0" VerticalAlignment="Center" Height="Auto" Margin="15" >
                         <TextBlock FontSize="19" HorizontalAlignment="Center" TextWrapping="Wrap"  VerticalAlignment="Center" Height="Auto">Your goal in this game is to become the greatest of all life forms!
                 Green cells are smaller than you, so you can consume them, increasing your size, and score. Red cells are bigger than you. Watch out, they consume you if you get close to them!
@@ -53,7 +86,7 @@
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="300" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Name="btn_help1_back" Grid.Column="0"  Width="150" Click="btn_help1_back_Click">Back</Button>
@@ -88,18 +121,27 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
-                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <Image Source="img/enemy_smaller.png" Grid.Column="0" Margin="7" ></Image>
-                        <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18" >Smaller Enemy</TextBlock>
-                        <Image Source="img/enemy_bigger.png" Grid.Column="1" Margin="7"></Image>
-                        <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Greater Enemy</TextBlock>
-                        <Image Source="Images/intellienemy_smaller.png" Grid.Column="2" Margin="7"></Image>
-                        <TextBlock Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Smaller Intelligent Enemy</TextBlock>
-                        <Image Source="Images/intellienemy_bigger.png" Grid.Column="3" Margin="7"></Image>
-                        <TextBlock Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Greater Intelligent Enemy</TextBlock>
-                        <Image Source="Images/antimatter.png" Grid.Column="4" Margin="7"></Image>
-                        <TextBlock Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Antimatter</TextBlock>
+                        <StackPanel Name="stack_smallenemy" Grid.Column="0" Tap="infostack_Tap">
+                            <Image Source="img/enemy_smaller.png"  Margin="7" Height="{StaticResource size_help_mainobjects}" ></Image>
+                            <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18" >Smaller Enemy</TextBlock>
+                        </StackPanel>
+                        <StackPanel Name="stack_bigenemy" Grid.Column="1" Tap="infostack_Tap">
+                            <Image Source="img/enemy_bigger.png" Margin="7" Height="{StaticResource size_help_mainobjects}"></Image>
+                            <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Greater Enemy</TextBlock>
+                        </StackPanel>
+                        <StackPanel Name="stack_small_intelli_enemy" Grid.Column="2" Tap="infostack_Tap">
+                            <Image Source="Images/intellienemy_smaller.png"  Margin="7" Height="{StaticResource size_help_mainobjects}"></Image>
+                            <TextBlock Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Smaller Intelligent Enemy</TextBlock>
+                        </StackPanel>
+                        <StackPanel Name="stack_big_intelli_enemy" Grid.Column="3" Tap="infostack_Tap">
+                            <Image Source="Images/intellienemy_bigger.png"  Margin="7" Height="{StaticResource size_help_mainobjects}"></Image>
+                            <TextBlock Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Greater Intelligent Enemy</TextBlock>
+                        </StackPanel>
+                        <StackPanel Name="stack_antimatter" Grid.Column="4" Tap="infostack_Tap">
+                            <Image Source="Images/antimatter.png"  Margin="7" Height="{StaticResource size_help_mainobjects}"></Image>
+                            <TextBlock Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Antimatter</TextBlock>
+                        </StackPanel>
                     </Grid>
                     <TextBlock Grid.Row="3" HorizontalAlignment="Center" FontSize="24" Margin="10">Infections</TextBlock>
                     <Grid Grid.Row="4" HorizontalAlignment="Stretch" Margin="80, 0, 80, 0">
@@ -110,24 +152,29 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <Image Source="Images/sizedecinf.png" Grid.Column="0" Width="40" Height="40"></Image>
-                        <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Size Decreasing</TextBlock>
-                        <Image Source="Images/inverseinf.png" Grid.Column="1" Width="40" Height="40"></Image>
-                        <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Inverse move</TextBlock>
-                        <Image Source="Images/rage.png" Grid.Column="2" Width="40" Height="40"></Image>
-                        <TextBlock Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Rage</TextBlock>
+                        <StackPanel  Name="stack_sizedec_inf" Grid.Column="0" Tap="infostack_Tap">
+                            <Image Source="Images/sizedecinf.png" Width="40" Height="40"></Image>
+                            <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Size Decreasing</TextBlock>
+                        </StackPanel>
+                        <StackPanel Name="stack_move_inf"  Grid.Column="1" Tap="infostack_Tap">
+                            <Image Source="Images/inverseinf.png"  Width="40" Height="40"></Image>
+                            <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Inverse move</TextBlock>
+                        </StackPanel>
+                        <StackPanel Name="stack_rage" Grid.Column="2" Tap="infostack_Tap">
+                            <Image Source="Images/rage.png"  Width="40" Height="40"></Image>
+                            <TextBlock Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Rage</TextBlock>
+                        </StackPanel>
                     </Grid>
                     <Grid Grid.Row="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="300" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Name="btn_help2_back" Grid.Column="0"  Width="150" Click="btn_help2_back_Click">Back</Button>
-                        <Button Name="btn_help2_next" Grid.Column="1"  Width="150" Click="btn_help2_next_Click">Next</Button>
+                        <Button Name="btn_help2_next" Grid.Column="2"  Width="150" Click="btn_help2_next_Click">Next</Button>
                     </Grid>
-
                 </Grid>
 
                 <Grid Name="Help3" Visibility="Collapsed">
@@ -146,7 +193,7 @@
   </TextBlock.RenderTransform>
                         </TextBlock>
                         <TextBlock Foreground="Red" TextWrapping="Wrap" FontWeight="Bold" FontSize="20" Canvas.Left="320" Canvas.Top="100" Width="360">
-                    Tap on the red position of you want to move your cell in this direction
+                    Tap on the red position if you want to move your cell in this direction
                         </TextBlock>
                         <Image Source="img/slide.png" Width="100" Canvas.Left="423" Canvas.Top="200"></Image>
                         <TextBlock Foreground="Red" TextWrapping="Wrap" FontWeight="Bold" FontSize="20" Canvas.Left="410" Canvas.Top="300" Width="360">
@@ -157,13 +204,25 @@
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="300" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Name="btn_help3_back" Grid.Column="0"  Width="150" Click="btn_help3_back_Click">Back</Button>
-                        <Button Name="btn_help3_okay" Grid.Column="1"  Width="150" Click="btn_help3_okay_Click">Okay</Button>
+                        <Button Name="btn_help3_okay" Grid.Column="2"  Width="150" Click="btn_help3_okay_Click">Okay</Button>
                     </Grid>
-
                 </Grid>
+            </Grid>
+        </Border>
+        <Border Name="panel_objectinfo" Visibility="Collapsed" BorderThickness="6" CornerRadius="25" Margin="80, 140" Tap="panel_objectinfo_Tap">
+            <Border.BorderBrush>
+                <SolidColorBrush Color="#FF43C81B" Opacity="0.9" />
+            </Border.BorderBrush>
+            <Border.Background>
+                <SolidColorBrush Color="#FF006F00" Opacity="0.9"/>
+            </Border.Background>
+            <Grid  HorizontalAlignment="Center"  >
+                <TextBlock Name="text_info_smallerenemy" FontSize="23" VerticalAlignment="Top" TextWrapping="Wrap" Margin="10">
+                </TextBlock>
             </Grid>
         </Border>
     </Grid>

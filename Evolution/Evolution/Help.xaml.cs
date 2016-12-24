@@ -33,7 +33,8 @@ namespace Evolution
             check_showtutorial.IsChecked = showtutorial;
             check_showtutorial.Checked += check_showtutorial_Checked;
             check_showtutorial.Unchecked += check_showtutorial_Unchecked;
-        }        
+            panel_objectinfo.Visibility = Visibility.Collapsed;
+        }
 
         private void btn_help1_back_Click(object sender, RoutedEventArgs e)
         {
@@ -48,12 +49,14 @@ namespace Evolution
 
         private void btn_help2_back_Click(object sender, RoutedEventArgs e)
         {
+            HideObjectInfo();
             Help2.Visibility = Visibility.Collapsed;
             Help1.Visibility = Visibility.Visible;
         }
 
         private void btn_help2_next_Click(object sender, RoutedEventArgs e)
         {
+            HideObjectInfo();
             Help2.Visibility = Visibility.Collapsed;
             Help3.Visibility = Visibility.Visible;
         }
@@ -68,7 +71,7 @@ namespace Evolution
         {
             if (MainPage.startedWithTutorial)
             {
-                NavigationService.Navigate(GamePage.GetUri());                
+                NavigationService.Navigate(GamePage.GetUri());
             }
             else NavigationService.GoBack();
         }
@@ -81,6 +84,48 @@ namespace Evolution
         private void check_showtutorial_Unchecked(object sender, RoutedEventArgs e)
         {
             configmanager.WriteConfig(ConfigKeys.ShowTutorial, "false");
+        }
+
+        private void panel_objectinfo_Tap(object sender, GestureEventArgs e)
+        {
+            HideObjectInfo();
+        }
+
+        private void HideObjectInfo()
+        {
+            panel_objectinfo.Visibility = Visibility.Collapsed;
+        }
+
+        private void SetObjectInfo(String ResourceName)
+        {
+            text_info_smallerenemy.Inlines.Clear();
+            Span textSpan = (Span)this.Resources[ResourceName];
+            Inline newInline;
+            foreach (Inline inline in textSpan.Inlines)
+            {
+                if (inline is Run)
+                {
+                    newInline = new Run();
+                    (newInline as Run).Text = (inline as Run).Text;
+                }
+                else if (inline is Bold)
+                {
+                    newInline = new Bold();
+                    //newInline.Text = ((inline as Bold).Inlines[0] as Run).Text;
+                    String text = ((inline as Bold).Inlines[0] as Run).Text;
+                    (newInline as Bold).Inlines.Add(text);
+                }
+                else newInline = new Run();
+                text_info_smallerenemy.Inlines.Add(newInline);
+            }
+            panel_objectinfo.Visibility = Visibility.Visible;
+        }
+
+        private void infostack_Tap(object sender, GestureEventArgs e)
+        {
+            string name = (sender as StackPanel).Name;
+            string resource = name.Replace("stack", "info");
+            SetObjectInfo(resource);
         }
     }
 }
