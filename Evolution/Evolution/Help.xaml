@@ -62,8 +62,6 @@
 
             <Grid>
 
-
-
                 <Grid Name="Help1" Visibility="Visible" >
                     <Grid.ColumnDefinitions>
 
@@ -205,19 +203,20 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Canvas Grid.Row="0">
-                        <Image Source="img/player.png" Width="100" Canvas.Left="320" Canvas.Top="179"></Image>
-                        <Ellipse Width="30" Height="30" Fill="Red" Canvas.Left="414" Canvas.Top="264"></Ellipse>
-                        <TextBlock Foreground="Blue" Text="&#x2794;" FontSize="100" Canvas.Left="273" Canvas.Top="242">
+                        <Image Name="movedemo_player" Source="img/player.png" Width="100" Canvas.Left="320" Canvas.Top="179"></Image>
+                        
+                        <TextBlock Name="arrow_direction" Foreground="Blue" Text="&#x2794;" FontSize="100" Canvas.Left="273" Canvas.Top="242">
                     
                      <TextBlock.RenderTransform>
     <RotateTransform Angle="220"/>
   </TextBlock.RenderTransform>
                         </TextBlock>
-                        <TextBlock  TextWrapping="Wrap" FontWeight="Bold" FontSize="20" Canvas.Left="320" Canvas.Top="100" Width="406">
+                        <TextBlock  TextWrapping="Wrap" FontWeight="Bold" FontSize="20" Canvas.Left="362" Canvas.Top="104" Width="380">
                     Tap on the red position if you want to move your cell in the arrow's direction
                         </TextBlock>
-                        <Image Source="img/slide.png" Width="100" Canvas.Left="423" Canvas.Top="200"></Image>
-                        <TextBlock TextWrapping="Wrap" FontSize="20" Canvas.Left="410" Canvas.Top="300" Width="360">
+                        <Image Source="img/slide.png" Width="100" Canvas.Left="430" Canvas.Top="194"></Image>
+                        <Ellipse Name="ellipse_tap" Width="50" Height="50" Fill="Red" Canvas.Left="414" Canvas.Top="264" Tap="Ellipse_Tap"></Ellipse>
+                        <TextBlock TextWrapping="Wrap" FontSize="20" Canvas.Left="400" Canvas.Top="320" Width="360">
                     Or slide towards any direction from that point to &#032;<Bold>boost</Bold>&#032; your cell
                         </TextBlock>
 

@@ -44,5 +44,10 @@ namespace Evolution
         {
             return (float)(Rnd.NextDouble() * (Maximum - Minimum) + Minimum);
         }
+
+        public static bool CircleContainsPosition(Vector2 CircleTopLeftPosition, double Width, Vector2 Position)
+        {
+            return CircleTopLeftPosition.X < Position.X && Position.X < CircleTopLeftPosition.X + Width && CircleTopLeftPosition.Y < Position.Y && Position.Y < CircleTopLeftPosition.Y + Width;
+        }
     }
 }
