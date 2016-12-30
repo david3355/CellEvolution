@@ -110,11 +110,11 @@ namespace Evolution
         {
             SetBackground();
             initialPlayerSize = 10 + level / 2;
-            speed = 0.1f + level * 0.13f;
+            speed = 0.1f + level * 0.1f;
             n_enemy = 4 + level / 2;
-            n_intellienemy = 6 + level;
+            n_intellienemy = 6 + (5 * level) / 6;
             n_antim = 10 + level / 3;
-            n_inf = 3 + level / 4;
+            n_inf = 3 + level / 6;
             t_game = 0;
             Initialize();
         }
@@ -319,7 +319,7 @@ namespace Evolution
             gt_rageOn.Update += gt_rageOn_Update;
             t_se = 0;
             t_game = 0;
-                
+
             SharedGraphicsDeviceManager.Current.GraphicsDevice.Clear(Color.White);
             int lastLevel = int.Parse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.LastLevel));
             level = lastLevel;
