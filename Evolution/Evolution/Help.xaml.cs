@@ -65,25 +65,25 @@ namespace Evolution
 
         private void btn_help1_back_Click(object sender, RoutedEventArgs e)
         {
+            HideObjectInfo();
             NavigationService.GoBack();
         }
 
         private void btn_help1_next_Click(object sender, RoutedEventArgs e)
         {
+            HideObjectInfo();
             Help1.Visibility = Visibility.Collapsed;
             Help2.Visibility = Visibility.Visible;
         }
 
         private void btn_help2_back_Click(object sender, RoutedEventArgs e)
         {
-            HideObjectInfo();
             Help2.Visibility = Visibility.Collapsed;
             Help1.Visibility = Visibility.Visible;
         }
 
         private void btn_help2_next_Click(object sender, RoutedEventArgs e)
         {
-            HideObjectInfo();
             Help2.Visibility = Visibility.Collapsed;
             Help3.Visibility = Visibility.Visible;
         }
