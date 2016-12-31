@@ -30,10 +30,41 @@ namespace Evolution
 
             if (closestAntimaterial != null && Utility.DistanceEdge(this, closestAntimaterial) <= ANTIMATTER_DANGER_DIST) velocity = GetFleeVector(closestAntimaterial.Origo, this.Origo);
             else if (closestenemy.R >= this.R) velocity = GetFleeVector(closestenemy.Origo, this.Origo);
-            else velocity = GetFollowVector(this.Origo, closestenemy.Origo);
+            else
+            {
+                List<Cell> exceptions = new List<Cell>();
+                while (!CanTouch(closestenemy))
+                {
+                    exceptions.Add(closestenemy);
+                    closestenemy = GetClosestObjectExcept(Objects, Player, exceptions);
+                }
+                velocity = GetFollowVector(this.Origo, closestenemy.Origo);
+            }
             velocity.X *= speed;
             velocity.Y *= speed;
             this.velocity = velocity;
+        }
+
+        private bool CanTouch(Cell Object)
+        {
+            Corner corner = Object.IsCornered();
+            if (corner == Corner.NoCorner) return true;
+            float changeX, changeY;
+            switch (corner)
+            {
+                case Corner.TopLeft:
+                changeX = -1; changeY = -1; break;
+                case Corner.TopRight:
+                changeX = 1; changeY = -1; break;
+                case Corner.BottomLeft:
+                changeX = -1; changeY = 1; break;
+                case Corner.BottomRight:
+                changeX = 1; changeY = 1; break;
+                default: return true;
+            }
+            Vector2 cornerPoint = new Vector2(Object.Origo.X + Object.R * changeX, Object.Origo.Y + Object.R * changeY);
+            Vector2 chaserTestOrigo = new Vector2(cornerPoint.X + this.R * -changeX, cornerPoint.Y + this.R * -changeY);
+            return Utility.Distance(Object.Origo, chaserTestOrigo) < Object.R + this.R;
         }
 
         private Vector2 GetFleeVector(Vector2 EnemyOrigo, Vector2 SelfOrigo)
@@ -48,6 +79,11 @@ namespace Evolution
 
         private Cell GetClosestObject(List<Cell> Objects, Player Player)
         {
+            return GetClosestObjectExcept(Objects, Player, new List<Cell>());
+        }
+
+        private Cell GetClosestObjectExcept(List<Cell> Objects, Player Player, List<Cell> Exceptions)
+        {
             double mindistance = Utility.DistanceEdge(this, Player);
             Cell minobject = Player;
             double distance;
@@ -59,7 +95,7 @@ namespace Evolution
                     if (!obj.Equals(this))
                     {
                         distance = Utility.DistanceEdge(this, obj);
-                        if (distance < mindistance)
+                        if (distance < mindistance && !Exceptions.Contains(obj))
                         {
                             mindistance = distance;
                             minobject = obj;

@@ -20,6 +20,8 @@ using System.Collections.Generic;
 
 namespace Evolution
 {
+    public enum Corner { TopLeft, TopRight, BottomLeft, BottomRight, NoCorner }
+
     public class Cell
     {
         protected GamePage game;
@@ -47,6 +49,12 @@ namespace Evolution
                 ScaleAndBounce();
             }
         }
+
+        public float Width
+        {
+            get { return radius * 2; }
+        }
+
         protected float scale;
 
         public Cell()
@@ -120,6 +128,20 @@ namespace Evolution
         public void ChangeTexture(Texture2D Texture)
         {
             texture = Texture;
+        }
+
+        /// <summary>
+        /// Check if this object is in the corner
+        /// </summary>
+        /// <returns></returns>
+        public Corner IsCornered()
+        {
+            double cornerEpsilon = 0.5;
+            if (Origo.X - R < cornerEpsilon && Origo.Y - R < cornerEpsilon) return Corner.TopLeft;
+            if (Math.Abs(Origo.X + R - game.ActualWidth) < cornerEpsilon && Origo.Y - R < cornerEpsilon) return Corner.TopRight;
+            if (Origo.X - R < cornerEpsilon && Math.Abs(Origo.Y + R - game.ActualHeight) < cornerEpsilon) return Corner.BottomLeft;
+            if (Math.Abs(Origo.X + R - game.ActualWidth) < cornerEpsilon && Math.Abs(Origo.Y + R - game.ActualHeight) < cornerEpsilon) return Corner.BottomRight;
+            return Corner.NoCorner;
         }
 
         public override bool Equals(object obj)
