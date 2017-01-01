@@ -109,12 +109,14 @@ namespace Evolution
         {
             SetBackground();
             initialPlayerSize = 10 + level / 2;
-            speed = 0.1f + level * 0.1f;
+            speed = 0.1f + level * 0.08f;
             n_enemy = 4 + level / 2;
             n_intellienemy = 6 + level / 2;
             n_antim = 10 + level / 3;
-            n_inf = 3 + level / 6;
+            n_inf = 2 + level / 6;
             t_game = 0;
+            rageCycle = 60 - level * 2;
+            rageDuration = 6;
             Initialize();
         }
 
@@ -291,13 +293,6 @@ namespace Evolution
             width_tx_pressback = sf_mgs.MeasureString(TEXT_PRESSBACK).X;
             width_tx_doubletap_restart = sf_mgs.MeasureString(TEXT_DOUBLETAP_RESTART).X;
 
-            n_enemy = 4;
-            n_intellienemy = 6;
-            n_antim = 10;
-            rageCycle = 60;
-            rageDuration = 6;
-            n_inf = 3;
-            speed = 0.1f;
             level = 0;
             score = 0;
             smallObjectInfectTreshold = 2.5;

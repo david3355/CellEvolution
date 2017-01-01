@@ -301,7 +301,7 @@ namespace Evolution
 
         private void AnimateHand()
         {
-            handAnimationLength = 150;
+            handAnimationLength = 140;
             timer_hand_animation = new GameTimer();
             timer_hand_animation.Update += timer_handanimation_Update;
             timer_hand_animation.UpdateInterval = TimeSpan.FromMilliseconds(3);
