@@ -163,6 +163,8 @@
     <Resource Include="Img\settings.png" />
     <Resource Include="Img\help.png" />
     <Resource Include="Img\slide.png" />
+    <Resource Include="Img\bg1.jpg" />
+    <Resource Include="Images\slidehand.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>

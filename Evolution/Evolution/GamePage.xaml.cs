@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Text;
-//using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Navigation;
@@ -112,7 +111,7 @@ namespace Evolution
             initialPlayerSize = 10 + level / 2;
             speed = 0.1f + level * 0.1f;
             n_enemy = 4 + level / 2;
-            n_intellienemy = 6 + (5 * level) / 6;
+            n_intellienemy = 6 + level / 2;
             n_antim = 10 + level / 3;
             n_inf = 3 + level / 6;
             t_game = 0;

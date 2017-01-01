@@ -20,12 +20,13 @@
         <Span x:Key="info_smallenemy">These kind of cells are &#032;
             <Bold>smaller</Bold> &#032; than the player's cell, so you can consume them. They move in only  &#032;
             <Bold>one</Bold> &#032; predefined  &#032;
-            <Bold>direction</Bold>.
+            <Bold>direction</Bold> .
         </Span>
         <Span x:Key="info_bigenemy">These kind of cells are &#032;
             <Bold>bigger</Bold> &#032; than the player's cell, so they will consume you if you get close to them. They move in only &#032;
             <Bold>one</Bold> &#032; predefined &#032;
-            <Bold>direction</Bold>.</Span>
+            <Bold>direction</Bold> .
+        </Span>
         <Span x:Key="info_small_intelli_enemy">These kind of intelligent cells are &#032;
             <Bold>smaller</Bold> &#032; than the player's cell, so you can consume them. &#032;
             <Bold>They flee</Bold> &#032; from the player, bigger cells and antimatters to avoid being consumed, and they also follows smaller cells to consume.
@@ -35,16 +36,18 @@
             <Bold>they will follow you</Bold> &#032; and smaller cells to consume, and also try to avoid antimatters.
         </Span>
         <Span x:Key="info_antimatter">Collosion with antimatter objects leads to &#032;
-            <Bold>decreasing both object's size</Bold>.
+            <Bold>decreasing both object's size</Bold> .
         </Span>
         <Span x:Key="info_sizedec_inf">When your cell collides with size decreasing infection, it becomes infected for a while, and during this time, &#032;
-            <Bold>player's size is decreasing</Bold>.
+            <Bold>player's size is decreasing</Bold> .
         </Span>
         <Span x:Key="info_move_inf">When your cell is infected with move infection, the &#032;
-            <Bold>direction of your next move is inverted</Bold>.</Span>
+            <Bold>direction of your next move is inverted</Bold> .
+        </Span>
         <Span x:Key="info_rage">Rage is a special kind of infection which appears quite rarely. When your cell gets this infection, it goes &#032;
             <Bold>on rage</Bold> &#032; for a couple of seconds, and for this time &#032;
-            <Bold>player can consume bigger cells too</Bold>. This doesn't regard to antimatters!</Span>
+            <Bold>player can consume bigger cells too</Bold> . This doesn't regard to antimatters!
+        </Span>
     </phone:PhoneApplicationPage.Resources>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -144,7 +147,7 @@
                     </Grid>
 
 
-                   
+
                 </Grid>
 
                 <Grid Name="Help2" Visibility="Collapsed">
@@ -204,7 +207,7 @@
                     </Grid.RowDefinitions>
                     <Canvas Grid.Row="0">
                         <Image Name="movedemo_player" Source="img/player.png" Width="100" Canvas.Left="320" Canvas.Top="179"></Image>
-                        
+
                         <TextBlock Name="arrow_direction" Foreground="Blue" Text="&#x2794;" FontSize="100" Canvas.Left="273" Canvas.Top="242">
                     
                      <TextBlock.RenderTransform>
@@ -232,7 +235,64 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Name="btn_help3_back" Grid.Column="0"  Width="150" Click="btn_help3_back_Click">Back</Button>
-                        <Button Name="btn_help3_okay" Grid.Column="2"  Width="150" Click="btn_help3_okay_Click">Okay</Button>
+                        <Button Name="btn_help3_next" Grid.Column="2"  Width="150" Click="btn_help3_next_Click">Next</Button>
+                    </Grid>
+                </Grid>
+
+                <Grid Name="Help4" Visibility="Collapsed" >
+                    <Border CornerRadius="25" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                        <Border.Background>
+                            <ImageBrush ImageSource="Img/bg1.jpg"></ImageBrush>
+                        </Border.Background>
+                    </Border>
+                    
+                    <!--CANVASPLACE-->
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" TextWrapping="Wrap" FontWeight="Bold" FontSize="35" VerticalAlignment="Top" HorizontalAlignment="Center">
+                    Wall bounce back tutorial
+                        </TextBlock>
+                        <Border Grid.Row="1" BorderThickness="3"  CornerRadius="20" Margin="10, 5, 10, 10" VerticalAlignment="Top">
+                            <Border.BorderBrush>
+                                <SolidColorBrush Color="#FF04A004" />
+                            </Border.BorderBrush>
+                            <Border.Background>
+                                <SolidColorBrush Color="Black" Opacity="0.8"/>
+                            </Border.Background>
+                            <Grid>
+                                <TextBlock  Margin="6" TextWrapping="Wrap" Foreground="White">One of the game's features is the ability of cells to bounce back from the walls. It can be used as tactics, but sometimes it can be very annoying when the player stucks next to the wall.
+                <LineBreak /> <Bold>Slide</Bold>&#032; behind your cell to &#032;<Bold>boost</Bold>&#032; and push it against the wall. 
+                                    <LineBreak />
+                                    Tap on the gamefield below for demonstration.
+                                </TextBlock>
+                                <Canvas Grid.Row="2"></Canvas>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Canvas Name="canvas_bounceback" Tap="Canvas_Tap" >
+                        <Canvas.Background>
+                            <SolidColorBrush Color="AliceBlue" Opacity="0.01"/>
+                        </Canvas.Background>
+                        <Image Source="Images/intellienemy_bigger.png" Width="90" Height="90" Canvas.Left="67" Canvas.Top="207"></Image>
+                        <Image Source="Images/intellienemy_smaller.png" Width="30" Height="30" Canvas.Left="679" Canvas.Top="283"></Image>
+                        <Image Source="Images/intellienemy_smaller.png" Width="50" Height="50" Canvas.Left="576" Canvas.Top="227"></Image>
+                        <Image Name="hand_bounceback" Source="Images/slidehand.png" Width="80" Height="80" Canvas.Left="472" Canvas.Top="320"></Image>
+                        <Image Name="player_bounceback" Source="Img/player.png" Width="70" Height="70" Grid.Column="1" Canvas.Left="390" Canvas.Top="370"></Image>
+                    </Canvas>
+                    <Grid VerticalAlignment="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="300" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Name="btn_help4_back" Grid.Column="0"  Width="150" Click="btn_help4_back_Click">Back</Button>
+                        <Button Name="btn_help4_okay" Grid.Column="2"  Width="150" Click="btn_help4_okay_Click">Okay</Button>
+                        
                     </Grid>
                 </Grid>
             </Grid>

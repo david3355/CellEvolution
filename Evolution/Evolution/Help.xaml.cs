@@ -20,9 +20,14 @@ namespace Evolution
     {
         static Uri Uri = new Uri("/Help.xaml", UriKind.Relative);
         private ConfigManager configmanager;
-        private GameTimer timer_move, timer_reposition, timer_gesture_checker;
+        private GameTimer timer_move, timer_reposition, timer_gesture_checker, timer_hand_animation;
         private double movedemo_velocity;
+        private int vxSign, vySign;
         private Vector2 cell_originalpos;
+        private Image demoPlayer;
+        private const double SLIDE_SPEED = 7.5;
+        private const double MOVE_SPEED = 5;
+        private int handAnimationLength;
 
         public static Uri GetUri()
         {
@@ -44,8 +49,7 @@ namespace Evolution
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
-        {
-            cell_originalpos = new Vector2((float)Canvas.GetLeft(movedemo_player), (float)Canvas.GetTop(movedemo_player));
+        {            
             TouchPanel.EnabledGestures = GestureType.Flick;
             timer_gesture_checker = new GameTimer();
             timer_gesture_checker.Update += timer_gesture_checker_Update;
@@ -86,6 +90,7 @@ namespace Evolution
         {
             Help2.Visibility = Visibility.Collapsed;
             Help3.Visibility = Visibility.Visible;
+            cell_originalpos = new Vector2((float)Canvas.GetLeft(movedemo_player), (float)Canvas.GetTop(movedemo_player));
         }
 
         private void btn_help3_back_Click(object sender, RoutedEventArgs e)
@@ -94,7 +99,21 @@ namespace Evolution
             Help2.Visibility = Visibility.Visible;
         }
 
-        private void btn_help3_okay_Click(object sender, RoutedEventArgs e)
+        private void btn_help3_next_Click(object sender, RoutedEventArgs e)
+        {
+            cell_originalpos = new Vector2((float)Canvas.GetLeft(player_bounceback), (float)Canvas.GetTop(player_bounceback));
+            Help3.Visibility = Visibility.Collapsed;
+            Help4.Visibility = Visibility.Visible;
+        }
+
+        private void btn_help4_back_Click(object sender, RoutedEventArgs e)
+        {
+            cell_originalpos = new Vector2((float)Canvas.GetLeft(movedemo_player), (float)Canvas.GetTop(movedemo_player));
+            Help4.Visibility = Visibility.Collapsed;
+            Help3.Visibility = Visibility.Visible;
+        }
+
+        private void btn_help4_okay_Click(object sender, RoutedEventArgs e)
         {
             if (MainPage.startedWithTutorial)
             {
@@ -156,11 +175,12 @@ namespace Evolution
 
         private void Ellipse_Tap(object sender, GestureEventArgs e)
         {
-            MoveDemonstration(5);
+            MoveDemonstration(MOVE_SPEED);
         }
 
         private void MoveDemonstration(double StartVelocity)
         {
+            demoPlayer = movedemo_player;
             if (timer_move != null)
             {
                 timer_move.Stop();
@@ -178,8 +198,29 @@ namespace Evolution
         {
             if (movedemo_velocity > 0)
             {
-                Canvas.SetTop(movedemo_player, Canvas.GetTop(movedemo_player) - movedemo_velocity);
                 Canvas.SetLeft(movedemo_player, Canvas.GetLeft(movedemo_player) - movedemo_velocity);
+                Canvas.SetTop(movedemo_player, Canvas.GetTop(movedemo_player) - movedemo_velocity);
+                movedemo_velocity -= 0.2;
+            }
+            else
+            {
+                timer_move.Stop();
+                timer_reposition = new GameTimer();
+                timer_reposition.UpdateInterval = TimeSpan.FromMilliseconds(500);
+                timer_reposition.Update += timer_reposition_Update;
+                timer_reposition.Start();
+            }
+        }
+
+        void timer_bounceback_Update(object sender, GameTimerEventArgs e)
+        {
+            if (movedemo_velocity > 0)
+            {
+                double x = Canvas.GetLeft(player_bounceback);
+                double y = Canvas.GetTop(player_bounceback);
+                if (y + player_bounceback.ActualHeight + movedemo_velocity * vySign > canvas_bounceback.ActualHeight) vySign *= -1;
+                Canvas.SetLeft(player_bounceback, x + movedemo_velocity * vxSign);
+                Canvas.SetTop(player_bounceback, y + movedemo_velocity * vySign);
                 movedemo_velocity -= 0.2;
             }
             else
@@ -199,6 +240,25 @@ namespace Evolution
             RepositionPlayerCell();
         }
 
+        void timer_handanimation_Update(object sender, GameTimerEventArgs e)
+        {
+            if (handAnimationLength > 0)
+            {
+                double x = Canvas.GetLeft(hand_bounceback);
+                double y = Canvas.GetTop(hand_bounceback);
+                Canvas.SetLeft(hand_bounceback, x + 0.5);
+                Canvas.SetTop(hand_bounceback, y -1);
+                if (handAnimationLength == 100) BounceBackDemonstration(SLIDE_SPEED);
+                handAnimationLength -= 1;
+            }
+            else
+            {
+                timer_hand_animation.Stop();
+                Canvas.SetLeft(hand_bounceback, 472);
+                Canvas.SetTop(hand_bounceback, 320);
+            }
+        }
+
         void timer_gesture_checker_Update(object sender, GameTimerEventArgs e)
         {
             BoostDemonstration();
@@ -206,8 +266,8 @@ namespace Evolution
 
         private void RepositionPlayerCell()
         {
-            Canvas.SetLeft(movedemo_player, cell_originalpos.X);
-            Canvas.SetTop(movedemo_player, cell_originalpos.Y);
+            Canvas.SetLeft(demoPlayer, cell_originalpos.X);
+            Canvas.SetTop(demoPlayer, cell_originalpos.Y);
         }
 
         /// <summary>
@@ -228,10 +288,41 @@ namespace Evolution
                 switch (gesture.GestureType)
                 {
                     case GestureType.Flick:
-                    MoveDemonstration(7.5);
+                    MoveDemonstration(SLIDE_SPEED);
                     break;
                 }
             }
+        }
+
+        private void Canvas_Tap(object sender, GestureEventArgs e)
+        {
+            AnimateHand();            
+        }
+
+        private void AnimateHand()
+        {
+            handAnimationLength = 150;
+            timer_hand_animation = new GameTimer();
+            timer_hand_animation.Update += timer_handanimation_Update;
+            timer_hand_animation.UpdateInterval = TimeSpan.FromMilliseconds(3);
+            timer_hand_animation.Start();
+        }
+
+        private void BounceBackDemonstration(double StartVelocity)
+        {
+            demoPlayer = player_bounceback;
+            if (timer_move != null)
+            {
+                timer_move.Stop();
+                timer_move = null;
+            }
+            vxSign = -1;
+            vySign = 1;
+            RepositionPlayerCell();
+            timer_move = new GameTimer();
+            timer_move.Update += timer_bounceback_Update;
+            movedemo_velocity = StartVelocity;
+            timer_move.Start();
         }
     }
 }
