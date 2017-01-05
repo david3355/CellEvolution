@@ -15,6 +15,11 @@
     shell:SystemTray.IsVisible="False">
 
     <phone:PhoneApplicationPage.Resources>
+        <sys:Double x:Key="movedemo_player_x">320</sys:Double>
+        <sys:Double x:Key="movedemo_player_y">179</sys:Double>
+        <sys:Double x:Key="bouncedemo_player_x">390</sys:Double>
+        <sys:Double x:Key="bouncedemo_player_y">370</sys:Double>
+
         <sys:Double x:Key="size_help_mainobjects">100</sys:Double>
         <sys:Double x:Key="size_gamerules">21</sys:Double>
         <Span x:Key="info_smallenemy">These kind of cells are &#032;
@@ -206,7 +211,7 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Canvas Grid.Row="0">
-                        <Image Name="movedemo_player" Source="img/player.png" Width="100" Canvas.Left="320" Canvas.Top="179"></Image>
+                        <Image Name="movedemo_player" Source="img/player.png" Width="100" Canvas.Left="{StaticResource movedemo_player_x}" Canvas.Top="{StaticResource movedemo_player_y}"></Image>
 
                         <TextBlock Name="arrow_direction" Foreground="Blue" Text="&#x2794;" FontSize="100" Canvas.Left="273" Canvas.Top="242">
                     
@@ -245,7 +250,7 @@
                             <ImageBrush ImageSource="Img/bg1.jpg"></ImageBrush>
                         </Border.Background>
                     </Border>
-                    
+
                     <!--CANVASPLACE-->
 
                     <Grid>
@@ -282,7 +287,7 @@
                         <Image Source="Images/intellienemy_smaller.png" Width="30" Height="30" Canvas.Left="679" Canvas.Top="283"></Image>
                         <Image Source="Images/intellienemy_smaller.png" Width="50" Height="50" Canvas.Left="576" Canvas.Top="227"></Image>
                         <Image Name="hand_bounceback" Source="Images/slidehand.png" Width="80" Height="80" Canvas.Left="472" Canvas.Top="320"></Image>
-                        <Image Name="player_bounceback" Source="Img/player.png" Width="70" Height="70" Grid.Column="1" Canvas.Left="390" Canvas.Top="370"></Image>
+                        <Image Name="player_bounceback" Source="Img/player.png" Width="70" Height="70" Grid.Column="1" Canvas.Left="{StaticResource bouncedemo_player_x}" Canvas.Top="{StaticResource bouncedemo_player_y}"></Image>
                     </Canvas>
                     <Grid VerticalAlignment="Bottom">
                         <Grid.ColumnDefinitions>
@@ -292,7 +297,7 @@
                         </Grid.ColumnDefinitions>
                         <Button Name="btn_help4_back" Grid.Column="0"  Width="150" Click="btn_help4_back_Click">Back</Button>
                         <Button Name="btn_help4_okay" Grid.Column="2"  Width="150" Click="btn_help4_okay_Click">Okay</Button>
-                        
+
                     </Grid>
                 </Grid>
             </Grid>
