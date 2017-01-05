@@ -19,6 +19,8 @@
         <sys:Double x:Key="movedemo_player_y">179</sys:Double>
         <sys:Double x:Key="bouncedemo_player_x">390</sys:Double>
         <sys:Double x:Key="bouncedemo_player_y">370</sys:Double>
+        <sys:Double x:Key="hand_x">472</sys:Double>
+        <sys:Double x:Key="hand_y">320</sys:Double>
 
         <sys:Double x:Key="size_help_mainobjects">100</sys:Double>
         <sys:Double x:Key="size_gamerules">21</sys:Double>

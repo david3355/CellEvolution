@@ -20,11 +20,11 @@ namespace Evolution
     {
         static Uri Uri = new Uri("/Help.xaml", UriKind.Relative);
         private ConfigManager configmanager;
-        private GameTimer timer_gesture_checker, timer_hand_animation;                
+        private GameTimer timer_gesture_checker;                
         private const double SLIDE_SPEED = 7.5;
         private const double MOVE_SPEED = 5;
-        private int handAnimationLength;
-        private Animation animationMove, animationBounce;
+        private const int LENGTH_HANDANIMATION = 140;
+        private Animation animationMove, animationBounce, animationHand;
 
         public static Uri GetUri()
         {
@@ -45,6 +45,7 @@ namespace Evolution
             panel_objectinfo.Visibility = Visibility.Collapsed;
             animationMove = new MoveAnimation(movedemo_player, new Vector2((float)(double)this.Resources["movedemo_player_x"], (float)(double)this.Resources["movedemo_player_y"]), arrow_direction);
             animationBounce = new BounceAnimation(player_bounceback, new Vector2((float)(double)this.Resources["bouncedemo_player_x"], (float)(double)this.Resources["bouncedemo_player_y"]), canvas_bounceback);
+            animationHand = new HandAnimation(hand_bounceback, new Vector2((float)(double)this.Resources["hand_x"], (float)(double)this.Resources["hand_y"]), animationBounce as BounceAnimation, SLIDE_SPEED);
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -174,31 +175,10 @@ namespace Evolution
             animationMove.Animate(MOVE_SPEED);
         }
 
-        void timer_handanimation_Update(object sender, GameTimerEventArgs e)
-        {
-            if (handAnimationLength > 0)
-            {
-                double x = Canvas.GetLeft(hand_bounceback);
-                double y = Canvas.GetTop(hand_bounceback);
-                Canvas.SetLeft(hand_bounceback, x + 0.5);
-                Canvas.SetTop(hand_bounceback, y - 1);
-                if (handAnimationLength == 100) animationBounce.Animate(SLIDE_SPEED);
-                handAnimationLength -= 1;
-            }
-            else
-            {
-                timer_hand_animation.Stop();
-                Canvas.SetLeft(hand_bounceback, 472);
-                Canvas.SetTop(hand_bounceback, 320);
-            }
-        }
-
         void timer_gesture_checker_Update(object sender, GameTimerEventArgs e)
         {
             BoostDemonstration();
         }
-
-        
 
         /// <summary>
         /// TODO: precise flickorigin is needed
@@ -226,47 +206,86 @@ namespace Evolution
 
         private void Canvas_Tap(object sender, GestureEventArgs e)
         {
-            AnimateHand();
+            animationHand.Animate(LENGTH_HANDANIMATION);            
         }
 
-        private void AnimateHand()
-        {
-            handAnimationLength = 140;
-            timer_hand_animation = new GameTimer();
-            timer_hand_animation.Update += timer_handanimation_Update;
-            timer_hand_animation.UpdateInterval = TimeSpan.FromMilliseconds(3);
-            timer_hand_animation.Start();
-        }
-
-       
     }
 
     abstract class Animation
     {
         public Animation(Image Image, Vector2 OriginalPosition)
         {
-            demoPlayer = Image;
-            cell_originalpos = OriginalPosition;
+            image = Image;
+            originalPosition = OriginalPosition;
         }
 
-        protected Vector2 cell_originalpos;
-        protected Image demoPlayer;
+        protected Vector2 originalPosition;
+        protected Image image;
         protected GameTimer timer_move, timer_reposition;
         protected double movedemo_velocity;
 
-        protected void RepositionPlayerCell()
+        protected void RepositionImage()
         {
-            Canvas.SetLeft(demoPlayer, cell_originalpos.X);
-            Canvas.SetTop(demoPlayer, cell_originalpos.Y);
+            Canvas.SetLeft(image, originalPosition.X);
+            Canvas.SetTop(image, originalPosition.Y);
         }
 
         protected virtual void timer_reposition_Update(object sender, GameTimerEventArgs e)
         {
             timer_reposition.Stop();            
-            RepositionPlayerCell();
+            RepositionImage();
         }
 
-        public abstract void Animate(double StartVelocity);
+        public virtual void Animate(double StartVelocity)
+        {
+            if (timer_move != null)
+            {
+                timer_move.Stop();
+                timer_move = null;
+            }
+        }
+    }
+
+    class HandAnimation : Animation
+    {
+        public HandAnimation(Image Image, Vector2 OriginalPosition, BounceAnimation AnimationBounce, double SlideSpeed)
+            : base(Image, OriginalPosition)
+        {
+            animationBounce = AnimationBounce;
+            slideSpeed = SlideSpeed;
+        }
+
+        private int handAnimationLength;
+        private BounceAnimation animationBounce;
+        private double slideSpeed;
+
+        public override void Animate(double HandAnimationLength)
+        {
+            base.Animate(handAnimationLength);
+            handAnimationLength = (int)HandAnimationLength;
+            timer_move = new GameTimer();
+            timer_move.Update += timer_handanimation_Update;
+            timer_move.UpdateInterval = TimeSpan.FromMilliseconds(3);
+            timer_move.Start();
+        }
+
+        void timer_handanimation_Update(object sender, GameTimerEventArgs e)
+        {
+            if (handAnimationLength > 0)
+            {
+                double x = Canvas.GetLeft(image);
+                double y = Canvas.GetTop(image);
+                Canvas.SetLeft(image, x + 0.5);
+                Canvas.SetTop(image, y - 1);
+                if (handAnimationLength == 100) animationBounce.Animate(slideSpeed);
+                handAnimationLength -= 1;
+            }
+            else
+            {
+                timer_move.Stop();
+                RepositionImage();
+            }
+        }
     }
 
     class MoveAnimation : Animation
@@ -281,12 +300,8 @@ namespace Evolution
 
         public override void Animate(double StartVelocity)
         {
-            if (timer_move != null)
-            {
-                timer_move.Stop();
-                timer_move = null;
-            }
-            RepositionPlayerCell();
+            base.Animate(StartVelocity);
+            RepositionImage();
             arrow_direction.Visibility = Visibility.Collapsed;
             timer_move = new GameTimer();
             timer_move.Update += timer_move_Update;
@@ -298,8 +313,8 @@ namespace Evolution
         {
             if (movedemo_velocity > 0)
             {
-                Canvas.SetLeft(demoPlayer, Canvas.GetLeft(demoPlayer) - movedemo_velocity);
-                Canvas.SetTop(demoPlayer, Canvas.GetTop(demoPlayer) - movedemo_velocity);
+                Canvas.SetLeft(image, Canvas.GetLeft(image) - movedemo_velocity);
+                Canvas.SetTop(image, Canvas.GetTop(image) - movedemo_velocity);
                 movedemo_velocity -= 0.2;
             }
             else
@@ -332,14 +347,10 @@ namespace Evolution
 
         public override void Animate(double StartVelocity)
         {
-            if (timer_move != null)
-            {
-                timer_move.Stop();
-                timer_move = null;
-            }
+            base.Animate(StartVelocity);
             vxSign = -1;
             vySign = 1;
-            RepositionPlayerCell();
+            RepositionImage();
             timer_move = new GameTimer();
             timer_move.Update += timer_bounceback_Update;
             movedemo_velocity = StartVelocity;
@@ -350,11 +361,11 @@ namespace Evolution
         {
             if (movedemo_velocity > 0)
             {
-                double x = Canvas.GetLeft(demoPlayer);
-                double y = Canvas.GetTop(demoPlayer);
-                if (y + demoPlayer.ActualHeight + movedemo_velocity * vySign > background.ActualHeight) vySign *= -1;
-                Canvas.SetLeft(demoPlayer, x + movedemo_velocity * vxSign);
-                Canvas.SetTop(demoPlayer, y + movedemo_velocity * vySign);
+                double x = Canvas.GetLeft(image);
+                double y = Canvas.GetTop(image);
+                if (y + image.ActualHeight + movedemo_velocity * vySign > background.ActualHeight) vySign *= -1;
+                Canvas.SetLeft(image, x + movedemo_velocity * vxSign);
+                Canvas.SetTop(image, y + movedemo_velocity * vySign);
                 movedemo_velocity -= 0.2;
             }
             else
