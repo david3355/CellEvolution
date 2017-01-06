@@ -29,7 +29,7 @@ namespace Evolution
         public MainPage()
         {
             InitializeComponent();
-            configmanager = ConfigManager.GetInstance;
+            configmanager = ConfigManager.GetInstance;            
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)

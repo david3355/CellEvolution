@@ -38,12 +38,15 @@ namespace Evolution
         static string[] backgrNames = { "bg1", "bg2", "bg3", "bg4", "bg5", "bg6", "bg7", "bg8", "bg9", "bg10", "bg11", "bg12", "bg13", "bg14", "bg15", "bg16", "bg17", "bg18" };
 
         const string TEXT_EXTINCT = "You are extinct";
+        const string TEXT_CONGRATULATIONS = "Congratulations!";
         const string TEXT_LEVELCOMPLETED = "Congratulations, level {0} completed!";
+        const string TEXT_LASTLEVELCOMPLETED = "You have completed the last level!";
         const string TEXT_DOUBLETAP = "Tap the screen on two points for new level";
         const string TEXT_DOUBLETAP_RESTART = "Tap the screen on two points to restart level";
         const string TEXT_PRESSBACK = "Press Back key again to exit";
+        const string TEXT_PLAYFURTHER = "You can play further if you like...";
 
-        float width_tx_extinct, width_tx_levelcompleted, width_tx_doubletap, width_tx_pressback, width_tx_doubletap_restart;
+        float width_tx_extinct, width_tx_levelcompleted, width_tx_doubletap, width_tx_pressback, width_tx_doubletap_restart, width_tx_lastlevelcomp, width_tx_congrat, width_tx_playfurther;
 
         ContentManager contentManager;  // A tartalmak betöltéséhez szükséges
         GameTimer timer;
@@ -62,6 +65,7 @@ namespace Evolution
         Texture2D tx_rage;
         Texture2D tx_doubletap;
         Texture2D tx_doubletap_red;
+        Texture2D tx_blackboard;
         List<Texture2D> backgrounds;
 
         Song s_music;
@@ -83,7 +87,7 @@ namespace Evolution
         int level, score;
 
         Random rnd = new Random();
-        SpriteFont sf, sf_mgs, sf_levelcomp_msg;
+        SpriteFont sf, sf_mgs, sf_levelcomp_msg, sf_congrat_msg;
         GameTimer gt_sdi, gt_imi, gtse, gt_game, gt_rageOn; // Az infection objektumok időzítői
 
 
@@ -109,7 +113,7 @@ namespace Evolution
         {
             SetBackground();
             initialPlayerSize = 10 + level / 2;
-            speed = 0.1f + level * 0.08f;
+            speed = 0.1f + level * 0.09f;
             n_enemy = 4 + level / 2;
             n_intellienemy = 6 + level / 2;
             n_antim = 10 + level / 3;
@@ -141,7 +145,7 @@ namespace Evolution
             Vector2 velocity = Vector2.Zero;
             Vector2 center = new Vector2(400, 240);
             int playerStartRadius = initialPlayerSize;
-            int bigenemyMaxSize = 13 + level;
+            double bigenemyMaxSize = 13 + level;
             int animatterMaxSize = 10 + level;
             player = new Player(this, tx_player, center, velocity, playerStartRadius);
             //all other objects:
@@ -159,7 +163,7 @@ namespace Evolution
             gt_game.Start();
         }
         // E metódus segítségébel az objektumokat szignatúra alapján, univerzálisan tudjuk hozzáadni a listához
-        void AddObjects(Cell obj, Texture2D texture, int number, int maxRad, Vector2 velocity)
+        void AddObjects(Cell obj, Texture2D texture, int number, double maxRad, Vector2 velocity)
         {
             float radius;
             Vector2 position;
@@ -276,9 +280,11 @@ namespace Evolution
             tx_rage = contentManager.Load<Texture2D>("rage");
             tx_doubletap = contentManager.Load<Texture2D>("doubletap");
             tx_doubletap_red = contentManager.Load<Texture2D>("doubletap_red");
+            tx_blackboard = contentManager.Load<Texture2D>("blackboard");
             sf = contentManager.Load<SpriteFont>("myFont");
             sf_mgs = contentManager.Load<SpriteFont>("SFmgs");
             sf_levelcomp_msg = contentManager.Load<SpriteFont>("levelcomp_msg");
+            sf_congrat_msg = contentManager.Load<SpriteFont>("congrat_msg");
             s_music = contentManager.Load<Song>("BGMusic");
             se_collosion = contentManager.Load<SoundEffect>("collosion");
             se_extinct = contentManager.Load<SoundEffect>("death");
@@ -289,9 +295,12 @@ namespace Evolution
 
             width_tx_extinct = sf_levelcomp_msg.MeasureString(TEXT_EXTINCT).X;
             width_tx_levelcompleted = sf_levelcomp_msg.MeasureString(TEXT_LEVELCOMPLETED).X;
+            width_tx_lastlevelcomp = sf_levelcomp_msg.MeasureString(TEXT_LASTLEVELCOMPLETED).X;
+            width_tx_congrat = sf_congrat_msg.MeasureString(TEXT_CONGRATULATIONS).X;
             width_tx_doubletap = sf_mgs.MeasureString(TEXT_DOUBLETAP).X;
             width_tx_pressback = sf_mgs.MeasureString(TEXT_PRESSBACK).X;
             width_tx_doubletap_restart = sf_mgs.MeasureString(TEXT_DOUBLETAP_RESTART).X;
+            width_tx_playfurther = sf_mgs.MeasureString(TEXT_PLAYFURTHER).X;
 
             level = 0;
             score = 0;
@@ -425,6 +434,11 @@ namespace Evolution
             }
         }
 
+        private bool IsLastLevel()
+        {
+            return level == backgrounds.Count;
+        }
+
         private void PlayerDies()
         {
             se_extinct.Play(effectsVolume, 0, 0);
@@ -504,6 +518,7 @@ namespace Evolution
         {
             spriteBatch.Begin();
             spriteBatch.Draw(tx_bG, Vector2.Zero, Color.White);
+            DrawBlackBoard(0.1f);
 
             if (!twoTouches && terminated == 0) // Amíg nincs double tap és a játékos él, addig kirajzoljuk az objektumokat és az adatokat.
             {
@@ -514,6 +529,7 @@ namespace Evolution
             }
             else if (IsPlayerTerminated())
             {
+                DrawBlackBoard(0.7f);
                 spriteBatch.DrawString(sf_levelcomp_msg, TEXT_EXTINCT, new Vector2((float)this.ActualWidth / 2 - width_tx_extinct / 2, (float)this.ActualHeight / 2 - 30), Color.Red);
                 spriteBatch.DrawString(sf_mgs, TEXT_DOUBLETAP_RESTART, new Vector2((float)this.ActualWidth / 2 - width_tx_doubletap_restart / 2, (float)this.ActualHeight / 2 + 50), Color.Red);
                 int tap_img_width = 100;
@@ -521,16 +537,33 @@ namespace Evolution
             }
             if (levelEnd)
             {
-                spriteBatch.DrawString(sf_levelcomp_msg, String.Format(TEXT_LEVELCOMPLETED, level), new Vector2((float)this.ActualWidth / 2 - width_tx_levelcompleted / 2, (float)this.ActualHeight / 2 - 30), Color.Green);
-                spriteBatch.DrawString(sf_mgs, TEXT_DOUBLETAP, new Vector2((float)this.ActualWidth / 2 - width_tx_doubletap / 2, (float)this.ActualHeight / 2 + 50), Color.Green);
-                int tap_img_width = 100;
-                spriteBatch.Draw(tx_doubletap, new Microsoft.Xna.Framework.Rectangle((int)this.ActualWidth / 2 - tap_img_width / 2, (int)this.ActualHeight / 2 + 100, tap_img_width, tap_img_width), Color.White);
+                if (IsLastLevel())
+                {
+                    DrawBlackBoard(0.7f);
+                    spriteBatch.DrawString(sf_congrat_msg, TEXT_CONGRATULATIONS, new Vector2((float)this.ActualWidth / 2 - width_tx_congrat / 2, (float)this.ActualHeight / 2 - 110), Color.Blue);
+                    spriteBatch.DrawString(sf_levelcomp_msg, TEXT_LASTLEVELCOMPLETED, new Vector2((float)this.ActualWidth / 2 - width_tx_lastlevelcomp / 2, (float)this.ActualHeight / 2 + 30), Color.FromNonPremultiplied(29, 45, 226, 255));
+                    spriteBatch.DrawString(sf_mgs, TEXT_PLAYFURTHER, new Vector2((float)this.ActualWidth / 2 - width_tx_playfurther / 2, (float)this.ActualHeight / 2 + 100), Color.FromNonPremultiplied(29, 45, 226, 255));
+                }
+                else
+                {
+                    DrawBlackBoard(0.7f);
+                    spriteBatch.DrawString(sf_levelcomp_msg, String.Format(TEXT_LEVELCOMPLETED, level), new Vector2((float)this.ActualWidth / 2 - width_tx_levelcompleted / 2, (float)this.ActualHeight / 2 - 100), Color.Green);
+                    spriteBatch.DrawString(sf_mgs, TEXT_DOUBLETAP, new Vector2((float)this.ActualWidth / 2 - width_tx_doubletap / 2, (float)this.ActualHeight / 2), Color.Green);
+                    int tap_img_width = 100;
+                    spriteBatch.Draw(tx_doubletap, new Microsoft.Xna.Framework.Rectangle((int)this.ActualWidth / 2 - tap_img_width / 2, (int)this.ActualHeight / 2 + 50, tap_img_width, tap_img_width), Color.White);
+                }
             }
             if (backKeyPressed)
             {
+                DrawBlackBoard(0.5f);
                 spriteBatch.DrawString(sf_mgs, TEXT_PRESSBACK, new Vector2((float)this.ActualWidth / 2 - width_tx_pressback / 2, (float)this.ActualHeight / 2 + 100), Color.Red);
             }
             spriteBatch.End();
+        }
+
+        private void DrawBlackBoard(float Opacity)
+        {
+            spriteBatch.Draw(tx_blackboard, new Microsoft.Xna.Framework.Rectangle(0, 0, (int)this.ActualWidth, (int)this.ActualHeight), Color.White * Opacity);
         }
 
         void HandleTouches()
