@@ -84,8 +84,7 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontSize="35" FontWeight="Bold">Game objects</TextBlock>
-                    <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Margin="7">Enemies</TextBlock>
+                    <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontSize="35" FontWeight="Bold" Margin="10">Game objects</TextBlock>
                     <Grid Grid.Row="2" HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -149,7 +148,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Button Name="btn_help1_back" Grid.Column="0"  Width="150" Click="btn_help1_back_Click">Back</Button>
-                        <CheckBox Name="check_showtutorial" Grid.Column="1" Checked="check_showtutorial_Checked" Unchecked="check_showtutorial_Unchecked">Show turorial at start</CheckBox>
+                        <CheckBox Name="check_showtutorial" Foreground="#FFFFB800" FontSize="25" Grid.Column="1" Checked="check_showtutorial_Checked" Unchecked="check_showtutorial_Unchecked">Show turorial at start</CheckBox>
                         <Button Name="btn_help1_next" Grid.Column="2"  Width="150" Click="btn_help1_next_Click">Next</Button>
                     </Grid>
 
