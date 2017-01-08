@@ -23,7 +23,6 @@ namespace Evolution
         public static bool startedWithGameModeChoose = false;
         static Uri Uri = new Uri("/MainPage.xaml", UriKind.Relative);
         ConfigManager configmanager;
-        ContentManager contentManager;  // A tartalmak betöltéséhez szükséges
 
         public static Uri GetUri()
         {
@@ -35,11 +34,12 @@ namespace Evolution
         {
             InitializeComponent();
             configmanager = ConfigManager.GetInstance;
-            contentManager = (Application.Current as App).Content;                      
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
+            //HighScores.SetMaxLevel(18);        // DEBUG: for all levels
+
             startedWithTutorial = false;
             startedWithGameModeChoose = false;
             panel_choose_level.Visibility = Visibility.Collapsed;

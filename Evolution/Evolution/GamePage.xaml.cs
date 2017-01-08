@@ -69,7 +69,7 @@ namespace Evolution
         List<Texture2D> backgrounds;
 
         Song s_music;
-        SoundEffect se_collosion, se_move, se_infection, se_extinct, se_rage, se_levelCompleted;
+        SoundEffect se_collosion, se_move, se_infection, se_extinct, se_rage, se_levelCompleted, se_gameCompleted;
 
         bool backKeyPressed;
         int actualBackgroundIndex;
@@ -292,6 +292,7 @@ namespace Evolution
             se_infection = contentManager.Load<SoundEffect>("infection");
             se_rage = contentManager.Load<SoundEffect>("flame");
             se_levelCompleted = contentManager.Load<SoundEffect>("glassbell");
+            se_gameCompleted = contentManager.Load<SoundEffect>("glassbell_gamecompleted");
 
             width_tx_extinct = sf_levelcomp_msg.MeasureString(TEXT_EXTINCT).X;
             width_tx_levelcompleted = sf_levelcomp_msg.MeasureString(TEXT_LEVELCOMPLETED).X;
@@ -784,7 +785,8 @@ namespace Evolution
                 levelEnd = true;
                 if (!levelCompletedSoundPlayed)
                 {
-                    se_levelCompleted.Play(effectsVolume, 0, 0);
+                    if (IsLastLevel()) se_gameCompleted.Play(effectsVolume, 0, 0);
+                    else se_levelCompleted.Play(effectsVolume, 0, 0);
                     levelCompletedSoundPlayed = true;
                 }
             }
