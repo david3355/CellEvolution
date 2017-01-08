@@ -14,6 +14,7 @@ using System.Threading;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.Windows.Media.Imaging;
+using Microsoft.Xna.Framework;
 
 namespace Evolution
 {
@@ -40,6 +41,7 @@ namespace Evolution
         {
             //HighScores.SetMaxLevel(18);        // DEBUG: for all levels
 
+            OpenMain();
             startedWithTutorial = false;
             startedWithGameModeChoose = false;
             panel_choose_level.Visibility = Visibility.Collapsed;
@@ -51,6 +53,23 @@ namespace Evolution
             {
                 btn_select_level.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void OpenMain()
+        {
+            ShowGamePremier();
+        }
+
+        private void ShowGamePremier()
+        {
+            FadeAnimation fadeAnim = new FadeAnimation(panel_premier, ShowMenu);
+            fadeAnim.Animate();
+        }
+
+        private void ShowMenu()
+        {
+            panel_premier.Visibility = Visibility.Collapsed;
+            panel_mainmenu.Visibility = Visibility.Visible;
         }
 
         private void SetLevelBoard()
@@ -126,7 +145,7 @@ namespace Evolution
         }
 
         // Simple button Click event handler to take us to the second page
-        private void Button_Click(object sender, RoutedEventArgs e) 
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             StartGame();
         }
@@ -172,5 +191,71 @@ namespace Evolution
             }
             else base.OnBackKeyPress(e);
         }
+    }
+
+    delegate void AnimationEnds();
+    class FadeAnimation
+    {
+        public FadeAnimation(UIElement Element, AnimationEnds AnimationEndsCallback)
+        {
+            element = Element;
+            animationEndsCallback = AnimationEndsCallback;
+        }
+
+        private UIElement element;
+        private GameTimer timer_fadeIn, timer_wait, timer_fadeOut;
+        private AnimationEnds animationEndsCallback;
+        private double fadeChange;
+        private double updateInterval;
+
+        public void Animate()
+        {
+            const double animationTimeSec = 1;
+            fadeChange = 0.01;
+            updateInterval = (animationTimeSec * 100) * fadeChange * 10;
+            element.Opacity = 0.0;
+            timer_fadeIn = new GameTimer();
+            timer_fadeIn.Update += timer_fadeIn_Update;
+            timer_fadeIn.UpdateInterval = TimeSpan.FromMilliseconds(updateInterval);
+            timer_fadeIn.Start();
+        }
+
+        void timer_fadeIn_Update(object sender, GameTimerEventArgs e)
+        {
+            if(element.Opacity > 0.94)
+            {
+                element.Opacity = 1;
+                timer_fadeIn.Stop();
+                timer_fadeIn = null;
+                timer_wait = new GameTimer();
+                timer_wait.Update += timer_wait_Update;
+                timer_wait.UpdateInterval = TimeSpan.FromSeconds(1);
+                timer_wait.Start();
+            }
+            else element.Opacity += fadeChange;
+        }
+
+        void timer_wait_Update(object sender, GameTimerEventArgs e)
+        {
+            timer_wait.Stop();
+            timer_wait = null;
+            timer_fadeOut = new GameTimer();
+            timer_fadeOut.Update += timer_fadeOut_Update;
+            timer_fadeOut.UpdateInterval = TimeSpan.FromMilliseconds(updateInterval);
+            timer_fadeOut.Start();
+        }
+
+        void timer_fadeOut_Update(object sender, GameTimerEventArgs e)
+        {
+            if (element.Opacity < 0.06)
+            {
+                element.Opacity = 0;
+                timer_fadeOut.Stop();
+                timer_fadeOut = null;
+                animationEndsCallback();
+            }
+            else element.Opacity -= fadeChange;
+        }
+
     }
 }

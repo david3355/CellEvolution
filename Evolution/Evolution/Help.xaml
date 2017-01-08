@@ -173,7 +173,7 @@
                         </TextBlock>
 
                         <TextBlock FontSize="{StaticResource size_gamerules}" HorizontalAlignment="Left" TextWrapping="Wrap"   Height="Auto" Margin="0, 5, 0, 5">
-                            &#8226; &#032;  Chase smaller (green) cells to consume, increasing your size, and score.
+                            &#8226; &#032;  Hunt for smaller (green) cells to consume them, increasing your size, and score.
                         </TextBlock>
                         <TextBlock FontSize="{StaticResource size_gamerules}" HorizontalAlignment="Left" TextWrapping="Wrap"   Height="Auto" Margin="0, 5, 0, 5">
                             &#8226; &#032; Meanwhile, avoid being consumed by bigger (red) cells.
