@@ -165,6 +165,24 @@
     <Resource Include="Img\slide.png" />
     <Resource Include="Img\bg1.jpg" />
     <Resource Include="Images\slidehand.png" />
+    <Resource Include="Images\thumbnails\bg1.jpg" />
+    <Resource Include="Images\thumbnails\bg10.jpg" />
+    <Resource Include="Images\thumbnails\bg11.jpg" />
+    <Resource Include="Images\thumbnails\bg12.jpg" />
+    <Resource Include="Images\thumbnails\bg13.jpg" />
+    <Resource Include="Images\thumbnails\bg14.jpg" />
+    <Resource Include="Images\thumbnails\bg15.jpg" />
+    <Resource Include="Images\thumbnails\bg16.jpg" />
+    <Resource Include="Images\thumbnails\bg17.jpg" />
+    <Resource Include="Images\thumbnails\bg18.jpg" />
+    <Resource Include="Images\thumbnails\bg2.jpg" />
+    <Resource Include="Images\thumbnails\bg3.jpg" />
+    <Resource Include="Images\thumbnails\bg4.jpg" />
+    <Resource Include="Images\thumbnails\bg5.jpg" />
+    <Resource Include="Images\thumbnails\bg6.jpg" />
+    <Resource Include="Images\thumbnails\bg7.jpg" />
+    <Resource Include="Images\thumbnails\bg8.jpg" />
+    <Resource Include="Images\thumbnails\bg9.jpg" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>

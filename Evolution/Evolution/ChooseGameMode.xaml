@@ -49,8 +49,8 @@
                         <SolidColorBrush Color="#FF006F00" Opacity="0.5"/>
                     </Border.Background>
                     <Grid>
-                        <TextBlock Name="txt_evo_tutorial" Margin="7" FontSize="24" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Collapsed">In Evolution mode, when you succeed a level, you can continue from the next level even if you die. This game mode gives advantage to succeed higher levels. Of course you can restart the game from the first level.</TextBlock>
-                        <TextBlock Name="txt_surv_tutorial" Margin="7" FontSize="24" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Collapsed">In Survival mode, when your cell dies, you start again from the first level. This hard mode is for succeeding higher levels with one life.</TextBlock>
+                        <TextBlock Name="txt_evo_tutorial" Margin="7" FontSize="24" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Collapsed">In Evolution mode, when your cell dies on a level, you can restart from that level. When you succeed a level, you can continue from that level at any time (choose from main menu).</TextBlock>
+                        <TextBlock Name="txt_surv_tutorial" Margin="7" FontSize="24" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Collapsed">In Survival mode, when your cell dies, you start again from the first level. Survival mode is for veterans, completing more levels with one life.</TextBlock>
                         <TextBlock Name="txt_choose" Margin="7" FontSize="35" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Visible" VerticalAlignment="Center">- Choose -</TextBlock>
                     </Grid>
                 </Border>

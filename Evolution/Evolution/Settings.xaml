@@ -51,7 +51,7 @@
                     <RadioButton Name="radio_gm_evo" Checked="radio_gm_evo_Checked">Evolution</RadioButton>
                     <RadioButton Name="radio_gm_surv" Checked="radio_gm_surv_Checked">Survival</RadioButton>
                 </StackPanel>
-                <TextBlock Name="txt_evo_desc" Margin="7" FontSize="18" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Collapsed" Grid.ColumnSpan="4" Grid.Row="4">When you succeed a level, you can continue from the next level even if you die.</TextBlock>
+                <TextBlock Name="txt_evo_desc" Margin="7" FontSize="18" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Collapsed" Grid.ColumnSpan="4" Grid.Row="4">When your cell dies, you can retry completing the level.</TextBlock>
                 <TextBlock Name="txt_surv_desc" Margin="7" FontSize="18" TextWrapping="Wrap" HorizontalAlignment="Center" Visibility="Collapsed" Grid.ColumnSpan="4" Grid.Row="4">When your cell dies, you start again from the first level.</TextBlock>
             </Grid>
         </Border>

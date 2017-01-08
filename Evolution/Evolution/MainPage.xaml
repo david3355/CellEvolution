@@ -68,7 +68,7 @@
                         </Ellipse>
                         <TextBlock FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe WP" FontSize="52" Foreground="#FF0E6F00">Start</TextBlock>
                     </Grid>
-                    <Button Name="btn_restart" Visibility="Collapsed" Foreground="Red" FontWeight="Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btn_restart_Click">Restart</Button>
+                    <Button Name="btn_select_level" Visibility="Collapsed" Foreground="Red" FontWeight="Black" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btn_select_level_Click">Select level</Button>
 
                 </StackPanel>
 
@@ -97,18 +97,15 @@
             <TextBlock Margin="10" FontFamily="Comic Sans MS"  FontSize="18" VerticalAlignment="Center" HorizontalAlignment="Center"  >Written and designed by Jäger</TextBlock>
         </Border>
 
-        <Border Name="panel_restart_confirm" Visibility="Collapsed" BorderThickness="6" CornerRadius="25" Margin="170,180,170,180">
+        <Border Name="panel_choose_level" Visibility="Collapsed" BorderThickness="6" CornerRadius="25" Margin="20">
             <Border.BorderBrush>
-                <SolidColorBrush Color="#FFD41616" Opacity="0.9" />
+                <SolidColorBrush Color="#FF0D438D" Opacity="0.9" />
             </Border.BorderBrush>
             <Border.Background>
-                <SolidColorBrush Color="#FF006F00" Opacity="0.9"/>
+                <SolidColorBrush Color="#FF2D777C" Opacity="0.95"/>
             </Border.Background>
-            <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center" >
-                <TextBlock Foreground="Red" FontWeight="Bold" Width="150" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="25">Restart from level 1?</TextBlock>
-                <Button Name="restart_yes" Width="120" Height="80" Foreground="Red" Click="restart_yes_Click">Yes</Button>
-                <Button Name="restart_no" Width="120" Height="80" Click="restart_no_Click">No</Button>
-            </StackPanel>
+            <Grid Name="grid_levelboard">
+            </Grid>
         </Border>
     </Grid>
 

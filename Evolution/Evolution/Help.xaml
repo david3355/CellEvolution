@@ -36,13 +36,13 @@
         </Span>
         <Span x:Key="info_small_intelli_enemy">These kind of intelligent cells are &#032;
             <Bold>smaller</Bold> &#032; than the player's cell, so you can consume them. &#032;
-            <Bold>They flee</Bold> &#032; from the player, bigger cells and antimatters to avoid being consumed, and they also follows smaller cells to consume.
+            <Bold>They flee</Bold> &#032; from player's cell, bigger cells and antimatters to avoid being consumed, and they also follows smaller cells to consume.
         </Span>
         <Span x:Key="info_big_intelli_enemy">These kind of intelligent cells are &#032;
             <Bold>bigger</Bold> &#032; than the player's cell. Watch out, &#032;
-            <Bold>they will follow you</Bold> &#032; and smaller cells to consume, and also try to avoid antimatters.
+            <Bold>they will follow you</Bold> &#032; and smaller cells to consume.
         </Span>
-        <Span x:Key="info_antimatter">Collosion with antimatter objects leads to &#032;
+        <Span x:Key="info_antimatter">Collosion with antimatter objects leads to annihilation,&#032;
             <Bold>decreasing both object's size</Bold> .
         </Span>
         <Span x:Key="info_sizedec_inf">When your cell collides with size decreasing infection, it becomes infected for a while, and during this time, &#032;
@@ -53,7 +53,7 @@
         </Span>
         <Span x:Key="info_rage">Rage is a special kind of infection which appears quite rarely. When your cell gets this infection, it goes &#032;
             <Bold>on rage</Bold> &#032; for a couple of seconds, and for this time &#032;
-            <Bold>player can consume bigger cells too</Bold> . This doesn't regard to antimatters!
+            <Bold>player can consume bigger cells too</Bold> .
         </Span>
     </phone:PhoneApplicationPage.Resources>
 
@@ -67,7 +67,7 @@
                 <SolidColorBrush Color="#FF04A004" />
             </Border.BorderBrush>
             <Border.Background>
-                <SolidColorBrush Color="Black" Opacity="0.8"/>
+                <SolidColorBrush Color="Black" Opacity="0.9"/>
             </Border.Background>
 
             <Grid>
