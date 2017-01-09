@@ -35,13 +35,19 @@ namespace Evolution
         {
             InitializeComponent();
             configmanager = ConfigManager.GetInstance;
+            int highscore, maxlevel, lastlevel;
+            int.TryParse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.HighScore), out highscore);
+            int.TryParse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.MaxLevel), out maxlevel);
+            int.TryParse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.LastLevel), out lastlevel);
+            HighScores.HighScore = highscore;
+            HighScores.MaxLevel = maxlevel;
+            HighScores.LastLevel = lastlevel;
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             //HighScores.SetMaxLevel(18);        // DEBUG: for all levels
-
-            OpenMain();
+                        
             startedWithTutorial = false;
             startedWithGameModeChoose = false;
             panel_choose_level.Visibility = Visibility.Collapsed;
@@ -191,6 +197,11 @@ namespace Evolution
             }
             else base.OnBackKeyPress(e);
         }
+
+        private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            OpenMain();
+        }
     }
 
     delegate void AnimationEnds();
@@ -210,10 +221,20 @@ namespace Evolution
 
         public void Animate()
         {
+            element.Opacity = 0.0;
+            timer_wait = new GameTimer();
+            timer_wait.Update += timer_waitbefore_Update;
+            timer_wait.UpdateInterval = TimeSpan.FromMilliseconds(500);
+            timer_wait.Start();
+        }
+
+        void timer_waitbefore_Update(object sender, GameTimerEventArgs e)
+        {
+            timer_wait.Stop();
+            timer_wait = null;
             const double animationTimeSec = 1;
             fadeChange = 0.01;
             updateInterval = (animationTimeSec * 100) * fadeChange * 10;
-            element.Opacity = 0.0;
             timer_fadeIn = new GameTimer();
             timer_fadeIn.Update += timer_fadeIn_Update;
             timer_fadeIn.UpdateInterval = TimeSpan.FromMilliseconds(updateInterval);

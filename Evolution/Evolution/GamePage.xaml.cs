@@ -45,8 +45,10 @@ namespace Evolution
         const string TEXT_DOUBLETAP_RESTART = "Tap the screen on two points to restart level";
         const string TEXT_PRESSBACK = "Press Back key again to exit";
         const string TEXT_PLAYFURTHER = "You can play further if you like...";
+        const string TEXT_LEVEL = "Level {0}";
+        const string TEXT_SCORE = "Score: {0}";
 
-        float width_tx_extinct, width_tx_levelcompleted, width_tx_doubletap, width_tx_pressback, width_tx_doubletap_restart, width_tx_lastlevelcomp, width_tx_congrat, width_tx_playfurther;
+        float width_tx_extinct, width_tx_doubletap, width_tx_pressback, width_tx_doubletap_restart, width_tx_lastlevelcomp, width_tx_congrat, width_tx_playfurther, width_tx_level;
 
         ContentManager contentManager;  // A tartalmak betöltéséhez szükséges
         GameTimer timer;
@@ -71,6 +73,7 @@ namespace Evolution
         Song s_music;
         SoundEffect se_collosion, se_move, se_infection, se_extinct, se_rage, se_levelCompleted, se_gameCompleted;
 
+        bool levelStarted;
         bool backKeyPressed;
         int actualBackgroundIndex;
         int n_enemy, n_antim, n_inf, n_intellienemy;
@@ -89,6 +92,7 @@ namespace Evolution
         Random rnd = new Random();
         SpriteFont sf, sf_mgs, sf_levelcomp_msg, sf_congrat_msg;
         GameTimer gt_sdi, gt_imi, gtse, gt_game, gt_rageOn; // Az infection objektumok időzítői
+        GameTimer gt_startlevel;
 
 
         int t_imi, t_sdi; // time of inverse moving infection / time of size decreasing infection
@@ -96,6 +100,11 @@ namespace Evolution
 
         bool touching, twoTouches, levelEnd, canTwoTouch, infected, rageObject, rageOn;
         int terminated;
+        private String text_levelcompleted = "Congratulations, level completed!";
+        private String text_score = "Score:";
+        private Color levelEndColor = Color.Green;
+        private Color lastLevelCompletedColor = Color.Blue;
+
         #endregion Fields
 
         void NewLevel()
@@ -133,6 +142,11 @@ namespace Evolution
 
         void Initialize()
         {
+            levelStarted = false;
+            gt_startlevel = new GameTimer();
+            gt_startlevel.UpdateInterval = TimeSpan.FromMilliseconds(1500);
+            gt_startlevel.Update += gt_startlevel_Update;
+            gt_startlevel.Start();
             levelEnd = false;
             canTwoTouch = false;
             twoTouches = false;
@@ -162,6 +176,7 @@ namespace Evolution
             gt_sdi.Stop(); t_sdi = 0; // az új pálya kezdésekor nem lehet infection
             gt_game.Start();
         }
+
         // E metódus segítségébel az objektumokat szignatúra alapján, univerzálisan tudjuk hozzáadni a listához
         void AddObjects(Cell obj, Texture2D texture, int number, double maxRad, Vector2 velocity)
         {
@@ -181,6 +196,13 @@ namespace Evolution
                 obj.SetAttributes(this, texture, position, velocity, radius);
                 objects.Add(obj);
             }
+        }
+
+        void gt_startlevel_Update(object sender, GameTimerEventArgs e)
+        {
+            gt_startlevel.Stop();
+            gt_startlevel = null;
+            levelStarted = true;
         }
 
         void AddSmallerEnemyToBalance(GameObjectCount Count)
@@ -295,13 +317,13 @@ namespace Evolution
             se_gameCompleted = contentManager.Load<SoundEffect>("glassbell_gamecompleted");
 
             width_tx_extinct = sf_levelcomp_msg.MeasureString(TEXT_EXTINCT).X;
-            width_tx_levelcompleted = sf_levelcomp_msg.MeasureString(TEXT_LEVELCOMPLETED).X;
             width_tx_lastlevelcomp = sf_levelcomp_msg.MeasureString(TEXT_LASTLEVELCOMPLETED).X;
             width_tx_congrat = sf_congrat_msg.MeasureString(TEXT_CONGRATULATIONS).X;
             width_tx_doubletap = sf_mgs.MeasureString(TEXT_DOUBLETAP).X;
             width_tx_pressback = sf_mgs.MeasureString(TEXT_PRESSBACK).X;
             width_tx_doubletap_restart = sf_mgs.MeasureString(TEXT_DOUBLETAP_RESTART).X;
             width_tx_playfurther = sf_mgs.MeasureString(TEXT_PLAYFURTHER).X;
+            width_tx_level = sf_congrat_msg.MeasureString(TEXT_LEVEL).X;
 
             level = 0;
             score = 0;
@@ -400,6 +422,7 @@ namespace Evolution
         /// </summary>
         private void OnUpdate(object sender, GameTimerEventArgs e)
         {
+            if (!levelStarted) return;
             HandleTouches();
             UpdateObjects();
             IsLevelEnd();
@@ -521,12 +544,12 @@ namespace Evolution
             spriteBatch.Draw(tx_bG, Vector2.Zero, Color.White);
             DrawBlackBoard(0.1f);
 
+
             if (!twoTouches && terminated == 0) // Amíg nincs double tap és a játékos él, addig kirajzoljuk az objektumokat és az adatokat.
             {
                 if (player.R > 0) player.Draw(spriteBatch);
                 foreach (Cell en in objects) en.Draw(spriteBatch);
-                spriteBatch.DrawString(sf, "Level " + level, new Vector2(10, 10), Color.White);
-                spriteBatch.DrawString(sf, "Score: " + score, new Vector2(10, 30), Color.White);
+                if (player.R > 0 && player.OnRage()) player.Draw(spriteBatch);
             }
             else if (IsPlayerTerminated())
             {
@@ -538,22 +561,29 @@ namespace Evolution
             }
             if (levelEnd)
             {
+                DrawBlackBoard(0.7f);
                 if (IsLastLevel())
                 {
-                    DrawBlackBoard(0.7f);
-                    spriteBatch.DrawString(sf_congrat_msg, TEXT_CONGRATULATIONS, new Vector2((float)this.ActualWidth / 2 - width_tx_congrat / 2, (float)this.ActualHeight / 2 - 110), Color.Blue);
-                    spriteBatch.DrawString(sf_levelcomp_msg, TEXT_LASTLEVELCOMPLETED, new Vector2((float)this.ActualWidth / 2 - width_tx_lastlevelcomp / 2, (float)this.ActualHeight / 2 + 30), Color.FromNonPremultiplied(29, 45, 226, 255));
-                    spriteBatch.DrawString(sf_mgs, TEXT_PLAYFURTHER, new Vector2((float)this.ActualWidth / 2 - width_tx_playfurther / 2, (float)this.ActualHeight / 2 + 100), Color.FromNonPremultiplied(29, 45, 226, 255));
+                    spriteBatch.DrawString(sf_congrat_msg, TEXT_CONGRATULATIONS, new Vector2((float)this.ActualWidth / 2 - width_tx_congrat / 2, (float)this.ActualHeight / 2 - 110), lastLevelCompletedColor);
+                    spriteBatch.DrawString(sf_levelcomp_msg, TEXT_LASTLEVELCOMPLETED, new Vector2((float)this.ActualWidth / 2 - width_tx_lastlevelcomp / 2, (float)this.ActualHeight / 2 + 30), lastLevelCompletedColor);
+                    spriteBatch.DrawString(sf_mgs, TEXT_PLAYFURTHER, new Vector2((float)this.ActualWidth / 2 - width_tx_playfurther / 2, (float)this.ActualHeight / 2 + 100), lastLevelCompletedColor);
                 }
                 else
                 {
-                    DrawBlackBoard(0.7f);
-                    spriteBatch.DrawString(sf_levelcomp_msg, String.Format(TEXT_LEVELCOMPLETED, level), new Vector2((float)this.ActualWidth / 2 - width_tx_levelcompleted / 2, (float)this.ActualHeight / 2 - 100), Color.Green);
-                    spriteBatch.DrawString(sf_mgs, TEXT_DOUBLETAP, new Vector2((float)this.ActualWidth / 2 - width_tx_doubletap / 2, (float)this.ActualHeight / 2), Color.Green);
+                    spriteBatch.DrawString(sf_levelcomp_msg, text_levelcompleted, new Vector2((float)this.ActualWidth / 2 - sf_levelcomp_msg.MeasureString(text_levelcompleted).X / 2, (float)this.ActualHeight / 2 - 100), levelEndColor);
+                    spriteBatch.DrawString(sf_mgs, TEXT_DOUBLETAP, new Vector2((float)this.ActualWidth / 2 - width_tx_doubletap / 2, (float)this.ActualHeight / 2), levelEndColor);
                     int tap_img_width = 100;
                     spriteBatch.Draw(tx_doubletap, new Microsoft.Xna.Framework.Rectangle((int)this.ActualWidth / 2 - tap_img_width / 2, (int)this.ActualHeight / 2 + 50, tap_img_width, tap_img_width), Color.White);
                 }
+                spriteBatch.DrawString(sf_levelcomp_msg, text_score, new Vector2((float)this.ActualWidth / 2 - sf_levelcomp_msg.MeasureString(text_score).X / 2, 30), Color.White);
             }
+
+            if (!levelStarted)
+            {
+                DrawBlackBoard(0.7f);
+                spriteBatch.DrawString(sf_congrat_msg, String.Format(TEXT_LEVEL, level), new Vector2((float)this.ActualWidth / 2 - width_tx_extinct / 2, (float)this.ActualHeight / 2 - 30), Color.AntiqueWhite);
+            }
+
             if (backKeyPressed)
             {
                 DrawBlackBoard(0.5f);
@@ -576,7 +606,7 @@ namespace Evolution
                 if (terminated == 0)
                 {
                     backKeyPressed = false;
-                    if (player.R > 0) se_move.Play(effectsVolume, 0, 0);
+                    if (player.R > 0 && touches.Count < 2) se_move.Play(effectsVolume, 0, 0);
                     SetNewVelocity(touches);
                 }
                 touching = true;
@@ -656,7 +686,7 @@ namespace Evolution
                 t_rageOn = 0;
                 gt_rageOn.Stop();
                 rageOn = false;
-                player.ChangeTexture(tx_player);
+                player.EndRage(tx_player);
             }
 
             foreach (Cell e in objects)
@@ -697,7 +727,7 @@ namespace Evolution
                 }
                 else if (b2 is Rage)
                 {
-                    player.ChangeTexture(tx_rage);
+                    player.GoOnRage(tx_rage);
                     rageOn = true;
                     gt_rageOn.Start();
                 }
@@ -740,6 +770,7 @@ namespace Evolution
             {
                 score += 10;
                 HighScores.SetHighScore(score);
+                text_score = String.Format(TEXT_SCORE, score);
             }
         }
 
@@ -788,6 +819,7 @@ namespace Evolution
                     if (IsLastLevel()) se_gameCompleted.Play(effectsVolume, 0, 0);
                     else se_levelCompleted.Play(effectsVolume, 0, 0);
                     levelCompletedSoundPlayed = true;
+                    text_levelcompleted = String.Format(TEXT_LEVELCOMPLETED, level);
                 }
             }
         }
