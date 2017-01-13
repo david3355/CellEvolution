@@ -124,9 +124,10 @@ namespace Evolution
             SetBackground();
             initialPlayerSize = 10 + level / 2;
             speed = 0.1f + level * 0.09f;
-            n_enemy = 4 + level / 2;
-            n_intellienemy = 6 + level / 2;
-            n_antim = 10 + level / 3;
+            int levelchange = level <= 15 ? level : 15;
+            n_enemy = 4 + levelchange / 2;
+            n_intellienemy = 6 + levelchange / 2;
+            n_antim = 10 + levelchange / 3;
             n_inf = 2 + level / 6;
             t_game = 0;
             rageCycle = 60 - level * 2;
@@ -183,19 +184,19 @@ namespace Evolution
         void AddObjects(Cell obj, Texture2D texture, int number, double maxRad, Vector2 velocity)
         {
             float radius;
-            Vector2 position;
+            Vector2 origoPosition;
             for (int i = 0; i < number; i++)
             {
-                position = GetRandomPositionAroundPlayer();
                 if (maxRad == 0) radius = 12; // az infection-ök mérete rögzített
                 else if (maxRad < 0) radius = Utility.RandomDouble(player.R + 0.1, Math.Abs(maxRad)); // ha nagyobb ellenséget adunk hozzá, tudnunk kell róla, így csak a player sugara és maxRad között generálhatunk számokat
                 else radius = Utility.RandomDouble(5, maxRad);
+                origoPosition = GetRandomPositionAroundPlayer(radius);
                 if (obj is IntelligentEnemy) obj = new IntelligentEnemy();  // TODO: ezen szépíteni kéne
                 else if (obj is Enemy) obj = new Enemy();
                 else if (obj is AntiMatter) obj = new AntiMatter();
                 else if (obj is SizeDecrease) obj = new SizeDecrease();
                 else if (obj is InverseMoving) obj = new InverseMoving();
-                obj.SetAttributes(this, texture, position, velocity, radius);
+                obj.SetAttributes(this, texture, origoPosition, velocity, radius);
                 objects.Add(obj);
             }
         }
@@ -221,29 +222,44 @@ namespace Evolution
                 enemy = new IntelligentEnemy();
                 texture = tx_intellienemy_smaller;
             }
-            Vector2 position = GetRandomPositionAroundPlayer();
             float radius;
             if (player.R <= 0.2) return;
             if (player.R <= 2) radius = player.R - 0.1f;
             else radius = Utility.RandomDouble(player.R / 2, player.R - 0.1);
+            Vector2 position = GetRandomPositionAroundPlayer(radius);
             enemy.SetAttributes(this, texture, position, GetRanVelocity(speed), radius);
             objects.Add(enemy);
         }
 
-        Vector2 GetRandomPositionAroundPlayer()
+        Vector2 GetRandomPositionAroundPlayer(float Radius)
         {
+            double screenWidth, screenHeight;
+            screenWidth = this.ActualWidth > this.ActualHeight ? this.ActualWidth : this.ActualHeight;
+            screenHeight = this.ActualWidth > this.ActualHeight ? this.ActualHeight : this.ActualWidth;
             float dist = 100;
             float X, Y;
-            // ezeken majd még javítani kell, hogy univerzális legyen:
-            //X = rnd.Next(maxRad * 2, (int)this.ActualHeight - maxRad * 2);
-            //Y = rnd.Next(maxRad * 2, (int)this.ActualWidth - maxRad * 2);
+            float margin = 5;
+            int NumberOfTrials = 0;
             do
             {
-                X = rnd.Next(50, 750);
-                Y = rnd.Next(50, 430);
+                X = Utility.RandomDouble(Radius + margin, screenWidth - Radius * 2 - margin);
+                Y = Utility.RandomDouble(Radius + margin, screenHeight - Radius * 2 - margin);
+                NumberOfTrials++;
             }
-            while (X < player.Origo.X + dist && X > player.Origo.X - dist && Y < player.Origo.Y + dist && Y > player.Origo.Y - dist); // távolságot kell, hogy hagyjunk a player és az új objektumok között
+            while (X < player.Origo.X + dist && X > player.Origo.X - dist && Y < player.Origo.Y + dist && Y > player.Origo.Y - dist || CollideWithOtherObjects(X, Y, Radius, NumberOfTrials)); // távolságot kell, hogy hagyjunk a player és az új objektumok között
             return new Vector2(X, Y);
+        }
+
+        private bool CollideWithOtherObjects(float OrigoX, float OrigoY, float Radius, int NumberOfTrials)
+        {
+            const int MAX_TRIAL_NUMBER = 1000;
+            if (NumberOfTrials > MAX_TRIAL_NUMBER) return false;
+            const float DISTANCE = 0;
+            foreach (Cell obj in objects)
+            {
+                if (obj is Enemy && Utility.DistanceEdge(obj.Origo, obj.R, new Vector2(OrigoX, OrigoY), Radius) < DISTANCE) return true;
+            }
+            return false;
         }
 
         Vector2 GetRanVelocity(float speed)
@@ -589,7 +605,7 @@ namespace Evolution
             if (backKeyPressed)
             {
                 DrawBlackBoard(0.5f);
-                spriteBatch.DrawString(sf_mgs, TEXT_PRESSBACK, new Vector2((float)this.ActualWidth / 2 - width_tx_pressback / 2, (float)this.ActualHeight / 2 + 100), Color.Red);
+                spriteBatch.DrawString(sf_mgs, TEXT_PRESSBACK, new Vector2((float)this.ActualWidth / 2 - width_tx_pressback / 2, (float)this.ActualHeight / 2 + 170), Color.Red);
             }
             spriteBatch.End();
         }

@@ -30,6 +30,11 @@ namespace Evolution
             return DistanceOrigo(Object1, Object2) - (Object1.R + Object2.R);
         }
 
+        public static double DistanceEdge(Vector2 Origo1, double Radius1, Vector2 Origo2, double Radius2)
+        {
+            return Distance(Origo1, Origo2) - (Radius1 + Radius2);
+        }
+
         /// <summary>
         /// Returns the distance of the ORIGO of two objects
         /// </summary>
