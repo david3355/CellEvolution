@@ -102,6 +102,7 @@ namespace Evolution
         int terminated;
         private String text_levelcompleted = "Congratulations, level completed!";
         private String text_score = "Score:";
+        private String text_level = "Level";
         private Color levelEndColor = Color.Green;
         private Color lastLevelCompletedColor = Color.Blue;
 
@@ -142,6 +143,7 @@ namespace Evolution
 
         void Initialize()
         {
+            text_level = String.Format(TEXT_LEVEL, level);
             levelStarted = false;
             gt_startlevel = new GameTimer();
             gt_startlevel.UpdateInterval = TimeSpan.FromMilliseconds(1500);
@@ -581,7 +583,7 @@ namespace Evolution
             if (!levelStarted)
             {
                 DrawBlackBoard(0.7f);
-                spriteBatch.DrawString(sf_congrat_msg, String.Format(TEXT_LEVEL, level), new Vector2((float)this.ActualWidth / 2 - width_tx_extinct / 2, (float)this.ActualHeight / 2 - 30), Color.AntiqueWhite);
+                spriteBatch.DrawString(sf_levelcomp_msg, text_level, new Vector2((float)this.ActualWidth / 2 - sf_levelcomp_msg.MeasureString(text_level).X / 2, (float)this.ActualHeight / 2 - 30), Color.AntiqueWhite);
             }
 
             if (backKeyPressed)
