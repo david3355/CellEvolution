@@ -168,20 +168,21 @@ namespace Evolution
             //all other objects:
             if (objects != null && objects.Count > 0) objects.Clear();
             objects = new List<Cell>();
-            AddObjects(new Enemy(), tx_enemy_smaller, n_enemy, playerStartRadius, GetRanVelocity(speed));
-            AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -bigenemyMaxSize, GetRanVelocity(speed));
-            AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy, playerStartRadius, GetRanVelocity(speed));
-            AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -bigenemyMaxSize, GetRanVelocity(speed));
-            AddObjects(new AntiMatter(), tx_antimatter, n_antim, animatterMaxSize, GetRanVelocity(speed));
-            AddObjects(new SizeDecrease(), tx_sdinf, n_inf, 0, Vector2.Zero);
-            AddObjects(new InverseMoving(), tx_iminf, n_inf, 0, Vector2.Zero);
+            
+            AddObjects(new Enemy(), tx_enemy_smaller, n_enemy, playerStartRadius);
+            AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -bigenemyMaxSize);
+            AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy, playerStartRadius);
+            AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -bigenemyMaxSize);
+            AddObjects(new AntiMatter(), tx_antimatter, n_antim, animatterMaxSize);
+            AddObjects(new SizeDecrease(), tx_sdinf, n_inf, 0);
+            AddObjects(new InverseMoving(), tx_iminf, n_inf, 0);
 
             gt_sdi.Stop(); t_sdi = 0; // az új pálya kezdésekor nem lehet infection
             gt_game.Start();
         }
 
         // E metódus segítségébel az objektumokat szignatúra alapján, univerzálisan tudjuk hozzáadni a listához
-        void AddObjects(Cell obj, Texture2D texture, int number, double maxRad, Vector2 velocity)
+        void AddObjects(Cell obj, Texture2D texture, int number, double maxRad)
         {
             float radius;
             Vector2 origoPosition;
@@ -196,7 +197,11 @@ namespace Evolution
                 else if (obj is AntiMatter) obj = new AntiMatter();
                 else if (obj is SizeDecrease) obj = new SizeDecrease();
                 else if (obj is InverseMoving) obj = new InverseMoving();
-                obj.SetAttributes(this, texture, origoPosition, velocity, radius);
+
+                Vector2 startVelocity;
+                if (obj is Infection) startVelocity = Vector2.Zero;
+                else startVelocity  = GetRanVelocity(speed, origoPosition);
+                obj.SetAttributes(this, texture, origoPosition, startVelocity, radius);
                 objects.Add(obj);
             }
         }
@@ -227,7 +232,7 @@ namespace Evolution
             if (player.R <= 2) radius = player.R - 0.1f;
             else radius = Utility.RandomDouble(player.R / 2, player.R - 0.1);
             Vector2 position = GetRandomPositionAroundPlayer(radius);
-            enemy.SetAttributes(this, texture, position, GetRanVelocity(speed), radius);
+            enemy.SetAttributes(this, texture, position, GetRanVelocity(speed, position), radius);
             objects.Add(enemy);
         }
 
@@ -262,9 +267,13 @@ namespace Evolution
             return false;
         }
 
-        Vector2 GetRanVelocity(float speed)
+        Vector2 GetRanVelocity(float speed, Vector2 Origo)
         {
-            return new Vector2(rnd.Next(2) < 1 ? speed : -speed, rnd.Next(2) < 1 ? speed : -speed); // TODO: minden irányba random
+            float randomangle = Utility.Rnd.Next(0, 360);
+            Vector2 DirectionPoint = new Vector2(Origo.X + 1, Origo.Y);
+            Vector2 directionVector = Utility.GetDirectionVector(Origo, DirectionPoint);
+            Vector2 rotatedDirectionPoint = Utility.RotatePoint(new Vector2(0, 0), directionVector, randomangle);
+            return Utility.GetNormalizedVector(rotatedDirectionPoint, (float)Utility.Distance(Origo, DirectionPoint)) * speed;
         }
 
         public GamePage()
@@ -466,7 +475,7 @@ namespace Evolution
             if (t_game > 0 && t_game % rageCycle == 0 && !rageObject)
             {
                 rageObject = true;
-                AddObjects(new Rage(), tx_rage, 1, 0, Vector2.Zero);
+                AddObjects(new Rage(), tx_rage, 1, 0);
                 se_rage.Play(effectsVolume, 0, 0);
             }
             if (t_game > 0 && t_game % rageCycle == rageDuration && rageObject)

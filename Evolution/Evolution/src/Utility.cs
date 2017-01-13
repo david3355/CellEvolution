@@ -54,5 +54,36 @@ namespace Evolution
         {
             return CircleTopLeftPosition.X < Position.X && Position.X < CircleTopLeftPosition.X + Width && CircleTopLeftPosition.Y < Position.Y && Position.Y < CircleTopLeftPosition.Y + Width;
         }
+
+        public static Vector2 GetNormalizedDirectionVector(Vector2 VectorOrigo, Vector2 DirectionPoint)
+        {
+            Vector2 vector = GetDirectionVector(VectorOrigo, DirectionPoint);
+            return GetNormalizedVector(vector, (float)Utility.Distance(VectorOrigo, DirectionPoint));
+        }
+
+        public static Vector2 GetDirectionVector(Vector2 VectorOrigo, Vector2 DirectionPoint)
+        {
+            return new Vector2(DirectionPoint.X - VectorOrigo.X, DirectionPoint.Y - VectorOrigo.Y);
+        }
+
+        public static Vector2 GetNormalizedVector(Vector2 Vector, float VectorLength)
+        {
+            return new Vector2(Vector.X / VectorLength, Vector.Y / VectorLength);
+        }
+
+        /// <summary>
+        /// Rotates a point around a pivot point with an angle
+        /// </summary>
+        public static Vector2 RotatePoint(Vector2 Pivot, Vector2 Point, float Angle)
+        {
+            float sin = (float)Math.Sin(MathHelper.ToRadians(Angle));
+            float cos = (float)Math.Cos(MathHelper.ToRadians(Angle));
+            Point.X -= Pivot.X;
+            Point.Y -= Pivot.Y;
+            double newx = Point.X * cos - Point.Y * sin;
+            double newy = Point.X * sin + Point.Y * cos;
+            return new Vector2((float)newx + Pivot.X, (float)newy + Pivot.Y);
+        }
+
     }
 }

@@ -33,7 +33,7 @@ namespace Evolution
             else
             {
                 List<Cell> exceptions = new List<Cell>();
-                while (!CanTouch(closestenemy))
+                while (!CanTouchObject(closestenemy))
                 {
                     exceptions.Add(closestenemy);
                     closestenemy = GetClosestObjectExcept(Objects, Player, exceptions);
@@ -45,7 +45,10 @@ namespace Evolution
             this.velocity = velocity;
         }
 
-        private bool CanTouch(Cell Object)
+        /// <summary>
+        /// Check if the actual object can touch the object given as parameter (depending whether the object is in corner or not)
+        /// </summary>
+        private bool CanTouchObject(Cell Object)
         {
             Corner corner = Object.IsCornered();
             if (corner == Corner.NoCorner) return true;
@@ -74,7 +77,7 @@ namespace Evolution
 
         private Vector2 GetFollowVector(Vector2 SelfOrigo, Vector2 PreyOrigo)
         {
-            return GetNormalizedDirectionVector(SelfOrigo, PreyOrigo);
+            return Utility.GetNormalizedDirectionVector(SelfOrigo, PreyOrigo);
         }
 
         private Cell GetClosestObject(List<Cell> Objects, Player Player)
@@ -127,44 +130,15 @@ namespace Evolution
             return minantimatter;
         }
 
-        private Vector2 GetNormalizedDirectionVector(Vector2 VectorOrigo, Vector2 DirectionPoint)
-        {
-            Vector2 vector = GetDirectionVector(VectorOrigo, DirectionPoint);
-            return GetNormalizedVector(vector, (float)Utility.Distance(VectorOrigo, DirectionPoint));
-        }
-
-        private Vector2 GetDirectionVector(Vector2 VectorOrigo, Vector2 DirectionPoint)
-        {
-            return new Vector2(DirectionPoint.X - VectorOrigo.X, DirectionPoint.Y - VectorOrigo.Y);
-        }
-
-        private Vector2 GetNormalizedVector(Vector2 Vector, float VectorLength)
-        {
-            return new Vector2(Vector.X / VectorLength, Vector.Y / VectorLength);
-        }
-
         private Vector2 GetRandomFleeDirection(Vector2 VectorOrigo, Vector2 DirectionPoint, int VariationDegree)
         {
             float randomangle = Utility.Rnd.Next(-VariationDegree, VariationDegree + 1);
-            Vector2 directionVector = GetDirectionVector(VectorOrigo, DirectionPoint);
-            Vector2 rotatedDirectionPoint = RotatePoint(new Vector2(0, 0), directionVector, randomangle);
-            return GetNormalizedVector(rotatedDirectionPoint, (float)Utility.Distance(VectorOrigo, DirectionPoint));
+            Vector2 directionVector = Utility.GetDirectionVector(VectorOrigo, DirectionPoint);
+            Vector2 rotatedDirectionPoint = Utility.RotatePoint(new Vector2(0, 0), directionVector, randomangle);
+            return Utility.GetNormalizedVector(rotatedDirectionPoint, (float)Utility.Distance(VectorOrigo, DirectionPoint));
         }
 
-        /// <summary>
-        /// Rotates a point around a pivot point with an angle
-        /// </summary>
-        static Vector2 RotatePoint(Vector2 Pivot, Vector2 Point, float Angle)
-        {
-            float sin = (float)Math.Sin(MathHelper.ToRadians(Angle));
-            float cos = (float)Math.Cos(MathHelper.ToRadians(Angle));
-            Point.X -= Pivot.X;
-            Point.Y -= Pivot.Y;
-            double newx = Point.X * cos - Point.Y * sin;
-            double newy = Point.X * sin + Point.Y * cos;
-            return new Vector2((float)newx + Pivot.X, (float)newy + Pivot.Y);
-        }
-
+        
         public override void Update()
         {
             if (topLeft.X + velocity.X <= 0) topLeft.X = 0;
