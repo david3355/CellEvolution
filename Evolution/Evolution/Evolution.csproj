@@ -81,9 +81,6 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Name.xaml.cs">
-      <DependentUpon>Name.xaml</DependentUpon>
-    </Compile>
     <Compile Include="src\Cell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GamePage.xaml.cs">
@@ -129,10 +126,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Name.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Settings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -145,7 +138,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Img\cells.jpg" />
     <Resource Include="Img\trophy.png" />
     <Resource Include="Img\player.png" />
     <Resource Include="Img\enemy_bigger.png" />
@@ -191,6 +183,20 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="SplashScreenImage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\mainmenu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\level.png" />
+    <Resource Include="Images\level_gray.png" />
+    <Resource Include="Images\start.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

@@ -16,14 +16,14 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" >
         <Grid.Background>
-            <ImageBrush ImageSource="Img/cells.jpg" Opacity="0.9" />
+            <ImageBrush ImageSource="Images/background.png" Opacity="0.9" />
         </Grid.Background>
         <Border BorderThickness="6"  CornerRadius="25" Margin="10, 5, 10, 10">
             <Border.BorderBrush>
                 <SolidColorBrush Color="#FF04A004" />
             </Border.BorderBrush>
             <Border.Background>
-                <SolidColorBrush Color="Black" Opacity="0.8"/>
+                <SolidColorBrush Color="Black" Opacity="0.5"/>
             </Border.Background>
             <Grid>
                 <Grid.ColumnDefinitions>

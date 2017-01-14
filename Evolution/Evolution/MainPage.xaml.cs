@@ -53,11 +53,11 @@ namespace Evolution
             panel_choose_level.Visibility = Visibility.Collapsed;
             if (ConfigManager.GetInstance.ReadConfig(ConfigKeys.GameMode) == GameMode.Evolution.ToString() && int.Parse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.MaxLevel)) >= 1)
             {
-                btn_select_level.Visibility = Visibility.Visible;
+                img_selectlevel.Visibility = Visibility.Visible;
             }
             else
             {
-                btn_select_level.Visibility = Visibility.Collapsed;
+                img_selectlevel.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -151,7 +151,7 @@ namespace Evolution
         }
 
         // Simple button Click event handler to take us to the second page
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Start_Click(object sender, GestureEventArgs e)
         {
             StartGame();
         }
@@ -171,10 +171,10 @@ namespace Evolution
             NavigationService.Navigate(Help.GetUri());
         }
 
-        private void btn_select_level_Click(object sender, RoutedEventArgs e)
+        private void Select_level_Click(object sender, GestureEventArgs e)
         {
             SetLevelBoard();
-            btn_select_level.Visibility = Visibility.Collapsed;
+            img_selectlevel.Visibility = Visibility.Collapsed;
             panel_choose_level.Visibility = Visibility.Visible;
         }
 
@@ -191,7 +191,7 @@ namespace Evolution
         {
             if (panel_choose_level.Visibility == Visibility.Visible)
             {
-                btn_select_level.Visibility = Visibility.Visible;
+                img_selectlevel.Visibility = Visibility.Visible;
                 panel_choose_level.Visibility = Visibility.Collapsed;
                 e.Cancel = true;
             }

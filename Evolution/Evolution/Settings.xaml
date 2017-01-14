@@ -16,7 +16,7 @@
 
     <Grid x:Name="LayoutRoot" >
         <Grid.Background>
-            <ImageBrush ImageSource="Img/cells.jpg" Opacity="0.5" />
+            <ImageBrush ImageSource="Images/background.png" Opacity="0.5" />
         </Grid.Background>
         <Border BorderThickness="6" Margin="50,50,50,50" CornerRadius="25">
             <Border.BorderBrush>
