@@ -58,6 +58,8 @@ namespace Evolution
         Texture2D tx_player;
         Texture2D tx_enemy_smaller;
         Texture2D tx_enemy_bigger;
+        Texture2D tx_enemy_smaller_boss;
+        Texture2D tx_enemy_bigger_boss;
         Texture2D tx_intellienemy_smaller;
         Texture2D tx_intellienemy_bigger;
         Texture2D tx_antimatter;
@@ -85,6 +87,7 @@ namespace Evolution
         public static string playerName;
         double smallObjectInfectTreshold;
         bool levelCompletedSoundPlayed;
+        float enemyMaxRadOnLevel;
 
         List<Cell> objects;
         int level, score;
@@ -155,6 +158,7 @@ namespace Evolution
             twoTouches = false;
             terminated = 0;
             levelCompletedSoundPlayed = false;
+            enemyMaxRadOnLevel = 0.0f;
 
             effectsVolume = (float)Settings.slideValEffects;
 
@@ -168,7 +172,7 @@ namespace Evolution
             //all other objects:
             if (objects != null && objects.Count > 0) objects.Clear();
             objects = new List<Cell>();
-            
+
             AddObjects(new Enemy(), tx_enemy_smaller, n_enemy, playerStartRadius);
             AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -bigenemyMaxSize);
             AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy, playerStartRadius);
@@ -176,6 +180,7 @@ namespace Evolution
             AddObjects(new AntiMatter(), tx_antimatter, n_antim, animatterMaxSize);
             AddObjects(new SizeDecrease(), tx_sdinf, n_inf, 0);
             AddObjects(new InverseMoving(), tx_iminf, n_inf, 0);
+            if (level % 6 == 0) AddObjects(new BossEnemy(), tx_enemy_bigger_boss, 1, -bigenemyMaxSize);
 
             gt_sdi.Stop(); t_sdi = 0; // az új pálya kezdésekor nem lehet infection
             gt_game.Start();
@@ -188,19 +193,26 @@ namespace Evolution
             Vector2 origoPosition;
             for (int i = 0; i < number; i++)
             {
-                if (maxRad == 0) radius = 12; // az infection-ök mérete rögzített
-                else if (maxRad < 0) radius = Utility.RandomDouble(player.R + 0.1, Math.Abs(maxRad)); // ha nagyobb ellenséget adunk hozzá, tudnunk kell róla, így csak a player sugara és maxRad között generálhatunk számokat
-                else radius = Utility.RandomDouble(5, maxRad);
+                if (obj is BossEnemy) radius = enemyMaxRadOnLevel + 5;
+                else
+                {
+                    if (maxRad == 0) radius = 12; // az infection-ök mérete rögzített
+                    else if (maxRad < 0) radius = Utility.RandomDouble(player.R + 0.1, Math.Abs(maxRad)); // ha nagyobb ellenséget adunk hozzá, tudnunk kell róla, így csak a player sugara és maxRad között generálhatunk számokat
+                    else radius = Utility.RandomDouble(5, maxRad);
+                    if (radius > enemyMaxRadOnLevel) enemyMaxRadOnLevel = radius;
+                }
                 origoPosition = GetRandomPositionAroundPlayer(radius);
-                if (obj is IntelligentEnemy) obj = new IntelligentEnemy();  // TODO: ezen szépíteni kéne
+                if (obj is BossEnemy) obj = new BossEnemy();  // TODO: ezen szépíteni kéne
+                else if (obj is IntelligentEnemy) obj = new IntelligentEnemy();
                 else if (obj is Enemy) obj = new Enemy();
                 else if (obj is AntiMatter) obj = new AntiMatter();
                 else if (obj is SizeDecrease) obj = new SizeDecrease();
                 else if (obj is InverseMoving) obj = new InverseMoving();
 
+
                 Vector2 startVelocity;
                 if (obj is Infection) startVelocity = Vector2.Zero;
-                else startVelocity  = GetRanVelocity(speed, origoPosition);
+                else startVelocity = GetRanVelocity(speed, origoPosition);
                 obj.SetAttributes(this, texture, origoPosition, startVelocity, radius);
                 objects.Add(obj);
             }
@@ -321,6 +333,8 @@ namespace Evolution
             tx_player = contentManager.Load<Texture2D>("player");
             tx_enemy_smaller = contentManager.Load<Texture2D>("enemy_smaller");
             tx_enemy_bigger = contentManager.Load<Texture2D>("enemy_bigger");
+            tx_enemy_smaller_boss = contentManager.Load<Texture2D>("enemy_smaller_boss");
+            tx_enemy_bigger_boss = contentManager.Load<Texture2D>("enemy_bigger_boss");
             tx_intellienemy_smaller = contentManager.Load<Texture2D>("intellienemy_smaller");
             tx_intellienemy_bigger = contentManager.Load<Texture2D>("intellienemy_bigger");
             tx_antimatter = contentManager.Load<Texture2D>("antimatter");
@@ -718,8 +732,8 @@ namespace Evolution
 
             foreach (Cell e in objects)
             {
-                if (e is Enemy && e.R < player.R) e.ChangeTexture(e is IntelligentEnemy ? tx_intellienemy_smaller : tx_enemy_smaller);
-                else if (e is Enemy && e.R >= player.R) e.ChangeTexture(e is IntelligentEnemy ? tx_intellienemy_bigger : tx_enemy_bigger);
+                if (e is Enemy && e.R < player.R) e.ChangeTexture(e is IntelligentEnemy ? (e is BossEnemy ? tx_enemy_smaller_boss : tx_intellienemy_smaller) : tx_enemy_smaller);
+                else if (e is Enemy && e.R >= player.R) e.ChangeTexture(e is IntelligentEnemy ? (e is BossEnemy ? tx_enemy_bigger_boss : tx_intellienemy_bigger) : tx_enemy_bigger);
             }
             player.Update();
             foreach (Cell e in objects)

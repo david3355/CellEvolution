@@ -60,6 +60,9 @@
                 </Grid>
             </Border>
         </Grid>
+        <Grid Name="panel_loading" Visibility="Collapsed">
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="33" Foreground="Green" FontWeight="Black">Loading...</TextBlock>
+        </Grid>
     </Grid>
 
 </phone:PhoneApplicationPage>

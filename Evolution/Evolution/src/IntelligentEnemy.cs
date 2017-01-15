@@ -21,7 +21,7 @@ namespace Evolution
 
         private const float ANTIMATTER_DANGER_DIST = 10;
 
-        public void ChangeVelocity(List<Cell> Objects, Player Player, float speed)
+        public virtual void ChangeVelocity(List<Cell> Objects, Player Player, float speed)
         {
             Cell closestenemy = GetClosestObject(Objects, Player);
             Cell closestAntimaterial = GetClosestAntimatter(Objects);

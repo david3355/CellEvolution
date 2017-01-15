@@ -22,6 +22,8 @@ namespace Evolution
     {
         public static bool startedWithTutorial = false;
         public static bool startedWithGameModeChoose = false;
+        private static bool logoShowed = false;
+        private static SolidColorBrush red_brush = new SolidColorBrush(Colors.Red);
         static Uri Uri = new Uri("/MainPage.xaml", UriKind.Relative);
         ConfigManager configmanager;
 
@@ -47,11 +49,13 @@ namespace Evolution
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             //HighScores.SetMaxLevel(18);        // DEBUG: for all levels
-                        
+
             startedWithTutorial = false;
             startedWithGameModeChoose = false;
             panel_choose_level.Visibility = Visibility.Collapsed;
-            if (ConfigManager.GetInstance.ReadConfig(ConfigKeys.GameMode) == GameMode.Evolution.ToString() && int.Parse(ConfigManager.GetInstance.ReadConfig(ConfigKeys.MaxLevel)) >= 1)
+            panel_loading.Visibility = Visibility.Collapsed;
+            if (logoShowed) panel_mainmenu.Visibility = Visibility.Visible;
+            if (ConfigManager.GetInstance.ReadConfig(ConfigKeys.GameMode) == GameMode.Evolution.ToString())
             {
                 img_selectlevel.Visibility = Visibility.Visible;
             }
@@ -76,6 +80,7 @@ namespace Evolution
         {
             panel_premier.Visibility = Visibility.Collapsed;
             panel_mainmenu.Visibility = Visibility.Visible;
+            logoShowed = true;
         }
 
         private void SetLevelBoard()
@@ -107,6 +112,13 @@ namespace Evolution
                     button.Width = 120;
                     button.Height = 120;
                     button.Content = level;
+                    if (j == COLS - 1)
+                    {
+                        button.Foreground = red_brush;
+                        button.FontWeight = FontWeights.Bold;
+                        button.BorderBrush = red_brush;
+                        button.BorderThickness = new Thickness(5);
+                    }
                     ImageBrush buttonBackgr = new ImageBrush();
                     if (level <= highestCompletedLevel + 1)
                     {
@@ -128,6 +140,8 @@ namespace Evolution
 
         private void StartGame()
         {
+            panel_mainmenu.Visibility = Visibility.Collapsed;
+            panel_loading.Visibility = Visibility.Visible;
             String firstStart = configmanager.ReadConfig(ConfigKeys.FirstStart);
             if (firstStart == "true")
             {
@@ -243,7 +257,7 @@ namespace Evolution
 
         void timer_fadeIn_Update(object sender, GameTimerEventArgs e)
         {
-            if(element.Opacity > 0.94)
+            if (element.Opacity > 0.94)
             {
                 element.Opacity = 1;
                 timer_fadeIn.Stop();
