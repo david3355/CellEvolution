@@ -98,23 +98,23 @@
                         </Grid.RowDefinitions>
                         <StackPanel Name="stack_smallenemy" Grid.Column="0" Tap="infostack_Tap">
                             <Image Source="img/enemy_smaller.png"  Margin="7" Height="{StaticResource size_help_mainobjects}" ></Image>
-                            <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18" >Smaller Enemy</TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18" Foreground="#FF45E245" >Smaller Enemy</TextBlock>
                         </StackPanel>
                         <StackPanel Name="stack_bigenemy" Grid.Column="1" Tap="infostack_Tap">
                             <Image Source="img/enemy_bigger.png" Margin="7" Height="{StaticResource size_help_mainobjects}"></Image>
-                            <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Greater Enemy</TextBlock>
+                            <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18" Foreground="#FFF84343">Greater Enemy</TextBlock>
                         </StackPanel>
                         <StackPanel Name="stack_small_intelli_enemy" Grid.Column="2" Tap="infostack_Tap">
                             <Image Source="Images/intellienemy_smaller.png"  Margin="7" Height="{StaticResource size_help_mainobjects}"></Image>
-                            <TextBlock Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Smaller Intelligent Enemy</TextBlock>
+                            <TextBlock Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18"  Foreground="#FF45E245">Smaller Intelligent Enemy</TextBlock>
                         </StackPanel>
                         <StackPanel Name="stack_big_intelli_enemy" Grid.Column="3" Tap="infostack_Tap">
                             <Image Source="Images/intellienemy_bigger.png"  Margin="7" Height="{StaticResource size_help_mainobjects}"></Image>
-                            <TextBlock Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Greater Intelligent Enemy</TextBlock>
+                            <TextBlock Grid.Column="3" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18"  Foreground="#FFF84343">Greater Intelligent Enemy</TextBlock>
                         </StackPanel>
                         <StackPanel Name="stack_antimatter" Grid.Column="4" Tap="infostack_Tap">
                             <Image Source="Images/antimatter.png"  Margin="7" Height="{StaticResource size_help_mainobjects}"></Image>
-                            <TextBlock Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Antimatter</TextBlock>
+                            <TextBlock Grid.Column="4" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18"  Foreground="#FFF84343">Antimatter</TextBlock>
                         </StackPanel>
                     </Grid>
                     <TextBlock Grid.Row="3" HorizontalAlignment="Center" FontSize="24" Margin="7">Infections</TextBlock>
@@ -129,15 +129,15 @@
                         </Grid.RowDefinitions>
                         <StackPanel  Name="stack_sizedec_inf" Grid.Column="0" Tap="infostack_Tap">
                             <Image Source="Images/sizedecinf.png" Width="40" Height="40"></Image>
-                            <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Size Decreasing</TextBlock>
+                            <TextBlock Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18"  Foreground="#FFF84343">Size Decreasing</TextBlock>
                         </StackPanel>
                         <StackPanel Name="stack_move_inf"  Grid.Column="1" Tap="infostack_Tap">
                             <Image Source="Images/inverseinf.png"  Width="40" Height="40"></Image>
-                            <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Inverse move</TextBlock>
+                            <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18"  Foreground="#FFF84343">Inverse Move</TextBlock>
                         </StackPanel>
                         <StackPanel Name="stack_rage" Grid.Column="2" Tap="infostack_Tap">
                             <Image Source="Images/rage.png"  Width="40" Height="40"></Image>
-                            <TextBlock Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18">Rage</TextBlock>
+                            <TextBlock Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" TextAlignment="Center" Margin="5" FontSize="18"  Foreground="#FF45E245">Rage</TextBlock>
                         </StackPanel>
                     </Grid>
 
