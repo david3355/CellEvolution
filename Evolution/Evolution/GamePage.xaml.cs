@@ -738,7 +738,8 @@ namespace Evolution
             player.Update();
             foreach (Cell e in objects)
             {
-                if (e is IntelligentEnemy) (e as IntelligentEnemy).ChangeVelocity(objects, player, speed);
+                if (e is BossEnemy) (e as BossEnemy).ChangeVelocity(objects, player, speed, level);
+                else if (e is IntelligentEnemy) (e as IntelligentEnemy).ChangeVelocity(objects, player, speed);
                 e.Update();
             }
             CollosionObjects();

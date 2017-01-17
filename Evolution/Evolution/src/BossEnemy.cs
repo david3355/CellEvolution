@@ -13,9 +13,9 @@ namespace Evolution
 {
     class BossEnemy : IntelligentEnemy
     {
-        public override void ChangeVelocity(System.Collections.Generic.List<Cell> Objects, Player Player, float speed)
+        public void ChangeVelocity(System.Collections.Generic.List<Cell> Objects, Player Player, float speed, int level)
         {
-            base.ChangeVelocity(Objects, Player, speed + 0.9f);
+            this.ChangeVelocity(Objects, Player, speed + 0.2f + (level / 6 - 1) * 0.1f);
         }
     }
 }
