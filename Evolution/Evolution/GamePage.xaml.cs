@@ -588,9 +588,9 @@ namespace Evolution
 
             if (!twoTouches && terminated == 0) // Amíg nincs double tap és a játékos él, addig kirajzoljuk az objektumokat és az adatokat.
             {
-                if (player.R > 0) player.Draw(spriteBatch);
+                if (player.R > 0) player.DrawPlayer(spriteBatch, level);
                 foreach (Cell en in objects) en.Draw(spriteBatch);
-                if (player.R > 0 && player.OnRage()) player.Draw(spriteBatch);
+                if (player.R > 0 && player.OnRage()) player.DrawPlayer(spriteBatch, level);
             }
             else if (IsPlayerTerminated())
             {

@@ -29,6 +29,7 @@ namespace Evolution
         protected Vector2 topLeft;
         public Vector2 velocity;
         private String id;
+        protected const float drawOpacity = 0.85f;
 
         public Vector2 Origo
         {
@@ -90,9 +91,14 @@ namespace Evolution
             BounceBall();
         }
 
+        public virtual void Draw(SpriteBatch batch, Color TintColor, float Opacity)
+        {
+            batch.Draw(texture, topLeft, null, TintColor  * Opacity, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+        }
+
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(texture, topLeft, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            this.Draw(batch, Color.White, drawOpacity);
         }
 
         public virtual void Update()

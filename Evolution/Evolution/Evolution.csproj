@@ -140,19 +140,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Img\trophy.png" />
-    <Resource Include="Img\player.png" />
-    <Resource Include="Img\enemy_bigger.png" />
-    <Resource Include="Img\enemy_smaller.png" />
-    <Resource Include="Background.png" />
-    <Resource Include="SmalMobileAppTile.png" />
-    <Resource Include="apptile173x173.png" />
-    <Resource Include="apptile99x99.png" />
-    <Resource Include="Images\antimatter.png" />
-    <Resource Include="Images\intellienemy_bigger.png" />
-    <Resource Include="Images\intellienemy_smaller.png" />
-    <Resource Include="Images\inverseinf.png" />
-    <Resource Include="Images\rage.png" />
-    <Resource Include="Images\sizedecinf.png" />
     <Resource Include="Img\settings.png" />
     <Resource Include="Img\help.png" />
     <Resource Include="Img\slide.png" />
@@ -198,6 +185,25 @@
     <Resource Include="Images\level.png" />
     <Resource Include="Images\level_gray.png" />
     <Resource Include="Images\start.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\antimatter.png" />
+    <Resource Include="Images\intellienemy_bigger.png" />
+    <Resource Include="Images\intellienemy_smaller.png" />
+    <Resource Include="Images\rage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Img\enemy_bigger.png" />
+    <Resource Include="Img\enemy_smaller.png" />
+    <Resource Include="Img\player.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="apptile173x173.png" />
+    <Resource Include="apptile99x99.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\inverseinf.png" />
+    <Resource Include="Images\sizedecinf.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

@@ -50,33 +50,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="enemy_bigger.png">
-      <Name>enemy_bigger</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="enemy_smaller.png">
-      <Name>enemy_smaller</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="inverseinf.png">
-      <Name>inverseinf</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="player.png">
-      <Name>player</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="sizedecinf.png">
-      <Name>sizedecinf</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="extinction.wav">
       <Name>extinction</Name>
       <Importer>WavImporter</Importer>
@@ -126,24 +99,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="rage.png">
-      <Name>rage</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="flame.wav">
       <Name>flame</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="antimatter.png">
-      <Name>antimatter</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -250,20 +209,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="intellienemy_bigger.png">
-      <Name>intellienemy_bigger</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="intellienemy_smaller.png">
-      <Name>intellienemy_smaller</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="doubletap.png">
       <Name>doubletap</Name>
       <Importer>TextureImporter</Importer>
@@ -315,15 +260,60 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="antimatter.png">
+      <Name>antimatter</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="enemy_bigger.png">
+      <Name>enemy_bigger</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="enemy_bigger_boss.png">
+      <Name>enemy_bigger_boss</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="enemy_smaller.png">
+      <Name>enemy_smaller</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="enemy_smaller_boss.png">
       <Name>enemy_smaller_boss</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+    <Compile Include="intellienemy_bigger.png">
+      <Name>intellienemy_bigger</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="intellienemy_smaller.png">
+      <Name>intellienemy_smaller</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="player.png">
+      <Name>player</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="rage.png">
+      <Name>rage</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="enemy_bigger_boss.png">
-      <Name>enemy_bigger_boss</Name>
+    <Compile Include="inverseinf.png">
+      <Name>inverseinf</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="sizedecinf.png">
+      <Name>sizedecinf</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

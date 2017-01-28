@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Ink;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Xna.Framework;
@@ -15,7 +14,8 @@ namespace Evolution
 {
     class Player : Cell
     {
-        public Player(GamePage Game, Texture2D texture, Vector2 center, Vector2 velocity, float radius) : base(Game, texture, center, velocity, radius) 
+        public Player(GamePage Game, Texture2D texture, Vector2 center, Vector2 velocity, float radius)
+            : base(Game, texture, center, velocity, radius)
         {
             onRage = false;
         }
@@ -37,6 +37,11 @@ namespace Evolution
         {
             onRage = false;
             ChangeTexture(OriginalTexture);
+        }
+
+        public void DrawPlayer(SpriteBatch batch, int level)
+        {
+            this.Draw(batch, Color.White, 0.9f);
         }
     }
 }

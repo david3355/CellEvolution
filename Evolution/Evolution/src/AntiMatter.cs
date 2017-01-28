@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Ink;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Xna.Framework;
@@ -17,5 +16,10 @@ namespace Evolution
     {
         public AntiMatter(GamePage Game, Texture2D texture, Vector2 center, Vector2 velocity, float radius) : base(Game, texture, center, velocity, radius) { }
         public AntiMatter() { }
+
+        public override void Draw(SpriteBatch batch, Color TintColor, float Opacity)
+        {
+            base.Draw(batch, TintColor, 1);
+        }
     }
 }
