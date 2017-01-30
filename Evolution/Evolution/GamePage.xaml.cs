@@ -168,7 +168,7 @@ namespace Evolution
             int playerStartRadius = initialPlayerSize;
             double bigenemyMaxSize = 13 + level;
             int animatterMaxSize = 10 + level;
-            player = new Player(this, tx_player, center, velocity, playerStartRadius);
+            player = new Player(this, tx_player, tx_rage, center, velocity, playerStartRadius);
             //all other objects:
             if (objects != null && objects.Count > 0) objects.Clear();
             objects = new List<Cell>();
