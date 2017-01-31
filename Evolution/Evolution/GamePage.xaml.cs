@@ -125,12 +125,12 @@ namespace Evolution
         void SetLevel(int Level)
         {
             SetBackground();
-            initialPlayerSize = 10 + level / 2;
+            initialPlayerSize = 40 - level;
             speed = 0.1f + level * 0.09f;
             int levelchange = level <= 15 ? level : 15;
-            n_enemy = 4 + levelchange / 2;
-            n_intellienemy = 6 + levelchange / 2;
-            n_antim = 10 + levelchange / 3;
+            n_enemy = 1 + levelchange / 2;
+            n_intellienemy = 3 + levelchange / 2;
+            n_antim = 1 + levelchange / 3;
             n_inf = 2 + level / 6;
             t_game = 0;
             rageCycle = 60 - level * 2;
@@ -163,12 +163,11 @@ namespace Evolution
             effectsVolume = (float)Settings.slideValEffects;
 
             //player:
-            Vector2 velocity = Vector2.Zero;
             Vector2 center = new Vector2(400, 240);
             int playerStartRadius = initialPlayerSize;
-            double bigenemyMaxSize = 13 + level;
+            double bigenemyMaxSize = playerStartRadius + 3 + level;
             int animatterMaxSize = 10 + level;
-            player = new Player(this, tx_player, tx_rage, center, velocity, playerStartRadius);
+            player = new Player(this, tx_player, tx_rage, center, Vector2.Zero, playerStartRadius);
             //all other objects:
             if (objects != null && objects.Count > 0) objects.Clear();
             objects = new List<Cell>();

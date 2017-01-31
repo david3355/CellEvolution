@@ -19,7 +19,7 @@ namespace Evolution
         {
             onRage = false;
             this.rageTexture = RageTexture;
-            rageOpacity = 0.75f;
+            rageOpacity = 0.70f;
         }
 
         private bool onRage;
