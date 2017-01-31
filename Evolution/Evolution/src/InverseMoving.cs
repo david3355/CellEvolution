@@ -17,5 +17,10 @@ namespace Evolution
     {
         public InverseMoving(GamePage Game, Texture2D texture, Vector2 center, Vector2 velocity, float radius) : base(Game, texture, center, velocity, radius) { }
         public InverseMoving() { }
+
+        public override Cell CreateInstance()
+        {
+            return new InverseMoving();
+        }
     }
 }

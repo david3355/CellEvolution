@@ -17,6 +17,11 @@ namespace Evolution
         public AntiMatter(GamePage Game, Texture2D texture, Vector2 center, Vector2 velocity, float radius) : base(Game, texture, center, velocity, radius) { }
         public AntiMatter() { }
 
+        public override Cell CreateInstance()
+        {
+            return new AntiMatter();
+        }
+
         public override void Draw(SpriteBatch batch, Color TintColor, float Opacity)
         {
             base.Draw(batch, TintColor, 1);

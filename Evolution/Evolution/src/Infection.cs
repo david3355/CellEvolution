@@ -17,5 +17,10 @@ namespace Evolution
     {
         public Infection(GamePage Game, Texture2D texture, Vector2 center, Vector2 velocity, float radius) : base(Game, texture, center, velocity, radius) { }
         public Infection() { }
+
+        public override Cell CreateInstance()
+        {
+            return new Infection();
+        }
     }
 }

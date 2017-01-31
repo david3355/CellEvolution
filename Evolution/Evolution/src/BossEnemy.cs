@@ -17,5 +17,10 @@ namespace Evolution
         {
             this.ChangeVelocity(Objects, Player, speed + 0.2f + (level / 6 - 1) * 0.1f);
         }
+
+        public override Cell CreateInstance()
+        {
+            return new BossEnemy();
+        }
     }
 }

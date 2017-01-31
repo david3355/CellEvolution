@@ -69,6 +69,14 @@ namespace Evolution
             SetAttributes(Game, texture, center, velocity, radius);
         }
 
+        /// <summary>
+        /// Hook method for subclasses
+        /// </summary>
+        public virtual Cell CreateInstance()
+        {
+            return new Cell();
+        }
+
         public void SetAttributes(GamePage Game, Texture2D texture, Vector2 center, Vector2 velocity, float radius)
         {
             this.game = Game;

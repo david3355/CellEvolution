@@ -19,6 +19,11 @@ namespace Evolution
         public IntelligentEnemy(GamePage Game, Texture2D texture, Vector2 center, Vector2 velocity, float radius) : base(Game, texture, center, velocity, radius) { }
         public IntelligentEnemy() { }
 
+        public override Cell CreateInstance()
+        {
+            return new IntelligentEnemy();
+        }
+
         private const float ANTIMATTER_DANGER_DIST = 10;
 
         public virtual void ChangeVelocity(List<Cell> Objects, Player Player, float speed)

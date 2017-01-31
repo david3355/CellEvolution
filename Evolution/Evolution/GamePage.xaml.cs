@@ -201,12 +201,7 @@ namespace Evolution
                     if (radius > enemyMaxRadOnLevel) enemyMaxRadOnLevel = radius;
                 }
                 origoPosition = GetRandomPositionAroundPlayer(radius);
-                if (obj is BossEnemy) obj = new BossEnemy();  // TODO: ezen szépíteni kéne
-                else if (obj is IntelligentEnemy) obj = new IntelligentEnemy();
-                else if (obj is Enemy) obj = new Enemy();
-                else if (obj is AntiMatter) obj = new AntiMatter();
-                else if (obj is SizeDecrease) obj = new SizeDecrease();
-                else if (obj is InverseMoving) obj = new InverseMoving();
+                obj = obj.CreateInstance();
 
 
                 Vector2 startVelocity;
