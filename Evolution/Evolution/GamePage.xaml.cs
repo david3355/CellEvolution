@@ -88,7 +88,8 @@ namespace Evolution
         double smallObjectInfectTreshold;
         bool levelCompletedSoundPlayed;
         float enemyMaxRadOnLevel;
-
+        float size_infection;
+                
         List<Cell> objects;
         int level, score;
 
@@ -165,51 +166,81 @@ namespace Evolution
             //player:
             Vector2 center = new Vector2(400, 240);
             int playerStartRadius = initialPlayerSize;
-            double bigenemyMaxSize = playerStartRadius + 3 + level;
-            int animatterMaxSize = 10 + level;
+            float bigenemyMaxSize = playerStartRadius + 3 + level;
+            float animatterMaxSize = 10 + level;
             player = new Player(this, tx_player, tx_rage, center, Vector2.Zero, playerStartRadius);
             //all other objects:
             if (objects != null && objects.Count > 0) objects.Clear();
             objects = new List<Cell>();
 
-            AddObjects(new Enemy(), tx_enemy_smaller, n_enemy, playerStartRadius);
-            AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -bigenemyMaxSize);
-            AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy, playerStartRadius);
-            AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -bigenemyMaxSize);
-            AddObjects(new AntiMatter(), tx_antimatter, n_antim, animatterMaxSize);
-            AddObjects(new SizeDecrease(), tx_sdinf, n_inf, 0);
-            AddObjects(new InverseMoving(), tx_iminf, n_inf, 0);
-            if (level % 6 == 0) AddObjects(new BossEnemy(), tx_enemy_bigger_boss, 1, -bigenemyMaxSize);
+            //AddObjects(new Enemy(), tx_enemy_smaller, n_enemy, playerStartRadius);
+            //AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -bigenemyMaxSize);
+            //AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy, playerStartRadius);
+            //AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -bigenemyMaxSize);
+            //AddObjects(new AntiMatter(), tx_antimatter, n_antim, animatterMaxSize);
+            //AddObjects(new SizeDecrease(), tx_sdinf, n_inf, 0);
+            //AddObjects(new InverseMoving(), tx_iminf, n_inf, 0);
+            //if (level % 6 == 0) AddObjects(new BossEnemy(), tx_enemy_bigger_boss, 1, -bigenemyMaxSize);
 
+            List<PreparedCell> preparedCells = PrepareSizeAndPosition(playerStartRadius, bigenemyMaxSize, animatterMaxSize);
+            AddPreparedCells(preparedCells);
+            
             gt_sdi.Stop(); t_sdi = 0; // az új pálya kezdésekor nem lehet infection
             gt_game.Start();
         }
 
-        // E metódus segítségébel az objektumokat szignatúra alapján, univerzálisan tudjuk hozzáadni a listához
-        void AddObjects(Cell obj, Texture2D texture, int number, double maxRad)
+        void AddPreparedCells(List<PreparedCell> preparedCells)
+        {
+            foreach (PreparedCell cell in preparedCells)
+            {
+                AddObject(cell);
+            }
+        }
+
+        List<PreparedCell> PrepareSizeAndPosition(float playerStartRadius, float bigenemyMaxSize, float animatterMaxSize)
+        {
+            List<PreparedCell> preparedCells = new List<PreparedCell>();
+            GetSizeForCells(new Enemy(), tx_enemy_smaller, n_enemy, playerStartRadius, false, preparedCells);
+            GetSizeForCells(new Enemy(), tx_enemy_bigger, n_enemy, bigenemyMaxSize, true, preparedCells);
+            GetSizeForCells(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy, playerStartRadius, false, preparedCells);
+            GetSizeForCells(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, bigenemyMaxSize, true, preparedCells);
+            GetSizeForCells(new AntiMatter(), tx_antimatter, n_antim, animatterMaxSize, false, preparedCells);
+            GetSizeForCells(new SizeDecrease(), tx_sdinf, n_inf, 0, false, preparedCells);
+            GetSizeForCells(new InverseMoving(), tx_iminf, n_inf, 0, false, preparedCells);
+            if (level % 6 == 0) GetSizeForCells(new BossEnemy(), tx_enemy_bigger_boss, 1, bigenemyMaxSize, true, preparedCells);
+
+            preparedCells.Sort();
+            return preparedCells;
+        }
+
+        void GetSizeForCells(Cell GameObject, Texture2D texture, int Number, float MaxRadius, bool Bigger, List<PreparedCell> preparedCells)
         {
             float radius;
-            Vector2 origoPosition;
-            for (int i = 0; i < number; i++)
+            PreparedCell cell;
+            for (int i = 0; i < Number; i++)
             {
-                if (obj is BossEnemy) radius = enemyMaxRadOnLevel + 5;
+                if (GameObject is BossEnemy) radius = enemyMaxRadOnLevel + 5;
                 else
                 {
-                    if (maxRad == 0) radius = 12; // az infection-ök mérete rögzített
-                    else if (maxRad < 0) radius = Utility.RandomDouble(player.R + 0.1, Math.Abs(maxRad)); // ha nagyobb ellenséget adunk hozzá, tudnunk kell róla, így csak a player sugara és maxRad között generálhatunk számokat
-                    else radius = Utility.RandomDouble(5, maxRad);
+                    if (GameObject is Infection) radius = size_infection;
+                    else if (Bigger) radius = Utility.RandomDouble(player.R + 0.1, MaxRadius);
+                    else radius = Utility.RandomDouble(5, MaxRadius);
                     if (radius > enemyMaxRadOnLevel) enemyMaxRadOnLevel = radius;
                 }
-                origoPosition = GetRandomPositionAroundPlayer(radius);
-                obj = obj.CreateInstance();
-
-
-                Vector2 startVelocity;
-                if (obj is Infection) startVelocity = Vector2.Zero;
-                else startVelocity = GetRanVelocity(speed, origoPosition);
-                obj.SetAttributes(this, texture, origoPosition, startVelocity, radius);
-                objects.Add(obj);
+                cell = new PreparedCell(radius, GameObject, texture);
+                preparedCells.Add(cell);
             }
+        }
+
+        void AddObject(PreparedCell Cell)
+        {
+            Cell obj = Cell.CellType.CreateInstance();
+            Vector2 origoPosition = GetRandomPositionAroundPlayer(Cell.Radius);
+            Vector2 startVelocity;
+            if (obj is Infection) startVelocity = Vector2.Zero;
+            else startVelocity = GetRanVelocity(speed, origoPosition);
+            obj.SetAttributes(this, Cell.Texture, origoPosition, startVelocity, Cell.Radius);
+            objects.Add(obj);
         }
 
         void gt_startlevel_Update(object sender, GameTimerEventArgs e)
@@ -217,6 +248,12 @@ namespace Evolution
             gt_startlevel.Stop();
             gt_startlevel = null;
             levelStarted = true;
+        }
+
+        void AddRage()
+        {
+            PreparedCell rage = new PreparedCell(size_infection, new Rage(), tx_rage);
+            AddObject(rage);
         }
 
         void AddSmallerEnemyToBalance(GameObjectCount Count)
@@ -363,6 +400,7 @@ namespace Evolution
             level = 0;
             score = 0;
             smallObjectInfectTreshold = 2.5;
+            size_infection = 12;
             gt_sdi = new GameTimer();
             gt_sdi.UpdateInterval = TimeSpan.FromSeconds(1);
             gt_sdi.Update += gt_imi_Update;
@@ -483,7 +521,7 @@ namespace Evolution
             if (t_game > 0 && t_game % rageCycle == 0 && !rageObject)
             {
                 rageObject = true;
-                AddObjects(new Rage(), tx_rage, 1, 0);
+                AddRage();
                 se_rage.Play(effectsVolume, 0, 0);
             }
             if (t_game > 0 && t_game % rageCycle == rageDuration && rageObject)

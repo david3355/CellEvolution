@@ -95,6 +95,7 @@
     <Compile Include="src\FileManager.cs" />
     <Compile Include="src\IntelligentEnemy.cs" />
     <Compile Include="src\Infection.cs" />
+    <Compile Include="src\PreparedCell.cs" />
     <Compile Include="src\SizeDecrease.cs" />
     <Compile Include="src\InverseMoving.cs" />
     <Compile Include="src\Rage.cs" />
