@@ -89,7 +89,7 @@ namespace Evolution
         bool levelCompletedSoundPlayed;
         float enemyMaxRadOnLevel;
         float size_infection;
-                
+
         List<Cell> objects;
         int level, score;
 
@@ -167,24 +167,15 @@ namespace Evolution
             Vector2 center = new Vector2(400, 240);
             int playerStartRadius = initialPlayerSize;
             float bigenemyMaxSize = playerStartRadius + 3 + level;
-            float animatterMaxSize = 10 + level;
+            float animatterMaxSize = playerStartRadius + level / 2;
             player = new Player(this, tx_player, tx_rage, center, Vector2.Zero, playerStartRadius);
             //all other objects:
             if (objects != null && objects.Count > 0) objects.Clear();
             objects = new List<Cell>();
 
-            //AddObjects(new Enemy(), tx_enemy_smaller, n_enemy, playerStartRadius);
-            //AddObjects(new Enemy(), tx_enemy_bigger, n_enemy, -bigenemyMaxSize);
-            //AddObjects(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy, playerStartRadius);
-            //AddObjects(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, -bigenemyMaxSize);
-            //AddObjects(new AntiMatter(), tx_antimatter, n_antim, animatterMaxSize);
-            //AddObjects(new SizeDecrease(), tx_sdinf, n_inf, 0);
-            //AddObjects(new InverseMoving(), tx_iminf, n_inf, 0);
-            //if (level % 6 == 0) AddObjects(new BossEnemy(), tx_enemy_bigger_boss, 1, -bigenemyMaxSize);
-
             List<PreparedCell> preparedCells = PrepareSizeAndPosition(playerStartRadius, bigenemyMaxSize, animatterMaxSize);
             AddPreparedCells(preparedCells);
-            
+
             gt_sdi.Stop(); t_sdi = 0; // az új pálya kezdésekor nem lehet infection
             gt_game.Start();
         }
@@ -279,6 +270,13 @@ namespace Evolution
             objects.Add(enemy);
         }
 
+        void AddAntimatterToBalance(GameObjectCount Count)
+        {
+            float radius = Utility.RandomDouble(10, enemyMaxRadOnLevel);
+            PreparedCell antimatter = new PreparedCell(radius, new AntiMatter(), tx_antimatter);
+            AddObject(antimatter);
+        }
+
         Vector2 GetRandomPositionAroundPlayer(float Radius)
         {
             double screenWidth, screenHeight;
@@ -305,7 +303,7 @@ namespace Evolution
             const float DISTANCE = 0;
             foreach (Cell obj in objects)
             {
-                if (obj is Enemy && Utility.DistanceEdge(obj.Origo, obj.R, new Vector2(OrigoX, OrigoY), Radius) < DISTANCE) return true;
+                if ((obj is Enemy || obj is AntiMatter) && Utility.DistanceEdge(obj.Origo, obj.R, new Vector2(OrigoX, OrigoY), Radius) < DISTANCE) return true;
             }
             return false;
         }
@@ -551,11 +549,19 @@ namespace Evolution
 
         private void BalanceEnemies()
         {
-            int ratio = 3;
+            float smallEnemyRatio, antimaterRatio;
             int maxSmallerEnemies = 30;
+            int maxAntimatters = 10;
             GameObjectCount count = CountObjects();
-            if (terminated == 0 && !levelEnd && count.SmallerEnemies < count.GreaterEnemies * ratio && count.SmallerEnemies < maxSmallerEnemies)
-                AddSmallerEnemyToBalance(count);
+            if (count.BiggerEnemies == 1) smallEnemyRatio = 5;
+            else smallEnemyRatio = 3;
+            if (count.BiggerEnemies > 3) antimaterRatio = 0.5f;
+            else antimaterRatio = 0;
+            if (terminated == 0 && !levelEnd)
+            {
+                if (count.SmallerEnemies < count.BiggerEnemies * smallEnemyRatio && count.SmallerEnemies < maxSmallerEnemies) AddSmallerEnemyToBalance(count);
+                if (count.BiggerEnemies * antimaterRatio >= count.Antimatters && count.Antimatters < maxAntimatters) AddAntimatterToBalance(count);
+            }
         }
 
         private void SlowlyKillTinyObjects()
@@ -578,14 +584,16 @@ namespace Evolution
         {
             public GameObjectCount()
             {
-                GreaterEnemies = 0;
+                BiggerEnemies = 0;
                 SmallerEnemies = 0;
                 AllEnemies = 0;
+                Antimatters = 0;
             }
 
-            public int GreaterEnemies { get; set; }
+            public int BiggerEnemies { get; set; }
             public int SmallerEnemies { get; set; }
             public int AllEnemies { get; set; }
+            public int Antimatters { get; set; }
         }
 
         private GameObjectCount CountObjects()
@@ -597,7 +605,11 @@ namespace Evolution
                 {
                     count.AllEnemies++;
                     if (gameobject.R < player.R) count.SmallerEnemies++;
-                    else count.GreaterEnemies++;
+                    else count.BiggerEnemies++;
+                }
+                else if (gameobject is AntiMatter)
+                {
+                    count.Antimatters++;
                 }
             }
             return count;
@@ -785,7 +797,7 @@ namespace Evolution
             d = Utility.DistanceOrigo(b1, b2);
             k = (float)((b1.R + b2.R) - d) / 2;
             x = 1f;
-            if (b1 is Player && b2 is Infection && d <= b1.R + b2.R)
+            if (b1 is Player && b2 is Infection && Collide(b1, b2, d))
             {
                 if (b2 is Rage) se_rage.Play(effectsVolume, 0, 0);
                 else se_infection.Play(effectsVolume, 0, 0);
@@ -807,14 +819,14 @@ namespace Evolution
                 }
                 objects.Remove(b2);
             }
-            else if (b2 is AntiMatter && d < b1.R + b2.R)
+            else if (b2 is AntiMatter && Collide(b1, b2, d))
             {
                 b1.R -= k;
                 b2.R -= k;
                 if (b1 is Player && terminated == 0) CollosionSound();
 
             }
-            else if (d <= b1.R + b2.R)
+            else if (Collide(b1, b2, d))
             {
                 if (b1 is Player && rageOn)
                 {
@@ -846,6 +858,12 @@ namespace Evolution
                 HighScores.SetHighScore(score);
                 text_score = String.Format(TEXT_SCORE, score);
             }
+        }
+
+        bool Collide(Cell b1, Cell b2, double OrigoDistance)
+        {
+            float textureGap = 2;
+            return OrigoDistance <= b1.R - textureGap + b2.R - textureGap;
         }
 
         void CollosionSound()
