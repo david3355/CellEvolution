@@ -53,6 +53,7 @@ namespace Evolution
             startedWithTutorial = false;
             startedWithGameModeChoose = false;
             panel_choose_level.Visibility = Visibility.Collapsed;
+            panel_choose_evomode.Visibility = Visibility.Collapsed;
             panel_loading.Visibility = Visibility.Collapsed;
             if (logoShowed) panel_mainmenu.Visibility = Visibility.Visible;
             if (ConfigManager.GetInstance.ReadConfig(ConfigKeys.GameMode) == GameMode.Evolution.ToString())
@@ -209,12 +210,27 @@ namespace Evolution
                 panel_choose_level.Visibility = Visibility.Collapsed;
                 e.Cancel = true;
             }
+            if (panel_choose_evomode.Visibility == Visibility.Visible)
+            {
+                panel_choose_evomode.Visibility = Visibility.Collapsed;
+                e.Cancel = true;
+            }
             else base.OnBackKeyPress(e);
         }
 
         private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
         {
             OpenMain();
+        }
+
+        private void img_selectlevelgrey_Tap(object sender, GestureEventArgs e)
+        {
+            panel_choose_evomode.Visibility = Visibility.Visible;
+        }
+
+        private void panel_choose_evomode_Tap(object sender, GestureEventArgs e)
+        {
+            panel_choose_evomode.Visibility = Visibility.Collapsed;
         }
     }
 

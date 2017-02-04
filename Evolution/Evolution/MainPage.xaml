@@ -35,7 +35,7 @@
                     <RowDefinition Height="130" />
                 </Grid.RowDefinitions>
                 <Image Name="img_start" Tap="Start_Click" Grid.Column="0" Source="Images/start.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="50" />
-                <Image Name="img_selectlevelgrey" Grid.Column="1" Source="Images/level_gray.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="50" />
+                <Image Name="img_selectlevelgrey" Grid.Column="1" Source="Images/level_gray.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="50" Tap="img_selectlevelgrey_Tap"  />
                 <Image Name="img_selectlevel" Tap="Select_level_Click" Grid.Column="1" Source="Images/level.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="50" />
                 <Grid Grid.Row="1" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
@@ -49,15 +49,21 @@
                 </Grid>
             </Grid>
 
-                <Border Name="panel_choose_level" Visibility="Collapsed" BorderThickness="6" CornerRadius="25" Margin="20">
+            <Border Name="panel_choose_level" Visibility="Collapsed" BorderThickness="6" CornerRadius="25" Margin="20">
                 <Border.BorderBrush>
-                    <SolidColorBrush Color="#FF0D438D" Opacity="0.9" />
+                    <SolidColorBrush Color="#FF1B7A04" Opacity="0.9" />
                 </Border.BorderBrush>
                 <Border.Background>
-                    <SolidColorBrush Color="#FF2D777C" Opacity="0.95"/>
+                    <SolidColorBrush Color="#FF66AD59" Opacity="0.95"/>
                 </Border.Background>
                 <Grid Name="grid_levelboard">
                 </Grid>
+            </Border>
+            <Border Name="panel_choose_evomode" Visibility="Collapsed" BorderThickness="6" CornerRadius="25" Margin="100, 200" Background="#FF66AD59" Tap="panel_choose_evomode_Tap">
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="#FF1B7A04" Opacity="0.9" />
+                </Border.BorderBrush>
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF0E4100">Choose &#032;<Bold>Evolution</Bold>&#032; game mode in Settings to select level</TextBlock>
             </Border>
         </Grid>
         <Grid Name="panel_loading" Visibility="Collapsed">
