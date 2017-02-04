@@ -20,7 +20,7 @@ namespace Evolution
     {
         static Uri Uri = new Uri("/Help.xaml", UriKind.Relative);
         private ConfigManager configmanager;
-        private GameTimer timer_gesture_checker;                
+        private GameTimer timer_gesture_checker;
         private const double SLIDE_SPEED = 7.5;
         private const double MOVE_SPEED = 5;
         private const int LENGTH_HANDANIMATION = 140;
@@ -99,7 +99,7 @@ namespace Evolution
         }
 
         private void btn_help3_next_Click(object sender, RoutedEventArgs e)
-        {            
+        {
             Help3.Visibility = Visibility.Collapsed;
             Help4.Visibility = Visibility.Visible;
         }
@@ -139,9 +139,19 @@ namespace Evolution
             panel_objectinfo.Visibility = Visibility.Collapsed;
         }
 
+        protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
+        {
+            if (panel_objectinfo.Visibility == Visibility.Visible)
+            {
+                HideObjectInfo();
+                e.Cancel = true;
+            }
+            else base.OnBackKeyPress(e);
+        }
+
         private void SetObjectInfo(String ResourceName)
         {
-            text_info_smallerenemy.Inlines.Clear();
+            text_object_info.Inlines.Clear();
             Span textSpan = (Span)this.Resources[ResourceName];
             Inline newInline;
             foreach (Inline inline in textSpan.Inlines)
@@ -158,7 +168,7 @@ namespace Evolution
                     (newInline as Bold).Inlines.Add(text);
                 }
                 else newInline = new Run();
-                text_info_smallerenemy.Inlines.Add(newInline);
+                text_object_info.Inlines.Add(newInline);
             }
             panel_objectinfo.Visibility = Visibility.Visible;
         }
@@ -206,7 +216,7 @@ namespace Evolution
 
         private void Canvas_Tap(object sender, GestureEventArgs e)
         {
-            animationHand.Animate(LENGTH_HANDANIMATION);            
+            animationHand.Animate(LENGTH_HANDANIMATION);
         }
 
     }
@@ -232,7 +242,7 @@ namespace Evolution
 
         protected virtual void timer_reposition_Update(object sender, GameTimerEventArgs e)
         {
-            timer_reposition.Stop();            
+            timer_reposition.Stop();
             RepositionImage();
         }
 

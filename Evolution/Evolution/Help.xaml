@@ -311,7 +311,7 @@
                 <SolidColorBrush Color="#FF006F00" Opacity="0.9"/>
             </Border.Background>
             <Grid  HorizontalAlignment="Center"  >
-                <TextBlock Name="text_info_smallerenemy" FontSize="23" VerticalAlignment="Top" TextWrapping="Wrap" Margin="10">
+                <TextBlock Name="text_object_info" FontSize="23" VerticalAlignment="Top" TextWrapping="Wrap" Margin="10">
                 </TextBlock>
             </Grid>
         </Border>
