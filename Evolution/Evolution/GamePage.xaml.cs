@@ -797,10 +797,13 @@ namespace Evolution
 
         void CollosionTest(Cell b1, Cell b2)
         {
-            float x, k;
+            Cell bigger = b1.R > b2.R ? b1 : b2;
+            Cell smaller = b1.R > b2.R ? b2 : b1;
+            float x, gapDistance;
             double d; // Distance
             d = Utility.DistanceOrigo(b1, b2);
-            k = (float)((b1.R + b2.R - textureGap * 2) - d) / 2;
+            gapDistance = (float)((b1.R + b2.R - textureGap * 2) - d);
+            double growFunction = Math.Pow(smaller.R / bigger.R, 2);
             x = 1f;
             if (b1 is Player && b2 is Infection && Collide(b1, b2, d))
             {
@@ -826,8 +829,9 @@ namespace Evolution
             }
             else if (b2 is AntiMatter && Collide(b1, b2, d))
             {
-                b1.R -= k;
-                b2.R -= k;
+                
+                bigger.R -= (float)(gapDistance * growFunction);
+                smaller.R -= (float)(gapDistance * (1 - growFunction));
                 if (b1 is Player && terminated == 0) CollosionSound();
 
             }
@@ -838,20 +842,10 @@ namespace Evolution
                     b1.R += x * 0.2f;
                     b2.R -= x * 0.5f;
                 }
-                else if (b1.R > b2.R)
-                {
-                    b1.R += x * 0.2f;
-                    b2.R -= x;
-                }
-                else if (b1.R < b2.R)
-                {
-                    b2.R += x * 0.2f;
-                    b1.R -= x;
-                }
                 else
                 {
-                    b1.velocity *= -1;
-                    b2.velocity *= -1;
+                    bigger.R += x * 0.2f;
+                    smaller.R -= x;
                 }
                 if (b1 is Player) CollosionSound();
             }
