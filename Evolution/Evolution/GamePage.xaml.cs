@@ -82,13 +82,15 @@ namespace Evolution
         int rageCycle;
         int rageDuration;
         float speed;
-        int initialPlayerSize;
+        float initialPlayerSize;
         public static float musicVolume = 1f, effectsVolume = 0.4f;
         public static string playerName;
         double smallObjectInfectTreshold;
         bool levelCompletedSoundPlayed;
         float enemyMaxRadOnLevel;
         float size_infection;
+        float textureGap;
+        float minimalPlayerSize;
 
         List<Cell> objects;
         int level, score;
@@ -127,6 +129,7 @@ namespace Evolution
         {
             SetBackground();
             initialPlayerSize = 40 - level;
+            if (initialPlayerSize < minimalPlayerSize) initialPlayerSize = minimalPlayerSize;
             speed = 0.1f + level * 0.09f;
             int levelchange = level <= 15 ? level : 15;
             n_enemy = 1 + levelchange / 2;
@@ -165,8 +168,8 @@ namespace Evolution
 
             //player:
             Vector2 center = new Vector2(400, 240);
-            int playerStartRadius = initialPlayerSize;
-            float bigenemyMaxSize = playerStartRadius + 3 + level;
+            float playerStartRadius = initialPlayerSize;
+            float bigenemyMaxSize = playerStartRadius + 10 + level;
             float animatterMaxSize = playerStartRadius + level / 2;
             player = new Player(this, tx_player, tx_rage, center, Vector2.Zero, playerStartRadius);
             //all other objects:
@@ -398,7 +401,9 @@ namespace Evolution
             level = 0;
             score = 0;
             smallObjectInfectTreshold = 2.5;
+            textureGap = 2;
             size_infection = 12;
+            minimalPlayerSize = 10;
             gt_sdi = new GameTimer();
             gt_sdi.UpdateInterval = TimeSpan.FromSeconds(1);
             gt_sdi.Update += gt_imi_Update;
@@ -795,7 +800,7 @@ namespace Evolution
             float x, k;
             double d; // Distance
             d = Utility.DistanceOrigo(b1, b2);
-            k = (float)((b1.R + b2.R) - d) / 2;
+            k = (float)((b1.R + b2.R - textureGap * 2) - d) / 2;
             x = 1f;
             if (b1 is Player && b2 is Infection && Collide(b1, b2, d))
             {
@@ -862,7 +867,6 @@ namespace Evolution
 
         bool Collide(Cell b1, Cell b2, double OrigoDistance)
         {
-            float textureGap = 2;
             return OrigoDistance <= b1.R - textureGap + b2.R - textureGap;
         }
 
