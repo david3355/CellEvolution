@@ -80,7 +80,8 @@ namespace Evolution
         int actualBackgroundIndex;
         int n_enemy, n_antim, n_inf, n_intellienemy;
         int rageCycle;
-        int rageDuration;
+        int rageResideOnGroundTime;
+        int rageLastsOnPlayerTime;
         float speed;
         float initialPlayerSize;
         public static float musicVolume = 1f, effectsVolume = 0.4f;
@@ -97,14 +98,14 @@ namespace Evolution
 
         Random rnd = new Random();
         SpriteFont sf, sf_mgs, sf_levelcomp_msg, sf_congrat_msg;
-        GameTimer gt_sdi, gt_imi, gtse, gt_game, gt_rageOn; // Az infection objektumok időzítői
+        GameTimer gt_sizedec_inf, gt_inversemove_inf, gtse, gt_game, gt_rageOn; // Az infection objektumok időzítői
         GameTimer gt_startlevel;
 
 
-        int t_imi, t_sdi; // time of inverse moving infection / time of size decreasing infection
+        int time_inversemove_inf, time_sizedec_inf; // time of inverse moving infection / time of size decreasing infection
         int t_se, t_game, t_rageOn;
 
-        bool touching, twoTouches, levelEnd, canTwoTouch, infected, rageObject, rageOn;
+        bool touching, twoTouches, levelEnd, canTwoTouch, inverseMoveOn, rageObject, rageOn;
         int terminated;
         private String text_levelcompleted = "Congratulations, level completed!";
         private String text_score = "Score:";
@@ -138,7 +139,8 @@ namespace Evolution
             n_inf = 2 + level / 6;
             t_game = 0;
             rageCycle = 60 - level * 2;
-            rageDuration = 6;
+            rageResideOnGroundTime = 6;
+            rageLastsOnPlayerTime = 5;
             Initialize();
         }
 
@@ -179,7 +181,7 @@ namespace Evolution
             List<PreparedCell> preparedCells = PrepareSizeAndPosition(playerStartRadius, bigenemyMaxSize, animatterMaxSize);
             AddPreparedCells(preparedCells);
 
-            gt_sdi.Stop(); t_sdi = 0; // az új pálya kezdésekor nem lehet infection
+            gt_sizedec_inf.Stop(); time_sizedec_inf = 0; // az új pálya kezdésekor nem lehet infection
             gt_game.Start();
         }
 
@@ -285,7 +287,7 @@ namespace Evolution
             double screenWidth, screenHeight;
             screenWidth = this.ActualWidth > this.ActualHeight ? this.ActualWidth : this.ActualHeight;
             screenHeight = this.ActualWidth > this.ActualHeight ? this.ActualHeight : this.ActualWidth;
-            float dist = 100;
+            float dist = 70;
             float X, Y;
             float margin = 5;
             int NumberOfTrials = 0;
@@ -295,7 +297,8 @@ namespace Evolution
                 Y = Utility.RandomDouble(Radius + margin, screenHeight - Radius * 2 - margin);
                 NumberOfTrials++;
             }
-            while (X < player.Origo.X + dist && X > player.Origo.X - dist && Y < player.Origo.Y + dist && Y > player.Origo.Y - dist || CollideWithOtherObjects(X, Y, Radius, NumberOfTrials)); // távolságot kell, hogy hagyjunk a player és az új objektumok között
+            while (Utility.DistanceEdge(player.Origo, player.R, new Vector2(X, Y), Radius) < dist || CollideWithOtherObjects(X, Y, Radius, NumberOfTrials));
+
             return new Vector2(X, Y);
         }
 
@@ -404,12 +407,12 @@ namespace Evolution
             textureGap = 2;
             size_infection = 12;
             minimalPlayerSize = 10;
-            gt_sdi = new GameTimer();
-            gt_sdi.UpdateInterval = TimeSpan.FromSeconds(1);
-            gt_sdi.Update += gt_imi_Update;
-            gt_imi = new GameTimer();
-            gt_imi.UpdateInterval = TimeSpan.FromSeconds(1);
-            gt_imi.Update += gt_sdi_Update;
+            gt_sizedec_inf = new GameTimer();
+            gt_sizedec_inf.UpdateInterval = TimeSpan.FromSeconds(1);
+            gt_sizedec_inf.Update += gt_sizedec_Update;
+            gt_inversemove_inf = new GameTimer();
+            gt_inversemove_inf.UpdateInterval = TimeSpan.FromSeconds(1);
+            gt_inversemove_inf.Update += gt_inversemove_Update;
             gtse = new GameTimer();
             gtse.UpdateInterval = TimeSpan.FromMilliseconds(1);
             gtse.Update += gtse_Update;
@@ -445,14 +448,14 @@ namespace Evolution
             base.OnNavigatedTo(e);
         }
 
-        void gt_imi_Update(object sender, GameTimerEventArgs e)
+        void gt_inversemove_Update(object sender, GameTimerEventArgs e)
         {
-            t_imi -= 1;
+            time_inversemove_inf -= 1;
         }
 
-        void gt_sdi_Update(object sender, GameTimerEventArgs e)
+        void gt_sizedec_Update(object sender, GameTimerEventArgs e)
         {
-            t_sdi -= 1;
+            time_sizedec_inf -= 1;
         }
 
         void gtse_Update(object sender, GameTimerEventArgs e)
@@ -527,7 +530,7 @@ namespace Evolution
                 AddRage();
                 se_rage.Play(effectsVolume, 0, 0);
             }
-            if (t_game > 0 && t_game % rageCycle == rageDuration && rageObject)
+            if (t_game > 0 && t_game % rageCycle == rageResideOnGroundTime && rageObject)
             {
                 rageObject = false;
                 foreach (Cell obj in objects) if (obj is Rage) { objects.Remove(obj); break; }
@@ -736,11 +739,11 @@ namespace Evolution
             player.velocity.X += V.X;
             player.velocity.Y += V.Y;
             // inverse moving infection esetén:
-            if (!infected && t_imi > 0)
+            if (!inverseMoveOn && time_inversemove_inf > 0)
             {
                 player.velocity.X *= -1;
                 player.velocity.Y *= -1;
-                infected = true;
+                inverseMoveOn = true;
             }
 
             if (player.velocity.X > 10) player.velocity.X = 10;
@@ -764,14 +767,16 @@ namespace Evolution
 
         void UpdateObjects()
         {
-            if (t_imi <= 0)
+            if (time_sizedec_inf <= 0) gt_sizedec_inf.Stop();
+            else player.R -= 0.04f;  // ha épp elkapott egy size decreasing infectiont, amíg tart a fertőzés, csökken a mérete
+
+            if (time_inversemove_inf <= 0)
             {
-                gt_sdi.Stop();
-                infected = false;
+                gt_inversemove_inf.Stop();
+                inverseMoveOn = false;
             }
-            if (t_sdi <= 0) gt_imi.Stop();
-            if (t_sdi > 0) player.R -= 0.03f;  // ha épp elkapott egy size decreasing infectiont, amíg tart a fertőzés, csökken a mérete
-            if (t_rageOn >= 5)
+
+            if (t_rageOn >= rageLastsOnPlayerTime)
             {
                 t_rageOn = 0;
                 gt_rageOn.Stop();
@@ -811,13 +816,13 @@ namespace Evolution
                 else se_infection.Play(effectsVolume, 0, 0);
                 if (b2 is InverseMoving)
                 {
-                    t_imi = 5;
-                    gt_sdi.Start();
+                    time_inversemove_inf = 5;
+                    gt_inversemove_inf.Start();
                 }
                 else if (b2 is SizeDecrease)
                 {
-                    t_sdi = 5;
-                    gt_imi.Start();
+                    time_sizedec_inf = 5;
+                    gt_sizedec_inf.Start();
                 }
                 else if (b2 is Rage)
                 {
@@ -829,7 +834,7 @@ namespace Evolution
             }
             else if (b2 is AntiMatter && Collide(b1, b2, d))
             {
-                
+
                 bigger.R -= (float)(gapDistance * growFunction);
                 smaller.R -= (float)(gapDistance * (1 - growFunction));
                 if (b1 is Player && terminated == 0) CollosionSound();
