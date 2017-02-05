@@ -78,7 +78,7 @@ namespace Evolution
         bool levelStarted;
         bool backKeyPressed;
         int actualBackgroundIndex;
-        int n_enemy, n_antim, n_inf, n_intellienemy;
+        int n_bigenemy, n_smallenemy, n_antim, n_inf;
         int rageCycle;
         int rageResideOnGroundTime;
         int rageLastsOnPlayerTime;
@@ -133,8 +133,8 @@ namespace Evolution
             if (initialPlayerSize < minimalPlayerSize) initialPlayerSize = minimalPlayerSize;
             speed = 0.1f + level * 0.09f;
             int levelchange = level <= 15 ? level : 15;
-            n_enemy = 1 + levelchange / 2;
-            n_intellienemy = 3 + levelchange / 2;
+            n_bigenemy = level + 2;
+            n_smallenemy = level + 2;
             n_antim = 1 + levelchange / 3;
             n_inf = 2 + level / 6;
             t_game = 0;
@@ -171,7 +171,7 @@ namespace Evolution
             //player:
             Vector2 center = new Vector2(400, 240);
             float playerStartRadius = initialPlayerSize;
-            float bigenemyMaxSize = playerStartRadius + 10 + level;
+            float bigenemyMaxSize = playerStartRadius + 10 + level / 2;
             float animatterMaxSize = playerStartRadius + level / 2;
             player = new Player(this, tx_player, tx_rage, center, Vector2.Zero, playerStartRadius);
             //all other objects:
@@ -195,11 +195,16 @@ namespace Evolution
 
         List<PreparedCell> PrepareSizeAndPosition(float playerStartRadius, float bigenemyMaxSize, float animatterMaxSize)
         {
+            int num_small, num_big, num_intelli_small, num_intelli_big;
+            num_intelli_big = (int)(n_bigenemy * Utility.Rnd.Next(40, 80) / 100.0);
+            num_big = n_bigenemy - num_intelli_big;
+            num_intelli_small = (int)(n_smallenemy * Utility.Rnd.Next(50, 80) / 100.0);
+            num_small = n_smallenemy - num_intelli_small;
             List<PreparedCell> preparedCells = new List<PreparedCell>();
-            GetSizeForCells(new Enemy(), tx_enemy_smaller, n_enemy, playerStartRadius, false, preparedCells);
-            GetSizeForCells(new Enemy(), tx_enemy_bigger, n_enemy, bigenemyMaxSize, true, preparedCells);
-            GetSizeForCells(new IntelligentEnemy(), tx_intellienemy_smaller, n_intellienemy, playerStartRadius, false, preparedCells);
-            GetSizeForCells(new IntelligentEnemy(), tx_intellienemy_bigger, n_intellienemy, bigenemyMaxSize, true, preparedCells);
+            GetSizeForCells(new Enemy(), tx_enemy_smaller, num_small, playerStartRadius, false, preparedCells);
+            GetSizeForCells(new Enemy(), tx_enemy_bigger, num_big, bigenemyMaxSize, true, preparedCells);
+            GetSizeForCells(new IntelligentEnemy(), tx_intellienemy_smaller, num_intelli_small, playerStartRadius, false, preparedCells);
+            GetSizeForCells(new IntelligentEnemy(), tx_intellienemy_bigger, num_intelli_big, bigenemyMaxSize, true, preparedCells);
             GetSizeForCells(new AntiMatter(), tx_antimatter, n_antim, animatterMaxSize, false, preparedCells);
             GetSizeForCells(new SizeDecrease(), tx_sdinf, n_inf, 0, false, preparedCells);
             GetSizeForCells(new InverseMoving(), tx_iminf, n_inf, 0, false, preparedCells);
