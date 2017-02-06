@@ -47,6 +47,7 @@ namespace Evolution
         const string TEXT_PLAYFURTHER = "You can play further if you like...";
         const string TEXT_LEVEL = "Level {0}";
         const string TEXT_SCORE = "Score: {0}";
+        const string TEXT_HINT_SLIDE = "Hint: slide to speed up your cell";
 
         float width_tx_extinct, width_tx_doubletap, width_tx_pressback, width_tx_doubletap_restart, width_tx_lastlevelcomp, width_tx_congrat, width_tx_playfurther, width_tx_level;
 
@@ -92,6 +93,7 @@ namespace Evolution
         float size_infection;
         float textureGap;
         float minimalPlayerSize;
+        int level_hint_slide;
 
         List<Cell> objects;
         int level, score;
@@ -156,7 +158,7 @@ namespace Evolution
             text_level = String.Format(TEXT_LEVEL, level);
             levelStarted = false;
             gt_startlevel = new GameTimer();
-            gt_startlevel.UpdateInterval = TimeSpan.FromMilliseconds(1500);
+            gt_startlevel.UpdateInterval = TimeSpan.FromMilliseconds(2000);
             gt_startlevel.Update += gt_startlevel_Update;
             gt_startlevel.Start();
             levelEnd = false;
@@ -409,6 +411,7 @@ namespace Evolution
             level = 0;
             score = 0;
             smallObjectInfectTreshold = 2.5;
+            level_hint_slide = 8;
             textureGap = 2;
             size_infection = 12;
             minimalPlayerSize = 10;
@@ -680,6 +683,7 @@ namespace Evolution
             {
                 DrawBlackBoard(0.7f);
                 spriteBatch.DrawString(sf_levelcomp_msg, text_level, new Vector2((float)this.ActualWidth / 2 - sf_levelcomp_msg.MeasureString(text_level).X / 2, (float)this.ActualHeight / 2 - 30), Color.AntiqueWhite);
+                if (level >= level_hint_slide) spriteBatch.DrawString(sf_mgs, TEXT_HINT_SLIDE, new Vector2((float)this.ActualWidth / 2 - sf_mgs.MeasureString(TEXT_HINT_SLIDE).X / 2, (float)this.ActualHeight / 2 + 100), Color.SkyBlue);
             }
 
             if (backKeyPressed)
@@ -805,15 +809,21 @@ namespace Evolution
             if (player.R <= 0 && terminated == 0 && !levelEnd) terminated = 1;
         }
 
+        private double CalcVolume(double Radius)
+        {
+            return Math.Pow(Radius, 2) * Math.PI;
+        }
+
         void CollosionTest(Cell b1, Cell b2)
         {
             Cell bigger = b1.R > b2.R ? b1 : b2;
             Cell smaller = b1.R > b2.R ? b2 : b1;
             float x, gapDistance;
             double d; // Distance
+            float bigGrowFunction;
             d = Utility.DistanceOrigo(b1, b2);
             gapDistance = (float)((b1.R + b2.R - textureGap * 2) - d);
-            double growFunction = Math.Pow(smaller.R / bigger.R, 2);
+            double growFunction = Math.Pow(CalcVolume(smaller.R) / CalcVolume(bigger.R) / 2, 1);
             x = 1f;
             if (b1 is Player && b2 is Infection && Collide(b1, b2, d))
             {
@@ -839,11 +849,9 @@ namespace Evolution
             }
             else if (b2 is AntiMatter && Collide(b1, b2, d))
             {
-
                 bigger.R -= (float)(gapDistance * growFunction);
                 smaller.R -= (float)(gapDistance * (1 - growFunction));
                 if (b1 is Player && terminated == 0) CollosionSound();
-
             }
             else if (Collide(b1, b2, d))
             {
@@ -854,7 +862,8 @@ namespace Evolution
                 }
                 else
                 {
-                    bigger.R += x * 0.2f;
+                    bigGrowFunction = x * 0.2f;
+                    if((bigger.R + bigGrowFunction) * 2 < this.ActualHeight - 10) bigger.R += bigGrowFunction;
                     smaller.R -= x;
                 }
                 if (b1 is Player) CollosionSound();

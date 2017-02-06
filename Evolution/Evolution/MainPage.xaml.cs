@@ -48,7 +48,7 @@ namespace Evolution
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
-            //HighScores.SetMaxLevel(18);        // DEBUG: for all levels
+            // HighScores.SetMaxLevel(18);        // DEBUG: for all levels
 
             startedWithTutorial = false;
             startedWithGameModeChoose = false;
