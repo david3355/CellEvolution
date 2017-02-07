@@ -91,7 +91,6 @@ namespace Evolution
         bool levelCompletedSoundPlayed;
         float enemyMaxRadOnLevel;
         float size_infection;
-        float textureGap;
         float minimalPlayerSize;
         int level_hint_slide;
 
@@ -412,7 +411,6 @@ namespace Evolution
             score = 0;
             smallObjectInfectTreshold = 2.5;
             level_hint_slide = 8;
-            textureGap = 2;
             size_infection = 12;
             minimalPlayerSize = 10;
             gt_sizedec_inf = new GameTimer();
@@ -809,6 +807,12 @@ namespace Evolution
             if (player.R <= 0 && terminated == 0 && !levelEnd) terminated = 1;
         }
 
+        private double CalculateTextureGap(double Radius)
+        {
+            if (Radius < 2) return 0;
+            return Radius * 0.1185;
+        }
+
         private double CalcVolume(double Radius)
         {
             return Math.Pow(Radius, 2) * Math.PI;
@@ -822,7 +826,9 @@ namespace Evolution
             double d; // Distance
             float bigGrowFunction;
             d = Utility.DistanceOrigo(b1, b2);
-            gapDistance = (float)((b1.R + b2.R - textureGap * 2) - d);
+            double smallerTextureGap = CalculateTextureGap(smaller.R);
+            double biggerTextureGap = CalculateTextureGap(bigger.R);
+            gapDistance = (float)((bigger.R - biggerTextureGap + smaller.R - smallerTextureGap) - d);
             double growFunction = Math.Pow(CalcVolume(smaller.R) / CalcVolume(bigger.R) / 2, 1);
             x = 1f;
             if (b1 is Player && b2 is Infection && Collide(b1, b2, d))
@@ -863,7 +869,7 @@ namespace Evolution
                 else
                 {
                     bigGrowFunction = x * 0.2f;
-                    if((bigger.R + bigGrowFunction) * 2 < this.ActualHeight - 10) bigger.R += bigGrowFunction;
+                    if ((bigger.R + bigGrowFunction) * 2 < this.ActualHeight - 10) bigger.R += bigGrowFunction;
                     smaller.R -= x;
                 }
                 if (b1 is Player) CollosionSound();
@@ -880,7 +886,7 @@ namespace Evolution
 
         bool Collide(Cell b1, Cell b2, double OrigoDistance)
         {
-            return OrigoDistance <= b1.R - textureGap + b2.R - textureGap;
+            return OrigoDistance <= b1.R - CalculateTextureGap(b1.R) + b2.R - CalculateTextureGap(b2.R);
         }
 
         void CollosionSound()
