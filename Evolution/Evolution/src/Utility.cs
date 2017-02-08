@@ -85,5 +85,12 @@ namespace Evolution
             return new Vector2((float)newx + Pivot.X, (float)newy + Pivot.Y);
         }
 
+        public static float CalculateTextureGap(float Radius)
+        {
+            if (Radius < 2) return 0;
+            return Radius * 0.1185f;
+        }
+
+
     }
 }

@@ -72,7 +72,7 @@ namespace Evolution
             }
             Vector2 cornerPoint = new Vector2(Object.Origo.X + Object.R * changeX, Object.Origo.Y + Object.R * changeY);
             Vector2 chaserTestOrigo = new Vector2(cornerPoint.X + this.R * -changeX, cornerPoint.Y + this.R * -changeY);
-            return Utility.Distance(Object.Origo, chaserTestOrigo) < Object.R + this.R;
+            return Utility.Distance(Object.Origo, chaserTestOrigo) < Object.R - Utility.CalculateTextureGap(Object.R) + this.R - Utility.CalculateTextureGap(this.R);
         }
 
         private Vector2 GetFleeVector(Vector2 EnemyOrigo, Vector2 SelfOrigo)
@@ -146,12 +146,18 @@ namespace Evolution
         
         public override void Update()
         {
-            if (topLeft.X + velocity.X <= 0) topLeft.X = 0;
-            else if (topLeft.X + R * 2 + velocity.X >= game.ActualWidth) topLeft.X = (float)game.ActualWidth - R * 2;
+            float textureGap = Utility.CalculateTextureGap(R);
+            float left_new, right_new, top_new, bottom_new;
+            left_new = topLeft.X + velocity.X;
+            right_new = topLeft.X + (R * 2) + velocity.X;
+            top_new = topLeft.Y + velocity.Y;
+            bottom_new = topLeft.Y + (R * 2) + velocity.Y;
+            if (left_new + textureGap <= 0) topLeft.X = 0 - textureGap;
+            else if (right_new - textureGap >= game.ActualWidth) topLeft.X = (float)game.ActualWidth - R * 2 + textureGap;
             else topLeft.X += velocity.X;
 
-            if (topLeft.Y + velocity.Y <= 0) topLeft.Y = 0;
-            else if (topLeft.Y + R * 2 + velocity.X >= game.ActualHeight) topLeft.Y = (float)game.ActualHeight - R * 2;
+            if (top_new + textureGap <= 0) topLeft.Y = 0 - textureGap;
+            else if (bottom_new - textureGap >= game.ActualHeight) topLeft.Y = (float)game.ActualHeight - R * 2 + textureGap;
             else topLeft.Y += velocity.Y;
         }
     }

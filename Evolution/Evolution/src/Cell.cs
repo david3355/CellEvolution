@@ -30,6 +30,7 @@ namespace Evolution
         public Vector2 velocity;
         private String id;
         protected const float drawOpacity = 0.85f;
+        private float changeX, changeY;
 
         public Vector2 Origo
         {
@@ -61,6 +62,8 @@ namespace Evolution
         public Cell()
         {
             id = Guid.NewGuid().ToString();
+            changeX = 0f;
+            changeY = 0f;
         }
 
         public Cell(GamePage Game, Texture2D texture, Vector2 center, Vector2 velocity, float radius)
@@ -101,7 +104,7 @@ namespace Evolution
 
         public virtual void Draw(SpriteBatch batch, Color TintColor, float Opacity)
         {
-            batch.Draw(texture, topLeft, null, TintColor  * Opacity, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+            batch.Draw(texture, topLeft, null, TintColor * Opacity, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
         }
 
         public void Draw(SpriteBatch batch)
@@ -112,31 +115,35 @@ namespace Evolution
         public virtual void Update()
         {
             BounceBall();
-            topLeft += velocity;
+            topLeft.X = changeX;
+            topLeft.Y = changeY;
         }
 
         public void BounceBall()
         {
-            Vector2 newTopLeft = topLeft + velocity;
-            float left, right, top, bottom;
-            left = newTopLeft.X;
-            right = newTopLeft.X + (radius * 2);
-            top = newTopLeft.Y;
-            bottom = newTopLeft.Y + (radius * 2);
+            float textureGap = (float)Utility.CalculateTextureGap(radius);
+            float left_new, right_new, top_new, bottom_new;
+            left_new = topLeft.X + velocity.X;
+            right_new = topLeft.X + (radius * 2) + velocity.X;
+            top_new = topLeft.Y + velocity.Y;
+            bottom_new = topLeft.Y + (radius * 2) + velocity.Y;
 
-            if (left < 0) topLeft.X = 0;
-            if (right > game.ActualWidth) topLeft.X = (float)game.ActualWidth - radius * 2;
-            if (left < 0 || right > game.ActualWidth)
+            if (left_new + textureGap < 0 || right_new - textureGap > game.ActualWidth)
             {
                 velocity.X *= -1;
             }
+            if (left_new + textureGap < 0) left_new = 0 - textureGap;
+            if (right_new - textureGap > game.ActualWidth) left_new = (float)game.ActualWidth - radius * 2 + textureGap;
 
-            if (top < 0) topLeft.Y = 0;
-            if(bottom > game.ActualHeight) topLeft.Y = (float)game.ActualHeight - radius * 2;
-            if (top < 0 || bottom > game.ActualHeight)
+            if (top_new + textureGap < 0 || bottom_new - textureGap > game.ActualHeight)
             {
                 velocity.Y *= -1;
             }
+            if (top_new + textureGap < 0) top_new = 0 - textureGap;
+            if (bottom_new - textureGap > game.ActualHeight) top_new = (float)game.ActualHeight - radius * 2 + textureGap;
+            
+            changeX = left_new;
+            changeY = top_new;
         }
 
         public void ChangeTexture(Texture2D Texture)

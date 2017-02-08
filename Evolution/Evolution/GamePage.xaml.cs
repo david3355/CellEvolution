@@ -807,12 +807,6 @@ namespace Evolution
             if (player.R <= 0 && terminated == 0 && !levelEnd) terminated = 1;
         }
 
-        private double CalculateTextureGap(double Radius)
-        {
-            if (Radius < 2) return 0;
-            return Radius * 0.1185;
-        }
-
         private double CalcVolume(double Radius)
         {
             return Math.Pow(Radius, 2) * Math.PI;
@@ -826,8 +820,8 @@ namespace Evolution
             double d; // Distance
             float bigGrowFunction;
             d = Utility.DistanceOrigo(b1, b2);
-            double smallerTextureGap = CalculateTextureGap(smaller.R);
-            double biggerTextureGap = CalculateTextureGap(bigger.R);
+            double smallerTextureGap = Utility.CalculateTextureGap(smaller.R);
+            double biggerTextureGap = Utility.CalculateTextureGap(bigger.R);
             gapDistance = (float)((bigger.R - biggerTextureGap + smaller.R - smallerTextureGap) - d);
             double growFunction = Math.Pow(CalcVolume(smaller.R) / CalcVolume(bigger.R) / 2, 1);
             x = 1f;
@@ -886,7 +880,7 @@ namespace Evolution
 
         bool Collide(Cell b1, Cell b2, double OrigoDistance)
         {
-            return OrigoDistance <= b1.R - CalculateTextureGap(b1.R) + b2.R - CalculateTextureGap(b2.R);
+            return OrigoDistance <= b1.R - Utility.CalculateTextureGap(b1.R) + b2.R - Utility.CalculateTextureGap(b2.R);
         }
 
         void CollosionSound()
