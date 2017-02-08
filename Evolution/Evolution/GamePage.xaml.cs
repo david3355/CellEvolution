@@ -493,6 +493,7 @@ namespace Evolution
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             StopTimers();
+            objects.Clear();
 
             // Set the sharing mode of the graphics device to turn off XNA rendering
             SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(false);
@@ -679,7 +680,7 @@ namespace Evolution
 
             if (!levelStarted)
             {
-                DrawBlackBoard(0.7f);
+                DrawBlackBoard(0.8f);
                 spriteBatch.DrawString(sf_levelcomp_msg, text_level, new Vector2((float)this.ActualWidth / 2 - sf_levelcomp_msg.MeasureString(text_level).X / 2, (float)this.ActualHeight / 2 - 30), Color.AntiqueWhite);
                 if (level >= level_hint_slide) spriteBatch.DrawString(sf_mgs, TEXT_HINT_SLIDE, new Vector2((float)this.ActualWidth / 2 - sf_mgs.MeasureString(TEXT_HINT_SLIDE).X / 2, (float)this.ActualHeight / 2 + 100), Color.SkyBlue);
             }
