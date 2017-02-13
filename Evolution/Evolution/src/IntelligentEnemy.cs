@@ -24,25 +24,31 @@ namespace Evolution
             return new IntelligentEnemy();
         }
 
-        private const float ANTIMATTER_DANGER_DIST = 10;
-
         public virtual void ChangeVelocity(List<Cell> Objects, Player Player, float speed)
         {
             Cell closestenemy = GetClosestObject(Objects, Player);
+            if (closestenemy == null) return;
             Cell closestAntimaterial = GetClosestAntimatter(Objects);
 
             Vector2 velocity;
-
-            if (closestAntimaterial != null && Utility.DistanceEdge(this, closestAntimaterial) <= ANTIMATTER_DANGER_DIST) velocity = GetFleeVector(closestAntimaterial.Origo, this.Origo);
+            float antimatter_danger_dist = -100;
+            if (closestAntimaterial != null)
+            {
+                if (closestAntimaterial.R >= this.R) antimatter_danger_dist = 6;
+                else if (this.R * 0.6 <= closestAntimaterial.R) antimatter_danger_dist = 3;
+            }
+            if (closestAntimaterial != null && Utility.DistanceEdge(this, closestAntimaterial) <= antimatter_danger_dist) velocity = GetFleeVector(closestAntimaterial.Origo, this.Origo);
             else if (closestenemy.R >= this.R) velocity = GetFleeVector(closestenemy.Origo, this.Origo);
             else
             {
                 List<Cell> exceptions = new List<Cell>();
                 while (!CanTouchObject(closestenemy))
                 {
-                    exceptions.Add(closestenemy);
+                    if (!exceptions.Contains(closestenemy)) exceptions.Add(closestenemy);
                     closestenemy = GetClosestObjectExcept(Objects, Player, exceptions);
+                    if (closestenemy == null) return;
                 }
+                exceptions.Clear();
                 velocity = GetFollowVector(this.Origo, closestenemy.Origo);
             }
             velocity.X *= speed;
@@ -92,9 +98,14 @@ namespace Evolution
 
         private Cell GetClosestObjectExcept(List<Cell> Objects, Player Player, List<Cell> Exceptions)
         {
-            double mindistance = Utility.DistanceEdge(this, Player);
-            Cell minobject = Player;
-            double distance;
+            double mindistance = 10000;
+            Cell minobject = null;
+            double distance = Utility.DistanceEdge(this, Player);
+            if (distance < mindistance && !Exceptions.Contains(Player))
+            {
+                mindistance = distance;
+                minobject = Player;
+            }
 
             foreach (Cell obj in Objects)
             {
@@ -117,7 +128,7 @@ namespace Evolution
         private AntiMatter GetClosestAntimatter(List<Cell> Objects)
         {
             AntiMatter minantimatter = null;
-            double mindistance = -100;
+            double mindistance = 10000;
             double distance;
 
             foreach (Cell obj in Objects)
@@ -143,7 +154,7 @@ namespace Evolution
             return Utility.GetNormalizedVector(rotatedDirectionPoint, (float)Utility.Distance(VectorOrigo, DirectionPoint));
         }
 
-        
+
         public override void Update()
         {
             float textureGap = Utility.CalculateTextureGap(R);

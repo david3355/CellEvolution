@@ -27,12 +27,12 @@ namespace Evolution
         /// </summary>
         public static double DistanceEdge(Cell Object1, Cell Object2)
         {
-            return DistanceOrigo(Object1, Object2) - (Object1.R + Object2.R);
+            return DistanceEdge(Object1.Origo, Object1.R, Object2.Origo, Object2.R);
         }
 
-        public static double DistanceEdge(Vector2 Origo1, double Radius1, Vector2 Origo2, double Radius2)
+        public static double DistanceEdge(Vector2 Origo1, float Radius1, Vector2 Origo2, float Radius2)
         {
-            return Distance(Origo1, Origo2) - (Radius1 + Radius2);
+            return Distance(Origo1, Origo2) - (Radius1 - Utility.CalculateTextureGap(Radius1) + Radius2 - Utility.CalculateTextureGap(Radius2));
         }
 
         /// <summary>
