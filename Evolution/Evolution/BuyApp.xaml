@@ -1,0 +1,49 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="Evolution.BuyApp"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Landscape" Orientation="Landscape"
+    mc:Ignorable="d" d:DesignHeight="480" d:DesignWidth="800"
+    shell:SystemTray.IsVisible="False" >
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot">
+        <Grid.Background>
+            <ImageBrush ImageSource="Images/background.png" Opacity="1" />
+        </Grid.Background>
+
+        
+        <Grid x:Name="ContentPanel" >
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="120"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" FontSize="27" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                This is a free demo version of Cell Predator. 
+            </TextBlock>
+            <TextBlock Grid.Row="1" FontSize="27" Margin="40" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap">
+                For unlocking all levels and HD version, check out the link for Cell Predator HD:
+            </TextBlock>
+
+            <HyperlinkButton Grid.Row="3" TargetName="_blank" FontSize="27" Content="Get Cell Predator HD from Store" HorizontalAlignment="Center" VerticalAlignment="Top"  Name="cell_predator_hd_hyperlink" Tap="cell_predator_hd_hyperlink_Tap" />
+
+            <Border Grid.Row="2" CornerRadius="17" Background="Black" Width="110" Height="110" Margin="10" >
+                <Image  Source="icon.png" Margin="11" Tap="Image_Tap"></Image>
+            </Border>
+            
+        </Grid>
+    </Grid>
+ 
+
+</phone:PhoneApplicationPage>

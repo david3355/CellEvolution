@@ -129,6 +129,11 @@ namespace Evolution
 
         void SetLevel(int Level)
         {
+            if (MainPage.IsLevelNotPermittedInDemo(Level))
+            {
+                BuyApp.navigatedFromGame = true;
+                NavigationService.Navigate(BuyApp.GetUri());
+            }
             SetBackground();
             initialPlayerSize = 40 - level;
             if (initialPlayerSize < minimalPlayerSize) initialPlayerSize = minimalPlayerSize;
@@ -247,7 +252,7 @@ namespace Evolution
 
         void gt_startlevel_Update(object sender, GameTimerEventArgs e)
         {
-            gt_startlevel.Stop();
+            if (gt_startlevel != null) gt_startlevel.Stop();
             gt_startlevel = null;
             levelStarted = true;
         }
@@ -483,8 +488,8 @@ namespace Evolution
 
         private void StopTimers()
         {
-            timer.Stop();
-            gt_game.Stop();
+            if (timer != null) timer.Stop();
+            if (gt_game != null) gt_game.Stop();
         }
 
         /// <summary>
@@ -493,7 +498,7 @@ namespace Evolution
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             StopTimers();
-            objects.Clear();
+            if(objects != null) objects.Clear();
 
             // Set the sharing mode of the graphics device to turn off XNA rendering
             SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(false);

@@ -69,6 +69,9 @@
     <Compile Include="AppServiceProvider.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BuyApp.xaml.cs">
+      <DependentUpon>BuyApp.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ChooseGameMode.xaml.cs">
       <DependentUpon>ChooseGameMode.xaml</DependentUpon>
     </Compile>
@@ -108,6 +111,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Page Include="BuyApp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ChooseGameMode.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -188,14 +195,9 @@
     <Resource Include="Images\start.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\antimatter.png" />
-    <Resource Include="Images\intellienemy_bigger.png" />
-    <Resource Include="Images\intellienemy_smaller.png" />
     <Resource Include="Images\rage.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Img\enemy_bigger.png" />
-    <Resource Include="Img\enemy_smaller.png" />
     <Resource Include="Img\player.png" />
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +207,21 @@
   <ItemGroup>
     <Resource Include="Images\inverseinf.png" />
     <Resource Include="Images\sizedecinf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Img\enemy_bigger.png" />
+    <Resource Include="Img\enemy_smaller.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\antimatter.png" />
+    <Resource Include="Images\intellienemy_bigger.png" />
+    <Resource Include="Images\intellienemy_smaller.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Img\money.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

@@ -26,6 +26,9 @@ namespace Evolution
         private static SolidColorBrush red_brush = new SolidColorBrush(Colors.Red);
         static Uri Uri = new Uri("/MainPage.xaml", UriKind.Relative);
         ConfigManager configmanager;
+        private BitmapImage moneyImage;
+        
+        private const int MAX_DEMO_LEVEL = 5;
 
         public static Uri GetUri()
         {
@@ -44,6 +47,7 @@ namespace Evolution
             HighScores.HighScore = highscore;
             HighScores.MaxLevel = maxlevel;
             HighScores.LastLevel = lastlevel;
+            moneyImage = new BitmapImage(new Uri("Img/money.png", UriKind.Relative));
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -121,7 +125,13 @@ namespace Evolution
                         button.BorderThickness = new Thickness(5);
                     }
                     ImageBrush buttonBackgr = new ImageBrush();
-                    if (level <= highestCompletedLevel + 1)
+                    if (IsLevelNotPermittedInDemo(level))
+                    {
+                        buttonBackgr.ImageSource = moneyImage;
+                        button.Content = null;
+                        button.Tap += level_is_not_avaliable;
+                    }
+                    else if (level <= highestCompletedLevel + 1)
                     {
                         buttonBackgr.ImageSource = new BitmapImage(new Uri(String.Format("Images/thumbnails/bg{0}.jpg", level), UriKind.Relative));
                         button.Tap += level_selected;
@@ -137,6 +147,11 @@ namespace Evolution
                     Grid.SetColumn(button, j);
                 }
             }
+        }
+
+        public static bool IsLevelNotPermittedInDemo(int Level)
+        {
+            return Level > MAX_DEMO_LEVEL;
         }
 
         private void StartGame()
@@ -200,6 +215,13 @@ namespace Evolution
             HighScores.ResetLastLevel();
             HighScores.SetLastLevel(level);
             StartGame();
+        }
+
+        private void level_is_not_avaliable(object sender, RoutedEventArgs e)
+        {
+            BuyApp.navigatedFromGame = false;
+            NavigationService.Navigate(BuyApp.GetUri());
+            panel_choose_level.Visibility = Visibility.Collapsed;
         }
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
