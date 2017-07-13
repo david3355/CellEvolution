@@ -28,7 +28,7 @@ namespace Evolution
         ConfigManager configmanager;
         private BitmapImage moneyImage;
         
-        private const int MAX_DEMO_LEVEL = 5;
+        private const int MAX_DEMO_LEVEL = 12;
 
         public static Uri GetUri()
         {
